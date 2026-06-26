@@ -8,27 +8,64 @@
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:'Segoe UI',Arial,sans-serif;background:#f0faf0;min-height:100vh;}
 
-/* ── PAGES ── */
 .page{display:none;}
 .page.active{display:block;}
 
-/* ── HEADER ── */
-header{
-  background:linear-gradient(135deg,#087f23,#1b5e20);
-  color:white;text-align:center;padding:28px 20px 22px;position:relative;
+/* ── USER LOGIN ── */
+.user-login-bg{
+  min-height:100vh;
+  background:linear-gradient(160deg,#e8f5e9 0%,#f0faf0 60%,#c8e6c9 100%);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:30px 16px;
 }
-header img{
-  width:85px;height:85px;border-radius:50%;object-fit:cover;
-  border:3px solid rgba(255,255,255,0.5);display:block;margin:0 auto 12px;
+.user-login-logo{
+  width:90px;height:90px;border-radius:50%;object-fit:cover;
+  border:4px solid #087f23;margin-bottom:12px;
+  box-shadow:0 4px 18px rgba(8,127,35,0.2);
 }
-header h1{font-size:1.9rem;font-weight:700;letter-spacing:1px;}
-header p{font-size:0.9rem;opacity:0.85;margin-top:5px;}
+.brand-title{font-size:1.75rem;font-weight:800;color:#1b5e20;margin-bottom:3px;text-align:center;}
+.brand-sub{font-size:0.88rem;color:#555;margin-bottom:28px;text-align:center;}
+.login-card{
+  background:white;width:100%;max-width:360px;
+  padding:32px 26px;border-radius:22px;
+  box-shadow:0 8px 36px rgba(0,0,0,0.11);
+}
+.login-card h2{color:#087f23;font-size:1.25rem;font-weight:700;margin-bottom:22px;text-align:center;}
+.form-group{margin-bottom:15px;}
+.form-group label{display:block;font-size:0.83rem;font-weight:600;color:#444;margin-bottom:6px;}
+.form-group input{
+  width:100%;padding:13px 14px;border:1.5px solid #ddd;
+  border-radius:10px;font-size:0.95rem;transition:border-color 0.2s;
+}
+.form-group input:focus{outline:none;border-color:#087f23;}
+.primary-btn{
+  width:100%;background:#087f23;color:white;border:none;
+  padding:14px;border-radius:12px;font-size:1rem;font-weight:700;
+  cursor:pointer;margin-top:4px;transition:background 0.2s;
+}
+.primary-btn:hover{background:#1b5e20;}
+.primary-btn:disabled{opacity:0.6;cursor:not-allowed;}
+.form-msg{
+  text-align:center;padding:10px;border-radius:8px;
+  font-size:0.87rem;margin-top:10px;display:none;
+}
+.form-msg.error{background:#fce4ec;color:#c62828;}
+.form-msg.success{background:#e8f5e9;color:#2e7d32;}
 
-/* hidden admin tap zone — bottom-right corner, invisible */
-.secret-admin-zone{
-  position:absolute;bottom:0;right:0;width:44px;height:44px;
-  cursor:default;opacity:0;
+/* ── USER DASHBOARD ── */
+.user-topbar{
+  background:linear-gradient(135deg,#087f23,#1b5e20);
+  color:white;padding:14px 20px;
+  display:flex;align-items:center;justify-content:space-between;gap:8px;
 }
+.greeting-name{font-size:1rem;font-weight:700;}
+.greeting-name span{font-size:0.8rem;opacity:0.85;display:block;margin-top:2px;font-weight:400;}
+.user-logout-btn{
+  background:rgba(255,255,255,0.2);border:1.5px solid rgba(255,255,255,0.5);
+  color:white;padding:7px 15px;border-radius:18px;cursor:pointer;
+  font-size:0.82rem;font-weight:600;white-space:nowrap;
+}
+.user-logout-btn:hover{background:rgba(255,255,255,0.35);}
 
 /* ── MARQUEE ── */
 .marquee-wrap{
@@ -46,110 +83,34 @@ header p{font-size:0.9rem;opacity:0.85;margin-top:5px;}
   border-radius:50%;background:white;padding:3px;
 }
 
-/* ── USER LOGIN PAGE ── */
-.user-login-bg{
-  min-height:100vh;
-  background:linear-gradient(160deg,#e8f5e9 0%,#f0faf0 60%,#c8e6c9 100%);
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  padding:30px 16px;
-}
-.user-login-logo{
-  width:90px;height:90px;border-radius:50%;object-fit:cover;
-  border:4px solid #087f23;margin-bottom:14px;
-  box-shadow:0 4px 18px rgba(8,127,35,0.2);
-}
-.user-login-title{
-  font-size:1.7rem;font-weight:800;color:#1b5e20;margin-bottom:4px;
-}
-.user-login-sub{
-  font-size:0.9rem;color:#555;margin-bottom:28px;
-}
-.user-login-box{
-  background:white;width:100%;max-width:370px;
-  padding:32px 26px;border-radius:22px;
-  box-shadow:0 8px 36px rgba(0,0,0,0.11);
-}
-.user-login-box h2{
-  color:#087f23;font-size:1.3rem;font-weight:700;
-  margin-bottom:20px;text-align:center;
-}
-.form-group{margin-bottom:15px;}
-.form-group label{
-  display:block;font-size:0.84rem;font-weight:600;color:#333;margin-bottom:6px;
-}
-.form-group input{
-  width:100%;padding:13px 14px;border:1.5px solid #ddd;
-  border-radius:10px;font-size:0.95rem;transition:border-color 0.2s;
-}
-.form-group input:focus{outline:none;border-color:#087f23;}
-.primary-btn{
-  width:100%;background:#087f23;color:white;border:none;
-  padding:14px;border-radius:12px;font-size:1rem;font-weight:700;
-  cursor:pointer;margin-top:4px;transition:background 0.2s;
-}
-.primary-btn:hover{background:#1b5e20;}
-.primary-btn:disabled{opacity:0.6;cursor:not-allowed;}
-.login-msg{
-  text-align:center;padding:10px;border-radius:8px;
-  font-size:0.88rem;margin-top:12px;display:none;
-}
-.login-msg.error{background:#fce4ec;color:#c62828;}
-.login-msg.success{background:#e8f5e9;color:#2e7d32;}
-.switch-link{
-  display:block;text-align:center;margin-top:16px;
-  color:#087f23;cursor:pointer;font-size:0.88rem;text-decoration:underline;
-}
-.register-note{
-  text-align:center;margin-top:14px;font-size:0.83rem;color:#888;
-}
-.register-note span{color:#087f23;cursor:pointer;text-decoration:underline;font-weight:600;}
-
-/* ── USER DASHBOARD (after login) ── */
-.user-topbar{
-  background:linear-gradient(135deg,#087f23,#1b5e20);
-  color:white;padding:14px 20px;
-  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;
-}
-.user-topbar .greeting{font-size:1rem;font-weight:700;}
-.user-topbar .greeting span{font-size:0.82rem;opacity:0.85;display:block;margin-top:2px;}
-.user-logout-btn{
-  background:rgba(255,255,255,0.2);border:1.5px solid rgba(255,255,255,0.5);
-  color:white;padding:7px 16px;border-radius:18px;cursor:pointer;
-  font-size:0.82rem;font-weight:600;
-}
-.user-logout-btn:hover{background:rgba(255,255,255,0.35);}
-
-/* ── MY ORDERS TAB ── */
-.user-tabs{
-  display:flex;background:#fff;border-bottom:2px solid #e0e0e0;
-}
+/* ── TABS ── */
+.user-tabs{display:flex;background:#fff;border-bottom:2px solid #e0e0e0;}
 .user-tab{
   flex:1;padding:13px;text-align:center;font-size:0.9rem;font-weight:600;
   color:#777;cursor:pointer;border-bottom:3px solid transparent;
   transition:all 0.2s;margin-bottom:-2px;
 }
 .user-tab.active{color:#087f23;border-bottom-color:#087f23;}
-
 .tab-content{display:none;}
 .tab-content.active{display:block;}
 
-/* my orders list */
+/* ── MY ORDERS ── */
 .my-orders-wrap{padding:16px;}
 .my-order-card{
   background:white;border-radius:14px;padding:14px 16px;margin-bottom:12px;
   box-shadow:0 3px 10px rgba(0,0,0,0.07);border-left:4px solid #087f23;
 }
 .my-order-card.pending{border-left-color:#e65100;}
-.my-order-card .order-prod{font-weight:700;font-size:1rem;color:#1b5e20;}
-.my-order-card .order-meta{font-size:0.82rem;color:#666;margin-top:4px;}
-.my-order-card .order-status{
+.order-prod{font-weight:700;font-size:1rem;color:#1b5e20;}
+.order-meta{font-size:0.81rem;color:#666;margin-top:4px;}
+.order-status-badge{
   display:inline-block;padding:3px 12px;border-radius:20px;
-  font-size:0.78rem;font-weight:700;margin-top:8px;
+  font-size:0.77rem;font-weight:700;margin-top:8px;
 }
 .status-pending{background:#fff3e0;color:#e65100;}
 .status-delivered{background:#e8f5e9;color:#087f23;}
 
-/* ── PRODUCTS & ORDER (same as before, inside user dashboard) ── */
+/* ── PRODUCTS ── */
 .products-section{padding:24px 16px 8px;}
 .section-title{text-align:center;color:#087f23;font-size:1.3rem;font-weight:700;margin-bottom:18px;}
 .products{display:flex;justify-content:center;gap:14px;flex-wrap:wrap;}
@@ -167,6 +128,8 @@ header p{font-size:0.9rem;opacity:0.85;margin-top:5px;}
   padding:8px 16px;border-radius:18px;cursor:pointer;font-size:0.83rem;
 }
 .card button:hover{background:#1b5e20;}
+
+/* ── ORDER FORM ── */
 .order-section{padding:22px 16px 10px;}
 .order{
   background:white;max-width:420px;margin:0 auto;
@@ -180,7 +143,7 @@ header p{font-size:0.9rem;opacity:0.85;margin-top:5px;}
   resize:vertical;transition:border-color 0.2s;
 }
 .order input:focus,.order textarea:focus{outline:none;border-color:#087f23;}
-.order input[readonly]{background:#f5f5f5;cursor:default;}
+.order input[readonly]{background:#f5f5f5;color:#555;cursor:default;}
 #orderBtn{
   background:#087f23;color:white;border:none;padding:14px;
   border-radius:12px;font-size:1rem;font-weight:700;cursor:pointer;
@@ -201,37 +164,35 @@ footer{
 }
 footer a{color:#a5d6a7;text-decoration:none;}
 
-/* ── ADMIN LOGIN PAGE ── */
+/* ── ADMIN LOGIN ── */
 .admin-login-bg{
   min-height:100vh;
-  background:linear-gradient(160deg,#e8eaf6 0%,#f5f5f5 60%,#c5cae9 100%);
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  padding:30px 16px;
+  background:linear-gradient(160deg,#e8eaf6,#f5f5f5 60%,#c5cae9);
+  display:flex;align-items:center;justify-content:center;padding:30px 16px;
 }
-.admin-login-box{
-  background:white;width:100%;max-width:370px;
+.admin-login-card{
+  background:white;width:100%;max-width:360px;
   padding:32px 26px;border-radius:22px;
   box-shadow:0 8px 36px rgba(0,0,0,0.13);
 }
-.admin-login-box h2{color:#1a237e;font-size:1.3rem;font-weight:700;margin-bottom:6px;text-align:center;}
-.admin-login-box p{text-align:center;color:#666;font-size:0.85rem;margin-bottom:20px;}
-.admin-login-box .form-group input:focus{border-color:#1a237e;}
-.admin-primary-btn{
+.admin-login-card h2{color:#1a237e;font-size:1.25rem;font-weight:700;margin-bottom:6px;text-align:center;}
+.admin-login-card p{text-align:center;color:#777;font-size:0.83rem;margin-bottom:18px;}
+.admin-login-card .form-group input:focus{border-color:#1a237e;}
+.admin-btn{
   width:100%;background:#1a237e;color:white;border:none;
-  padding:14px;border-radius:12px;font-size:1rem;font-weight:700;
-  cursor:pointer;margin-top:4px;
+  padding:14px;border-radius:12px;font-size:1rem;font-weight:700;cursor:pointer;
 }
-.admin-primary-btn:hover{background:#283593;}
+.admin-btn:hover{background:#283593;}
 .role-select{display:flex;gap:10px;margin-bottom:18px;}
 .role-btn{
   flex:1;padding:10px;border-radius:10px;border:2px solid #ddd;
-  background:white;font-size:0.88rem;font-weight:600;cursor:pointer;
+  background:white;font-size:0.87rem;font-weight:600;cursor:pointer;
   transition:all 0.2s;color:#555;
 }
 .role-btn.active-role{border-color:#1a237e;background:#e8eaf6;color:#1a237e;}
 .back-link{
   display:block;text-align:center;margin-top:16px;
-  color:#1a237e;cursor:pointer;font-size:0.88rem;text-decoration:underline;
+  color:#1a237e;cursor:pointer;font-size:0.87rem;text-decoration:underline;
 }
 
 /* ── ADMIN DASHBOARD ── */
@@ -244,15 +205,12 @@ footer a{color:#a5d6a7;text-decoration:none;}
 .admin-header-right{display:flex;gap:10px;align-items:center;flex-wrap:wrap;}
 .logout-btn{
   background:rgba(255,255,255,0.18);border:1.5px solid rgba(255,255,255,0.4);
-  color:white;padding:7px 16px;border-radius:18px;cursor:pointer;
-  font-size:0.83rem;font-weight:600;
+  color:white;padding:7px 16px;border-radius:18px;cursor:pointer;font-size:0.83rem;font-weight:600;
 }
 .logout-btn:hover{background:rgba(255,255,255,0.3);}
 .role-badge{
-  padding:5px 14px;border-radius:20px;
-  font-size:0.78rem;font-weight:700;letter-spacing:0.5px;
-  color:white;border:1px solid rgba(255,255,255,0.5);
-  background:rgba(255,255,255,0.2);
+  padding:5px 14px;border-radius:20px;font-size:0.77rem;font-weight:700;
+  color:white;border:1px solid rgba(255,255,255,0.5);background:rgba(255,255,255,0.2);
 }
 .role-badge.owner{background:rgba(255,193,7,0.35);border-color:rgba(255,193,7,0.6);}
 .role-badge.dev{background:rgba(0,188,212,0.35);border-color:rgba(0,188,212,0.6);}
@@ -266,8 +224,7 @@ footer a{color:#a5d6a7;text-decoration:none;}
 .stat-box h3.blue{color:#1565c0;}
 .stat-box p{font-size:0.78rem;color:#777;margin-top:3px;}
 .admin-tools{
-  display:flex;gap:10px;flex-wrap:wrap;
-  padding:14px 14px 0;align-items:center;
+  display:flex;gap:10px;flex-wrap:wrap;padding:14px 14px 0;align-items:center;
 }
 .search-box{
   flex:1;min-width:180px;max-width:300px;
@@ -318,11 +275,9 @@ tr:hover td{background:#f8f8ff;}
 .dev-only{display:none;}
 .no-results{text-align:center;padding:28px;color:#888;font-size:0.92rem;}
 
-/* ── RESPONSIVE ── */
 @media(max-width:600px){
   .products{flex-direction:column;align-items:center;}
   .card{width:90%;}
-  .admin-header h1{font-size:1.05rem;}
   th,td{font-size:0.74rem;padding:7px 8px;}
   .admin-tools{flex-direction:column;align-items:stretch;}
   .search-box{max-width:100%;}
@@ -331,72 +286,40 @@ tr:hover td{background:#f8f8ff;}
 </head>
 <body>
 
-<!-- ══════════════════════════════════════
-     PAGE 0 — USER LOGIN / REGISTER
-══════════════════════════════════════ -->
+<!-- ══ PAGE 1: USER LOGIN ══ -->
 <div id="userLoginPage" class="page active">
 <div class="user-login-bg">
   <img src="logo.png" alt="Kani Milk Logo" class="user-login-logo">
-  <div class="user-login-title">Kani Milk Agency</div>
-  <div class="user-login-sub">🥛 Fresh Milk • Daily Delivery • Pure Quality</div>
+  <div class="brand-title">Kani Milk Agency</div>
+  <div class="brand-sub">🥛 Fresh Milk • Daily Delivery • Pure Quality</div>
 
-  <!-- LOGIN BOX -->
-  <div class="user-login-box" id="userLoginBox">
+  <div class="login-card">
     <h2>👤 Customer Login</h2>
     <div class="form-group">
-      <label>Phone Number</label>
-      <input id="uLoginPhone" type="tel" placeholder="10-digit phone number" maxlength="10">
-    </div>
-    <div class="form-group">
-      <label>Password</label>
-      <input id="uLoginPass" type="password" placeholder="உங்கள் password">
-    </div>
-    <div id="uLoginMsg" class="login-msg"></div>
-    <button class="primary-btn" onclick="doUserLogin()">Login →</button>
-    <div class="register-note">புதிய customer? <span onclick="showRegisterBox()">Register செய்யுங்கள்</span></div>
-  </div>
-
-  <!-- REGISTER BOX -->
-  <div class="user-login-box" id="userRegisterBox" style="display:none;">
-    <h2>📝 New Customer Register</h2>
-    <div class="form-group">
-      <label>பெயர் (Name)</label>
-      <input id="uRegName" type="text" placeholder="உங்கள் பெயர்">
+      <label>உங்கள் பெயர் (Your Name)</label>
+      <input id="uName" type="text" placeholder="பெயர் போடுங்கள்">
     </div>
     <div class="form-group">
       <label>Phone Number</label>
-      <input id="uRegPhone" type="tel" placeholder="10-digit phone number" maxlength="10">
+      <input id="uPhone" type="tel" placeholder="10-digit phone number" maxlength="10">
     </div>
-    <div class="form-group">
-      <label>Password</label>
-      <input id="uRegPass" type="password" placeholder="Password உருவாக்குங்கள்">
-    </div>
-    <div class="form-group">
-      <label>Delivery Address</label>
-      <input id="uRegAddr" type="text" placeholder="உங்கள் வீட்டு முகவரி">
-    </div>
-    <div id="uRegMsg" class="login-msg"></div>
-    <button class="primary-btn" onclick="doUserRegister()">Register & Login →</button>
-    <div class="register-note">Already registered? <span onclick="showLoginBox()">Login செய்யுங்கள்</span></div>
+    <div id="uLoginMsg" class="form-msg"></div>
+    <button class="primary-btn" onclick="doUserLogin()">உள்ளே செல்க →</button>
   </div>
 </div>
 </div>
 
 
-<!-- ══════════════════════════════════════
-     PAGE 1 — USER DASHBOARD
-══════════════════════════════════════ -->
+<!-- ══ PAGE 2: USER DASHBOARD ══ -->
 <div id="userDashPage" class="page">
 
-<!-- TOP BAR -->
 <div class="user-topbar">
-  <div class="greeting">
-    வணக்கம், <span id="dashUserName">Customer</span>! 👋
+  <div class="greeting-name" id="greetingArea" onclick="secretAdminTap()" style="cursor:default;">
+    வணக்கம், <span id="dashUserName">Customer</span>
   </div>
   <button class="user-logout-btn" onclick="doUserLogout()">Logout ↩</button>
 </div>
 
-<!-- MARQUEE -->
 <div class="marquee-wrap">
   <marquee behavior="scroll" direction="left" scrollamount="4">
     <span class="marquee-item"><img src="cowmilk.jpg" alt="">Jersey Gold Milk</span>
@@ -414,13 +337,12 @@ tr:hover td{background:#f8f8ff;}
   </marquee>
 </div>
 
-<!-- TABS -->
 <div class="user-tabs">
   <div class="user-tab active" id="tab-shop" onclick="switchTab('shop')">🛍️ Shop</div>
   <div class="user-tab" id="tab-myorders" onclick="switchTab('myorders')">📦 My Orders</div>
 </div>
 
-<!-- TAB: SHOP -->
+<!-- SHOP TAB -->
 <div class="tab-content active" id="tc-shop">
   <section class="products-section">
     <div class="section-title">🛍️ Our Products</div>
@@ -443,10 +365,10 @@ tr:hover td{background:#f8f8ff;}
   <section class="order-section">
     <div class="section-title">📋 Place Your Order</div>
     <div class="order">
-      <input id="custName"     type="text" placeholder="உங்கள் பெயர் (Your Name)">
-      <input id="custPhone"    type="tel"  placeholder="Phone Number" maxlength="10">
-      <input id="custProduct"  type="text" placeholder="மேலே product select செய்யுங்கள்" readonly>
-      <input id="custQuantity" type="text" placeholder="Quantity (எ.கா: 1 Litre)">
+      <input id="custName"     type="text"  placeholder="உங்கள் பெயர்" readonly>
+      <input id="custPhone"    type="tel"   placeholder="Phone Number" readonly>
+      <input id="custProduct"  type="text"  placeholder="மேலே product select செய்யுங்கள்" readonly>
+      <input id="custQuantity" type="text"  placeholder="Quantity (எ.கா: 1 Litre)">
       <textarea id="custAddress" placeholder="Delivery Address" rows="3"></textarea>
       <div id="orderMsg" class="order-msg"></div>
       <button id="orderBtn" onclick="sendOrder()">🛒 Order Now</button>
@@ -459,23 +381,82 @@ tr:hover td{background:#f8f8ff;}
   </footer>
 </div>
 
-<!-- TAB: MY ORDERS -->
+<!-- MY ORDERS TAB -->
 <div class="tab-content" id="tc-myorders">
   <div class="my-orders-wrap">
-    <div id="myOrdersList"><p class="no-results">⏳ Loading your orders...</p></div>
+    <div id="myOrdersList"><p class="no-results">⏳ Loading...</p></div>
   </div>
 </div>
 
-<!-- SECRET ADMIN ZONE: tap 5 times on header area bottom-right -->
-<!-- We attach a hidden counter to logo area -->
 </div><!-- end userDashPage -->
 
 
-<!-- ══════════════════════════════════════
-     PAGE 2 — ADMIN LOGIN (hidden, secret)
-══════════════════════════════════════ -->
+<!-- ══ PAGE 3: ADMIN LOGIN (SECRET) ══ -->
 <div id="adminLoginPage" class="page">
 <div class="admin-login-bg">
-  <div class="admin-login-box">
+  <div class="admin-login-card">
     <h2>🔐 Admin Login</h2>
-    <p>Au
+    <p>Authorized personnel only</p>
+    <div class="role-select">
+      <button class="role-btn active-role" id="roleOwnerBtn" onclick="selectAdminRole('owner')">👑 Owner</button>
+      <button class="role-btn" id="roleDevBtn" onclick="selectAdminRole('developer')">💻 Developer</button>
+    </div>
+    <div class="form-group">
+      <label>Username</label>
+      <input id="adminLoginUser" type="text" placeholder="username">
+    </div>
+    <div class="form-group">
+      <label>Password</label>
+      <input id="adminLoginPass" type="password" placeholder="password">
+    </div>
+    <div id="adminLoginMsg" class="form-msg"></div>
+    <button class="admin-btn" onclick="doAdminLogin()">Login →</button>
+    <span class="back-link" onclick="goBackFromAdmin()">← திரும்பு</span>
+  </div>
+</div>
+</div>
+
+
+<!-- ══ PAGE 4: ADMIN DASHBOARD ══ -->
+<div id="adminPage" class="page">
+<div class="admin-header">
+  <div>
+    <h1>🛡️ Kani Milk Admin Dashboard</h1>
+    <p style="font-size:0.8rem;opacity:0.8;margin-top:2px;">Real-time Order Management</p>
+  </div>
+  <div class="admin-header-right">
+    <span id="roleBadge" class="role-badge owner">👑 Owner</span>
+    <button class="logout-btn" onclick="doAdminLogout()">Logout ↩</button>
+  </div>
+</div>
+
+<div class="stats">
+  <div class="stat-box"><h3 id="totalCount">0</h3><p>மொத்த Orders</p></div>
+  <div class="stat-box"><h3 id="pendingCount" class="orange">0</h3><p>Pending</p></div>
+  <div class="stat-box"><h3 id="deliveredCount">0</h3><p>Delivered</p></div>
+  <div class="stat-box"><h3 id="todayCount" class="blue">0</h3><p>Today</p></div>
+</div>
+
+<div class="dev-panel" id="devPanel">
+  <h3>💻 Developer Panel</h3>
+  <div class="dev-stats-grid">
+    <div class="dev-stat"><strong id="devTotal">0</strong><span>Total</span></div>
+    <div class="dev-stat"><strong id="devToday">0</strong><span>Today</span></div>
+    <div class="dev-stat"><strong id="devPending">0</strong><span>Pending</span></div>
+    <div class="dev-stat"><strong id="devDelivered">0</strong><span>Delivered</span></div>
+    <div class="dev-stat"><strong>✅</strong><span>Firebase</span></div>
+  </div>
+</div>
+
+<div class="admin-tools">
+  <input class="search-box" id="searchBox" type="text" placeholder="🔍 பெயர் / Phone / Product..." oninput="filterOrders()">
+  <select class="filter-select" id="filterStatus" onchange="filterOrders()">
+    <option value="all">All Status</option>
+    <option value="Pending">Pending</option>
+    <option value="Delivered">Delivered</option>
+  </select>
+  <button class="export-btn" onclick="exportCSV()">📥 CSV</button>
+</div>
+
+<div class="admin-wrap">
+  <h2>📋 Live Orders <span id="orderCountLabel" style="font-size:0.83rem;color:#888;font-weight:400;"></span></h2
