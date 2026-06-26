@@ -7,32 +7,31 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:'Segoe UI',Arial,sans-serif;background:#f0faf0;min-height:100vh;}
-
 .page{display:none;}
 .page.active{display:block;}
 
-/* ── USER LOGIN ── */
-.user-login-bg{
+/* LOGIN PAGE */
+.login-bg{
   min-height:100vh;
   background:linear-gradient(160deg,#e8f5e9 0%,#f0faf0 60%,#c8e6c9 100%);
   display:flex;flex-direction:column;align-items:center;justify-content:center;
   padding:30px 16px;
 }
-.user-login-logo{
+.login-logo{
   width:90px;height:90px;border-radius:50%;object-fit:cover;
   border:4px solid #087f23;margin-bottom:12px;
-  box-shadow:0 4px 18px rgba(8,127,35,0.2);
+  box-shadow:0 4px 18px rgba(8,127,35,0.25);
 }
-.brand-title{font-size:1.75rem;font-weight:800;color:#1b5e20;margin-bottom:3px;text-align:center;}
+.brand-title{font-size:1.8rem;font-weight:800;color:#1b5e20;text-align:center;}
 .brand-sub{font-size:0.88rem;color:#555;margin-bottom:28px;text-align:center;}
 .login-card{
   background:white;width:100%;max-width:360px;
   padding:32px 26px;border-radius:22px;
-  box-shadow:0 8px 36px rgba(0,0,0,0.11);
+  box-shadow:0 8px 36px rgba(0,0,0,0.12);
 }
 .login-card h2{color:#087f23;font-size:1.25rem;font-weight:700;margin-bottom:22px;text-align:center;}
 .form-group{margin-bottom:15px;}
-.form-group label{display:block;font-size:0.83rem;font-weight:600;color:#444;margin-bottom:6px;}
+.form-group label{display:block;font-size:0.85rem;font-weight:600;color:#444;margin-bottom:6px;}
 .form-group input{
   width:100%;padding:13px 14px;border:1.5px solid #ddd;
   border-radius:10px;font-size:0.95rem;transition:border-color 0.2s;
@@ -41,7 +40,7 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:#f0faf0;min-height:100vh
 .primary-btn{
   width:100%;background:#087f23;color:white;border:none;
   padding:14px;border-radius:12px;font-size:1rem;font-weight:700;
-  cursor:pointer;margin-top:4px;transition:background 0.2s;
+  cursor:pointer;margin-top:4px;
 }
 .primary-btn:hover{background:#1b5e20;}
 .primary-btn:disabled{opacity:0.6;cursor:not-allowed;}
@@ -51,86 +50,69 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:#f0faf0;min-height:100vh
 }
 .form-msg.error{background:#fce4ec;color:#c62828;}
 .form-msg.success{background:#e8f5e9;color:#2e7d32;}
+.admin-link{
+  display:block;text-align:center;margin-top:18px;
+  color:#087f23;font-size:0.85rem;cursor:pointer;text-decoration:underline;
+}
 
-/* ── USER DASHBOARD ── */
+/* TOPBAR */
 .user-topbar{
   background:linear-gradient(135deg,#087f23,#1b5e20);
   color:white;padding:14px 20px;
-  display:flex;align-items:center;justify-content:space-between;gap:8px;
+  display:flex;align-items:center;justify-content:space-between;
 }
-.greeting-name{font-size:1rem;font-weight:700;}
-.greeting-name span{font-size:0.8rem;opacity:0.85;display:block;margin-top:2px;font-weight:400;}
-.user-logout-btn{
+.greeting{font-size:1rem;font-weight:700;}
+.greeting small{font-size:0.78rem;opacity:0.85;display:block;margin-top:2px;font-weight:400;}
+.topbar-btn{
   background:rgba(255,255,255,0.2);border:1.5px solid rgba(255,255,255,0.5);
-  color:white;padding:7px 15px;border-radius:18px;cursor:pointer;
-  font-size:0.82rem;font-weight:600;white-space:nowrap;
+  color:white;padding:7px 14px;border-radius:18px;cursor:pointer;
+  font-size:0.82rem;font-weight:600;
 }
-.user-logout-btn:hover{background:rgba(255,255,255,0.35);}
+.topbar-btn:hover{background:rgba(255,255,255,0.35);}
 
-/* ── MARQUEE ── */
-.marquee-wrap{
-  background:linear-gradient(90deg,#087f23,#1b5e20);
-  padding:12px 0;overflow:hidden;
-}
+/* MARQUEE */
+.marquee-wrap{background:linear-gradient(90deg,#1b5e20,#087f23,#1b5e20);padding:11px 0;}
 .marquee-item{
-  display:inline-flex;align-items:center;gap:10px;
+  display:inline-flex;align-items:center;gap:9px;
   background:rgba(255,255,255,0.15);border-radius:30px;
-  padding:6px 16px;margin:0 10px;
-  color:white;font-size:0.9rem;font-weight:600;white-space:nowrap;
+  padding:5px 15px;margin:0 8px;
+  color:white;font-size:0.88rem;font-weight:600;white-space:nowrap;
 }
 .marquee-item img{
-  width:36px;height:36px;object-fit:contain;
+  width:34px;height:34px;object-fit:contain;
   border-radius:50%;background:white;padding:3px;
 }
 
-/* ── TABS ── */
-.user-tabs{display:flex;background:#fff;border-bottom:2px solid #e0e0e0;}
+/* TABS */
+.user-tabs{display:flex;background:#fff;border-bottom:2px solid #e8f5e9;box-shadow:0 2px 8px rgba(0,0,0,0.06);}
 .user-tab{
   flex:1;padding:13px;text-align:center;font-size:0.9rem;font-weight:600;
-  color:#777;cursor:pointer;border-bottom:3px solid transparent;
-  transition:all 0.2s;margin-bottom:-2px;
+  color:#777;cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;
 }
-.user-tab.active{color:#087f23;border-bottom-color:#087f23;}
+.user-tab.active{color:#087f23;border-bottom-color:#087f23;background:#f9fff9;}
 .tab-content{display:none;}
 .tab-content.active{display:block;}
 
-/* ── MY ORDERS ── */
-.my-orders-wrap{padding:16px;}
-.my-order-card{
-  background:white;border-radius:14px;padding:14px 16px;margin-bottom:12px;
-  box-shadow:0 3px 10px rgba(0,0,0,0.07);border-left:4px solid #087f23;
-}
-.my-order-card.pending{border-left-color:#e65100;}
-.order-prod{font-weight:700;font-size:1rem;color:#1b5e20;}
-.order-meta{font-size:0.81rem;color:#666;margin-top:4px;}
-.order-status-badge{
-  display:inline-block;padding:3px 12px;border-radius:20px;
-  font-size:0.77rem;font-weight:700;margin-top:8px;
-}
-.status-pending{background:#fff3e0;color:#e65100;}
-.status-delivered{background:#e8f5e9;color:#087f23;}
-
-/* ── PRODUCTS ── */
+/* PRODUCTS */
 .products-section{padding:24px 16px 8px;}
 .section-title{text-align:center;color:#087f23;font-size:1.3rem;font-weight:700;margin-bottom:18px;}
 .products{display:flex;justify-content:center;gap:14px;flex-wrap:wrap;}
 .card{
-  background:white;padding:16px;width:165px;
-  text-align:center;border-radius:16px;
-  box-shadow:0 4px 14px rgba(0,0,0,0.09);
+  background:white;padding:16px;width:160px;text-align:center;
+  border-radius:16px;box-shadow:0 4px 14px rgba(0,0,0,0.09);
   transition:transform 0.2s,box-shadow 0.2s;
 }
 .card:hover{transform:translateY(-4px);box-shadow:0 8px 22px rgba(0,0,0,0.14);}
 .card img{width:110px;height:110px;object-fit:contain;margin-bottom:10px;}
-.card h3{font-size:0.83rem;color:#1b5e20;margin-bottom:10px;font-weight:600;}
+.card h3{font-size:0.82rem;color:#1b5e20;margin-bottom:10px;font-weight:600;}
 .card button{
   background:#087f23;color:white;border:none;
-  padding:8px 16px;border-radius:18px;cursor:pointer;font-size:0.83rem;
+  padding:8px 16px;border-radius:18px;cursor:pointer;font-size:0.82rem;
 }
 .card button:hover{background:#1b5e20;}
 
-/* ── ORDER FORM ── */
-.order-section{padding:22px 16px 10px;}
+/* ORDER FORM */
+.order-section{padding:20px 16px 10px;}
 .order{
   background:white;max-width:420px;margin:0 auto;
   padding:24px 20px;border-radius:20px;
@@ -143,31 +125,45 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:#f0faf0;min-height:100vh
   resize:vertical;transition:border-color 0.2s;
 }
 .order input:focus,.order textarea:focus{outline:none;border-color:#087f23;}
-.order input[readonly]{background:#f5f5f5;color:#555;cursor:default;}
+.order input[readonly]{background:#f0faf0;color:#444;cursor:default;}
 #orderBtn{
   background:#087f23;color:white;border:none;padding:14px;
   border-radius:12px;font-size:1rem;font-weight:700;cursor:pointer;
 }
 #orderBtn:hover{background:#1b5e20;}
 #orderBtn:disabled{opacity:0.6;cursor:not-allowed;}
-.order-msg{
-  padding:12px;border-radius:10px;font-size:0.9rem;
-  text-align:center;display:none;
-}
+.order-msg{padding:12px;border-radius:10px;font-size:0.9rem;text-align:center;display:none;}
 .order-msg.success{background:#e8f5e9;color:#2e7d32;border:1px solid #a5d6a7;}
 .order-msg.error{background:#fce4ec;color:#c62828;border:1px solid #ef9a9a;}
 
-/* ── FOOTER ── */
+/* MY ORDERS */
+.my-orders-wrap{padding:16px;}
+.my-order-card{
+  background:white;border-radius:14px;padding:14px 16px;margin-bottom:12px;
+  box-shadow:0 3px 10px rgba(0,0,0,0.07);border-left:4px solid #e65100;
+}
+.my-order-card.delivered{border-left-color:#087f23;}
+.order-prod{font-weight:700;font-size:1rem;color:#1b5e20;}
+.order-meta{font-size:0.8rem;color:#666;margin-top:4px;line-height:1.6;}
+.order-badge{
+  display:inline-block;padding:3px 12px;border-radius:20px;
+  font-size:0.76rem;font-weight:700;margin-top:8px;
+}
+.badge-pending{background:#fff3e0;color:#e65100;}
+.badge-delivered{background:#e8f5e9;color:#087f23;}
+.no-orders{text-align:center;padding:40px;color:#888;font-size:0.92rem;}
+
+/* FOOTER */
 footer{
   background:#1b5e20;color:white;text-align:center;
   padding:20px;margin-top:30px;font-size:0.88rem;
 }
 footer a{color:#a5d6a7;text-decoration:none;}
 
-/* ── ADMIN LOGIN ── */
+/* ADMIN LOGIN */
 .admin-login-bg{
   min-height:100vh;
-  background:linear-gradient(160deg,#e8eaf6,#f5f5f5 60%,#c5cae9);
+  background:linear-gradient(160deg,#e8eaf6,#f5f5f5,#c5cae9);
   display:flex;align-items:center;justify-content:center;padding:30px 16px;
 }
 .admin-login-card{
@@ -177,43 +173,28 @@ footer a{color:#a5d6a7;text-decoration:none;}
 }
 .admin-login-card h2{color:#1a237e;font-size:1.25rem;font-weight:700;margin-bottom:6px;text-align:center;}
 .admin-login-card p{text-align:center;color:#777;font-size:0.83rem;margin-bottom:18px;}
-.admin-login-card .form-group input:focus{border-color:#1a237e;}
 .admin-btn{
   width:100%;background:#1a237e;color:white;border:none;
   padding:14px;border-radius:12px;font-size:1rem;font-weight:700;cursor:pointer;
 }
 .admin-btn:hover{background:#283593;}
-.role-select{display:flex;gap:10px;margin-bottom:18px;}
-.role-btn{
-  flex:1;padding:10px;border-radius:10px;border:2px solid #ddd;
-  background:white;font-size:0.87rem;font-weight:600;cursor:pointer;
-  transition:all 0.2s;color:#555;
-}
-.role-btn.active-role{border-color:#1a237e;background:#e8eaf6;color:#1a237e;}
 .back-link{
   display:block;text-align:center;margin-top:16px;
   color:#1a237e;cursor:pointer;font-size:0.87rem;text-decoration:underline;
 }
 
-/* ── ADMIN DASHBOARD ── */
+/* ADMIN DASHBOARD */
 .admin-header{
   background:linear-gradient(135deg,#1a237e,#283593);
   color:white;padding:18px 22px;
   display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;
 }
 .admin-header h1{font-size:1.3rem;font-weight:700;}
-.admin-header-right{display:flex;gap:10px;align-items:center;flex-wrap:wrap;}
 .logout-btn{
   background:rgba(255,255,255,0.18);border:1.5px solid rgba(255,255,255,0.4);
   color:white;padding:7px 16px;border-radius:18px;cursor:pointer;font-size:0.83rem;font-weight:600;
 }
 .logout-btn:hover{background:rgba(255,255,255,0.3);}
-.role-badge{
-  padding:5px 14px;border-radius:20px;font-size:0.77rem;font-weight:700;
-  color:white;border:1px solid rgba(255,255,255,0.5);background:rgba(255,255,255,0.2);
-}
-.role-badge.owner{background:rgba(255,193,7,0.35);border-color:rgba(255,193,7,0.6);}
-.role-badge.dev{background:rgba(0,188,212,0.35);border-color:rgba(0,188,212,0.6);}
 .stats{display:flex;justify-content:center;gap:14px;flex-wrap:wrap;padding:18px 14px 6px;}
 .stat-box{
   background:white;padding:13px 22px;border-radius:14px;
@@ -223,43 +204,27 @@ footer a{color:#a5d6a7;text-decoration:none;}
 .stat-box h3.orange{color:#e65100;}
 .stat-box h3.blue{color:#1565c0;}
 .stat-box p{font-size:0.78rem;color:#777;margin-top:3px;}
-.admin-tools{
-  display:flex;gap:10px;flex-wrap:wrap;padding:14px 14px 0;align-items:center;
-}
+.admin-tools{display:flex;gap:10px;flex-wrap:wrap;padding:14px 14px 0;align-items:center;}
 .search-box{
-  flex:1;min-width:180px;max-width:300px;
-  padding:10px 14px;border:1.5px solid #ddd;border-radius:10px;
-  font-size:0.88rem;outline:none;
+  flex:1;min-width:160px;padding:10px 14px;
+  border:1.5px solid #ddd;border-radius:10px;font-size:0.88rem;outline:none;
 }
 .search-box:focus{border-color:#1a237e;}
 .filter-select{
   padding:10px 12px;border:1.5px solid #ddd;border-radius:10px;
-  font-size:0.86rem;background:white;cursor:pointer;outline:none;
+  font-size:0.85rem;background:white;cursor:pointer;
 }
 .export-btn{
   background:#1a237e;color:white;border:none;
-  padding:10px 16px;border-radius:10px;cursor:pointer;
-  font-size:0.84rem;font-weight:600;white-space:nowrap;
+  padding:10px 16px;border-radius:10px;cursor:pointer;font-size:0.84rem;font-weight:600;
 }
 .export-btn:hover{background:#283593;}
-.dev-panel{
-  background:#e3f2fd;border:2px solid #90caf9;border-radius:14px;
-  padding:14px 16px;margin:14px 14px 0;display:none;
-}
-.dev-panel h3{color:#1565c0;font-size:0.95rem;margin-bottom:10px;}
-.dev-stats-grid{display:flex;gap:10px;flex-wrap:wrap;}
-.dev-stat{
-  background:white;border-radius:10px;padding:10px 14px;
-  text-align:center;min-width:90px;box-shadow:0 2px 8px rgba(0,0,0,0.06);
-}
-.dev-stat strong{display:block;font-size:1.4rem;color:#1565c0;}
-.dev-stat span{font-size:0.73rem;color:#888;}
 .admin-wrap{padding:14px 14px 30px;}
 .admin-wrap h2{color:#1a237e;margin-bottom:10px;font-size:1.1rem;}
 .table-wrap{overflow-x:auto;border-radius:12px;box-shadow:0 3px 14px rgba(0,0,0,0.08);}
 table{width:100%;border-collapse:collapse;background:white;}
 thead{background:#1a237e;color:white;}
-th,td{padding:10px 12px;text-align:left;font-size:0.83rem;border-bottom:1px solid #f0f0f0;}
+th,td{padding:10px 12px;text-align:left;font-size:0.82rem;border-bottom:1px solid #f0f0f0;}
 tr:last-child td{border-bottom:none;}
 tr:hover td{background:#f8f8ff;}
 .status-btn{
@@ -272,27 +237,24 @@ tr:hover td{background:#f8f8ff;}
   border-radius:8px;cursor:pointer;font-size:0.77rem;font-weight:600;
 }
 .delete-btn:hover{background:#b71c1c;}
-.dev-only{display:none;}
-.no-results{text-align:center;padding:28px;color:#888;font-size:0.92rem;}
 
 @media(max-width:600px){
   .products{flex-direction:column;align-items:center;}
   .card{width:90%;}
-  th,td{font-size:0.74rem;padding:7px 8px;}
-  .admin-tools{flex-direction:column;align-items:stretch;}
-  .search-box{max-width:100%;}
+  th,td{font-size:0.73rem;padding:7px 8px;}
+  .admin-tools{flex-direction:column;}
+  .search-box{min-width:100%;}
 }
 </style>
 </head>
 <body>
 
-<!-- ══ PAGE 1: USER LOGIN ══ -->
+<!-- PAGE 1: CUSTOMER LOGIN -->
 <div id="userLoginPage" class="page active">
-<div class="user-login-bg">
-  <img src="logo.png" alt="Kani Milk Logo" class="user-login-logo">
+<div class="login-bg">
+  <img src="logo.png" alt="Kani Milk Logo" class="login-logo">
   <div class="brand-title">Kani Milk Agency</div>
   <div class="brand-sub">🥛 Fresh Milk • Daily Delivery • Pure Quality</div>
-
   <div class="login-card">
     <h2>👤 Customer Login</h2>
     <div class="form-group">
@@ -305,35 +267,37 @@ tr:hover td{background:#f8f8ff;}
     </div>
     <div id="uLoginMsg" class="form-msg"></div>
     <button class="primary-btn" onclick="doUserLogin()">உள்ளே செல்க →</button>
+    <span class="admin-link" onclick="showPage('adminLoginPage')">🔐 Admin Login</span>
   </div>
 </div>
 </div>
 
 
-<!-- ══ PAGE 2: USER DASHBOARD ══ -->
+<!-- PAGE 2: USER DASHBOARD -->
 <div id="userDashPage" class="page">
 
 <div class="user-topbar">
-  <div class="greeting-name" id="greetingArea" onclick="secretAdminTap()" style="cursor:default;">
-    வணக்கம், <span id="dashUserName">Customer</span>
+  <div class="greeting">
+    வணக்கம்! 👋
+    <small id="dashUserName">Customer</small>
   </div>
-  <button class="user-logout-btn" onclick="doUserLogout()">Logout ↩</button>
+  <button class="topbar-btn" onclick="doUserLogout()">Logout ↩</button>
 </div>
 
 <div class="marquee-wrap">
   <marquee behavior="scroll" direction="left" scrollamount="4">
     <span class="marquee-item"><img src="cowmilk.jpg" alt="">Jersey Gold Milk</span>
-    <span class="marquee-item"><img src="bluetonedmilk.jpg" alt="">Blue Toned Milk</span>
+    <span class="marquee-item"><img src="bluetonedmilk.png" alt="">Blue Toned Milk</span>
     <span class="marquee-item"><img src="Enrichedtonedmilk.jpg" alt="">Enriched Toned Milk</span>
     <span class="marquee-item"><img src="fullcreamtonedmilk.jpg" alt="">Full Cream Toned Milk</span>
-    <span class="marquee-item"><img src="Richtonedmilk.jpg" alt="">Rich Toned Milk</span>
+    <span class="marquee-item"><img src="Richtonedmilk.png" alt="">Rich Toned Milk</span>
     <span class="marquee-item"><img src="standardizedmilk.jpg" alt="">Standardized Milk</span>
     <span class="marquee-item"><img src="tonedgreencurd.jpg" alt="">Toned Curd</span>
     <span class="marquee-item"><img src="tonedcurd.png" alt="">Fresh Curd</span>
     <span class="marquee-item"><img src="littlecurd.jpg" alt="">Little Curd</span>
     <span class="marquee-item"><img src="chocolate.png" alt="">Chocolate</span>
-    <span class="marquee-item"><img src="Strawberry50ml.jpg" alt="">Strawberry 50ml</span>
-    <span class="marquee-item"><img src="goldicecream.jpg" alt="">Gold Ice Cream</span>
+    <span class="marquee-item"><img src="Strawberry50ml.png" alt="">Strawberry 50ml</span>
+    <span class="marquee-item"><img src="goldicecream.png" alt="">Gold Ice Cream</span>
   </marquee>
 </div>
 
@@ -347,29 +311,29 @@ tr:hover td{background:#f8f8ff;}
   <section class="products-section">
     <div class="section-title">🛍️ Our Products</div>
     <div class="products">
-      <div class="card"><img src="cowmilk.jpg" alt="Jersey Gold Milk"><h3>Jersey Gold Milk</h3><button onclick="selectProduct('Jersey Gold Milk')">Select</button></div>
-      <div class="card"><img src="bluetonedmilk.jpg" alt="Blue Toned Milk"><h3>Blue Toned Milk</h3><button onclick="selectProduct('Blue Toned Milk')">Select</button></div>
-      <div class="card"><img src="Enrichedtonedmilk.jpg" alt="Enriched Toned Milk"><h3>Enriched Toned Milk</h3><button onclick="selectProduct('Enriched Toned Milk')">Select</button></div>
-      <div class="card"><img src="fullcreamtonedmilk.jpg" alt="Full Cream Toned Milk"><h3>Full Cream Toned Milk</h3><button onclick="selectProduct('Full Cream Toned Milk')">Select</button></div>
-      <div class="card"><img src="Richtonedmilk.jpg" alt="Rich Toned Milk"><h3>Rich Toned Milk</h3><button onclick="selectProduct('Rich Toned Milk')">Select</button></div>
-      <div class="card"><img src="standardizedmilk.jpg" alt="Standardized Milk"><h3>Standardized Milk</h3><button onclick="selectProduct('Standardized Milk')">Select</button></div>
-      <div class="card"><img src="tonedgreencurd.jpg" alt="Toned Curd"><h3>Toned Curd</h3><button onclick="selectProduct('Toned Curd')">Select</button></div>
-      <div class="card"><img src="tonedcurd.png" alt="Fresh Curd"><h3>Fresh Curd</h3><button onclick="selectProduct('Fresh Curd')">Select</button></div>
-      <div class="card"><img src="littlecurd.jpg" alt="Little Curd"><h3>Little Curd</h3><button onclick="selectProduct('Little Curd')">Select</button></div>
-      <div class="card"><img src="chocolate.png" alt="Chocolate"><h3>Chocolate</h3><button onclick="selectProduct('Chocolate')">Select</button></div>
-      <div class="card"><img src="Strawberry50ml.jpg" alt="Strawberry 50ml"><h3>Strawberry 50ml</h3><button onclick="selectProduct('Strawberry 50ml')">Select</button></div>
-      <div class="card"><img src="goldicecream.jpg" alt="Gold Ice Cream"><h3>Gold Ice Cream</h3><button onclick="selectProduct('Gold Ice Cream')">Select</button></div>
+      <div class="card"><img src="cowmilk.jpg" alt=""><h3>Jersey Gold Milk</h3><button onclick="selectProduct('Jersey Gold Milk')">Select</button></div>
+      <div class="card"><img src="bluetonedmilk.png" alt=""><h3>Blue Toned Milk</h3><button onclick="selectProduct('Blue Toned Milk')">Select</button></div>
+      <div class="card"><img src="Enrichedtonedmilk.jpg" alt=""><h3>Enriched Toned Milk</h3><button onclick="selectProduct('Enriched Toned Milk')">Select</button></div>
+      <div class="card"><img src="fullcreamtonedmilk.jpg" alt=""><h3>Full Cream Toned Milk</h3><button onclick="selectProduct('Full Cream Toned Milk')">Select</button></div>
+      <div class="card"><img src="Richtonedmilk.png" alt=""><h3>Rich Toned Milk</h3><button onclick="selectProduct('Rich Toned Milk')">Select</button></div>
+      <div class="card"><img src="standardizedmilk.jpg" alt=""><h3>Standardized Milk</h3><button onclick="selectProduct('Standardized Milk')">Select</button></div>
+      <div class="card"><img src="tonedgreencurd.jpg" alt=""><h3>Toned Curd</h3><button onclick="selectProduct('Toned Curd')">Select</button></div>
+      <div class="card"><img src="tonedcurd.png" alt=""><h3>Fresh Curd</h3><button onclick="selectProduct('Fresh Curd')">Select</button></div>
+      <div class="card"><img src="littlecurd.jpg" alt=""><h3>Little Curd</h3><button onclick="selectProduct('Little Curd')">Select</button></div>
+      <div class="card"><img src="chocolate.png" alt=""><h3>Chocolate</h3><button onclick="selectProduct('Chocolate')">Select</button></div>
+      <div class="card"><img src="Strawberry50ml.png" alt=""><h3>Strawberry 50ml</h3><button onclick="selectProduct('Strawberry 50ml')">Select</button></div>
+      <div class="card"><img src="goldicecream.png" alt=""><h3>Gold Ice Cream</h3><button onclick="selectProduct('Gold Ice Cream')">Select</button></div>
     </div>
   </section>
 
   <section class="order-section">
     <div class="section-title">📋 Place Your Order</div>
     <div class="order">
-      <input id="custName"     type="text"  placeholder="உங்கள் பெயர்" readonly>
-      <input id="custPhone"    type="tel"   placeholder="Phone Number" readonly>
-      <input id="custProduct"  type="text"  placeholder="மேலே product select செய்யுங்கள்" readonly>
-      <input id="custQuantity" type="text"  placeholder="Quantity (எ.கா: 1 Litre)">
-      <textarea id="custAddress" placeholder="Delivery Address" rows="3"></textarea>
+      <input id="custName"     type="text" placeholder="உங்கள் பெயர்" readonly>
+      <input id="custPhone"    type="tel"  placeholder="Phone Number" readonly>
+      <input id="custProduct"  type="text" placeholder="மேலே product select செய்யுங்கள்" readonly>
+      <input id="custQuantity" type="text" placeholder="Quantity (எ.கா: 1 Litre)">
+      <textarea id="custAddress" placeholder="Delivery Address - முழு முகவரி" rows="3"></textarea>
       <div id="orderMsg" class="order-msg"></div>
       <button id="orderBtn" onclick="sendOrder()">🛒 Order Now</button>
     </div>
@@ -384,26 +348,22 @@ tr:hover td{background:#f8f8ff;}
 <!-- MY ORDERS TAB -->
 <div class="tab-content" id="tc-myorders">
   <div class="my-orders-wrap">
-    <div id="myOrdersList"><p class="no-results">⏳ Loading...</p></div>
+    <div id="myOrdersList"><p class="no-orders">📦 My Orders இங்கே தெரியும்</p></div>
   </div>
 </div>
 
 </div><!-- end userDashPage -->
 
 
-<!-- ══ PAGE 3: ADMIN LOGIN (SECRET) ══ -->
+<!-- PAGE 3: ADMIN LOGIN -->
 <div id="adminLoginPage" class="page">
 <div class="admin-login-bg">
   <div class="admin-login-card">
     <h2>🔐 Admin Login</h2>
     <p>Authorized personnel only</p>
-    <div class="role-select">
-      <button class="role-btn active-role" id="roleOwnerBtn" onclick="selectAdminRole('owner')">👑 Owner</button>
-      <button class="role-btn" id="roleDevBtn" onclick="selectAdminRole('developer')">💻 Developer</button>
-    </div>
     <div class="form-group">
       <label>Username</label>
-      <input id="adminLoginUser" type="text" placeholder="username">
+      <input id="adminLoginUser" type="text" placeholder="admin username">
     </div>
     <div class="form-group">
       <label>Password</label>
@@ -411,23 +371,20 @@ tr:hover td{background:#f8f8ff;}
     </div>
     <div id="adminLoginMsg" class="form-msg"></div>
     <button class="admin-btn" onclick="doAdminLogin()">Login →</button>
-    <span class="back-link" onclick="goBackFromAdmin()">← திரும்பு</span>
+    <span class="back-link" onclick="showPage('userLoginPage')">← Customer Login-க்கு திரும்பு</span>
   </div>
 </div>
 </div>
 
 
-<!-- ══ PAGE 4: ADMIN DASHBOARD ══ -->
+<!-- PAGE 4: ADMIN DASHBOARD -->
 <div id="adminPage" class="page">
 <div class="admin-header">
   <div>
-    <h1>🛡️ Kani Milk Admin Dashboard</h1>
+    <h1>🛡️ Kani Milk Admin</h1>
     <p style="font-size:0.8rem;opacity:0.8;margin-top:2px;">Real-time Order Management</p>
   </div>
-  <div class="admin-header-right">
-    <span id="roleBadge" class="role-badge owner">👑 Owner</span>
-    <button class="logout-btn" onclick="doAdminLogout()">Logout ↩</button>
-  </div>
+  <button class="logout-btn" onclick="doAdminLogout()">Logout ↩</button>
 </div>
 
 <div class="stats">
@@ -437,19 +394,9 @@ tr:hover td{background:#f8f8ff;}
   <div class="stat-box"><h3 id="todayCount" class="blue">0</h3><p>Today</p></div>
 </div>
 
-<div class="dev-panel" id="devPanel">
-  <h3>💻 Developer Panel</h3>
-  <div class="dev-stats-grid">
-    <div class="dev-stat"><strong id="devTotal">0</strong><span>Total</span></div>
-    <div class="dev-stat"><strong id="devToday">0</strong><span>Today</span></div>
-    <div class="dev-stat"><strong id="devPending">0</strong><span>Pending</span></div>
-    <div class="dev-stat"><strong id="devDelivered">0</strong><span>Delivered</span></div>
-    <div class="dev-stat"><strong>✅</strong><span>Firebase</span></div>
-  </div>
-</div>
-
 <div class="admin-tools">
-  <input class="search-box" id="searchBox" type="text" placeholder="🔍 பெயர் / Phone / Product..." oninput="filterOrders()">
+  <input class="search-box" id="searchBox" type="text"
+    placeholder="🔍 பெயர் / Phone / Product..." oninput="filterOrders()">
   <select class="filter-select" id="filterStatus" onchange="filterOrders()">
     <option value="all">All Status</option>
     <option value="Pending">Pending</option>
@@ -459,4 +406,82 @@ tr:hover td{background:#f8f8ff;}
 </div>
 
 <div class="admin-wrap">
-  <h2>📋 Live Orders <span id="orderCountLabel" style="font-size:0.83rem;color:#888;font-weight:400;"></span></h2
+  <h2>📋 Live Orders <span id="orderCountLabel" style="font-size:0.82rem;color:#888;font-weight:400;"></span></h2>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>#</th><th>பெயர்</th><th>Phone</th><th>Product</th>
+          <th>Qty</th><th>Address</th><th>நேரம்</th><th>Status</th><th>Del</th>
+        </tr>
+      </thead>
+      <tbody id="ordersBody">
+        <tr><td colspan="9" style="text-align:center;padding:30px;color:#888;">⏳ Loading...</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+</div>
+
+
+<!-- FIREBASE v8 -->
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+<script>
+
+/* ===== CREDENTIALS ===== */
+var ADMIN_USER = "kani2025";
+var ADMIN_PASS = "milk@admin";
+
+/* ===== FIREBASE INIT ===== */
+if (!firebase.apps.length) {
+  firebase.initializeApp({
+    apiKey:            "AIzaSyAQAY_wXDlU5twKU9DLZCh3lgfBfLAy7AQ",
+    authDomain:        "kani-milk-agency-9323b.firebaseapp.com",
+    projectId:         "kani-milk-agency-9323b",
+    storageBucket:     "kani-milk-agency-9323b.firebasestorage.app",
+    messagingSenderId: "317392951345",
+    appId:             "1:317392951345:web:1768ca6b7725812491dd10"
+  });
+}
+var db = firebase.firestore();
+var unsubscribe = null;
+var allOrders   = [];
+var userName    = "";
+var userPhone   = "";
+
+/* ===== PAGE NAV ===== */
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(function(p){
+    p.classList.remove('active');
+  });
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
+}
+
+/* ===== TABS ===== */
+function switchTab(tab) {
+  ['shop','myorders'].forEach(function(t){
+    document.getElementById('tab-'+t).classList.remove('active');
+    document.getElementById('tc-'+t).classList.remove('active');
+  });
+  document.getElementById('tab-'+tab).classList.add('active');
+  document.getElementById('tc-'+tab).classList.add('active');
+  if (tab === 'myorders') loadMyOrders();
+}
+
+/* ===== USER LOGIN ===== */
+function doUserLogin() {
+  var nameVal  = document.getElementById("uName").value.trim();
+  var phoneVal = document.getElementById("uPhone").value.trim();
+  var msgEl    = document.getElementById("uLoginMsg");
+
+  if (!nameVal) {
+    msgEl.textContent = "⚠️ பெயர் போடுங்கள்!";
+    msgEl.className   = "form-msg error";
+    msgEl.style.display = "block";
+    return;
+  }
+  if (!phoneVal || !/^\d{10}$/.test(phoneVal)) {
+    msgEl.textContent = "⚠️ சரியான 10-digit phone number போடுங்கள்!";
+    msgEl.className   = "form-msg error
