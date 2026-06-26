@@ -21,8 +21,6 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:#f0faf0;min-height:100vh
   width:90px;height:90px;border-radius:50%;object-fit:cover;
   border:4px solid #087f23;margin-bottom:12px;
   box-shadow:0 4px 18px rgba(8,127,35,0.25);
-  display:flex;align-items:center;justify-content:center;
-  background:#087f23;color:white;font-size:2.5rem;font-weight:bold;
 }
 .brand-title{font-size:1.8rem;font-weight:800;color:#1b5e20;text-align:center;}
 .brand-sub{font-size:0.88rem;color:#555;margin-bottom:28px;text-align:center;}
@@ -73,21 +71,16 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:#f0faf0;min-height:100vh
 .topbar-btn:hover{background:rgba(255,255,255,0.35);}
 
 /* MARQUEE */
-.marquee-wrap{background:linear-gradient(90deg,#1b5e20,#087f23,#1b5e20);padding:11px 0;overflow:hidden;}
-.marquee-inner{display:flex;animation:marquee 25s linear infinite;white-space:nowrap;}
+.marquee-wrap{background:linear-gradient(90deg,#1b5e20,#087f23,#1b5e20);padding:11px 0;}
 .marquee-item{
   display:inline-flex;align-items:center;gap:9px;
   background:rgba(255,255,255,0.15);border-radius:30px;
   padding:5px 15px;margin:0 8px;
   color:white;font-size:0.88rem;font-weight:600;white-space:nowrap;
 }
-.marquee-item span{
-  width:34px;height:34px;display:inline-flex;align-items:center;justify-content:center;
-  border-radius:50%;background:white;padding:3px;font-size:1.2rem;
-}
-@keyframes marquee{
-  0%{transform:translateX(0);}
-  100%{transform:translateX(-50%);}
+.marquee-item img{
+  width:34px;height:34px;object-fit:contain;
+  border-radius:50%;background:white;padding:3px;
 }
 
 /* TABS */
@@ -110,7 +103,7 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:#f0faf0;min-height:100vh
   transition:transform 0.2s,box-shadow 0.2s;
 }
 .card:hover{transform:translateY(-4px);box-shadow:0 8px 22px rgba(0,0,0,0.14);}
-.card .product-icon{font-size:4rem;margin-bottom:10px;display:block;}
+.card img{width:110px;height:110px;object-fit:contain;margin-bottom:10px;}
 .card h3{font-size:0.82rem;color:#1b5e20;margin-bottom:10px;font-weight:600;}
 .card button{
   background:#087f23;color:white;border:none;
@@ -259,18 +252,18 @@ tr:hover td{background:#f8f8ff;}
 <!-- PAGE 1: CUSTOMER LOGIN -->
 <div id="userLoginPage" class="page active">
 <div class="login-bg">
-  <div class="login-logo">🥛</div>
+  <img src="logo.png" alt="Kani Milk Logo" class="login-logo">
   <div class="brand-title">Kani Milk Agency</div>
   <div class="brand-sub">🥛 Fresh Milk • Daily Delivery • Pure Quality</div>
   <div class="login-card">
     <h2>👤 Customer Login</h2>
     <div class="form-group">
       <label>உங்கள் பெயர் (Your Name)</label>
-      <input id="uName" type="text" placeholder="பெயர் போடுங்கள்" value="Muthuvel">
+      <input id="uName" type="text" placeholder="பெயர் போடுங்கள்">
     </div>
     <div class="form-group">
       <label>Phone Number</label>
-      <input id="uPhone" type="tel" placeholder="10-digit phone number" maxlength="10" value="8838416013">
+      <input id="uPhone" type="tel" placeholder="10-digit phone number" maxlength="10">
     </div>
     <div id="uLoginMsg" class="form-msg"></div>
     <button class="primary-btn" onclick="doUserLogin()">உள்ளே செல்க →</button>
@@ -291,33 +284,20 @@ tr:hover td{background:#f8f8ff;}
 </div>
 
 <div class="marquee-wrap">
-  <div class="marquee-inner">
-    <span class="marquee-item"><span>🥛</span>Jersey Gold Milk</span>
-    <span class="marquee-item"><span>🥛</span>Blue Toned Milk</span>
-    <span class="marquee-item"><span>🥛</span>Enriched Toned Milk</span>
-    <span class="marquee-item"><span>🥛</span>Full Cream Toned Milk</span>
-    <span class="marquee-item"><span>🥛</span>Rich Toned Milk</span>
-    <span class="marquee-item"><span>🥛</span>Standardized Milk</span>
-    <span class="marquee-item"><span>🧈</span>Toned Curd</span>
-    <span class="marquee-item"><span>🧈</span>Fresh Curd</span>
-    <span class="marquee-item"><span>🧈</span>Little Curd</span>
-    <span class="marquee-item"><span>🍫</span>Chocolate</span>
-    <span class="marquee-item"><span>🍓</span>Strawberry 50ml</span>
-    <span class="marquee-item"><span>🍦</span>Gold Ice Cream</span>
-    <!-- Duplicate for seamless loop -->
-    <span class="marquee-item"><span>🥛</span>Jersey Gold Milk</span>
-    <span class="marquee-item"><span>🥛</span>Blue Toned Milk</span>
-    <span class="marquee-item"><span>🥛</span>Enriched Toned Milk</span>
-    <span class="marquee-item"><span>🥛</span>Full Cream Toned Milk</span>
-    <span class="marquee-item"><span>🥛</span>Rich Toned Milk</span>
-    <span class="marquee-item"><span>🥛</span>Standardized Milk</span>
-    <span class="marquee-item"><span>🧈</span>Toned Curd</span>
-    <span class="marquee-item"><span>🧈</span>Fresh Curd</span>
-    <span class="marquee-item"><span>🧈</span>Little Curd</span>
-    <span class="marquee-item"><span>🍫</span>Chocolate</span>
-    <span class="marquee-item"><span>🍓</span>Strawberry 50ml</span>
-    <span class="marquee-item"><span>🍦</span>Gold Ice Cream</span>
-  </div>
+  <marquee behavior="scroll" direction="left" scrollamount="4">
+    <span class="marquee-item"><img src="cowmilk.jpg" alt="">Jersey Gold Milk</span>
+    <span class="marquee-item"><img src="bluetonedmilk.png" alt="">Blue Toned Milk</span>
+    <span class="marquee-item"><img src="Enrichedtonedmilk.jpg" alt="">Enriched Toned Milk</span>
+    <span class="marquee-item"><img src="fullcreamtonedmilk.jpg" alt="">Full Cream Toned Milk</span>
+    <span class="marquee-item"><img src="Richtonedmilk.png" alt="">Rich Toned Milk</span>
+    <span class="marquee-item"><img src="standardizedmilk.jpg" alt="">Standardized Milk</span>
+    <span class="marquee-item"><img src="tonedgreencurd.jpg" alt="">Toned Curd</span>
+    <span class="marquee-item"><img src="tonedcurd.png" alt="">Fresh Curd</span>
+    <span class="marquee-item"><img src="littlecurd.jpg" alt="">Little Curd</span>
+    <span class="marquee-item"><img src="chocolate.png" alt="">Chocolate</span>
+    <span class="marquee-item"><img src="Strawberry50ml.png" alt="">Strawberry 50ml</span>
+    <span class="marquee-item"><img src="goldicecream.png" alt="">Gold Ice Cream</span>
+  </marquee>
 </div>
 
 <div class="user-tabs">
@@ -330,18 +310,18 @@ tr:hover td{background:#f8f8ff;}
   <section class="products-section">
     <div class="section-title">🛍️ Our Products</div>
     <div class="products">
-      <div class="card"><span class="product-icon">🥛</span><h3>Jersey Gold Milk</h3><button onclick="selectProduct('Jersey Gold Milk')">Select</button></div>
-      <div class="card"><span class="product-icon">🥛</span><h3>Blue Toned Milk</h3><button onclick="selectProduct('Blue Toned Milk')">Select</button></div>
-      <div class="card"><span class="product-icon">🥛</span><h3>Enriched Toned Milk</h3><button onclick="selectProduct('Enriched Toned Milk')">Select</button></div>
-      <div class="card"><span class="product-icon">🥛</span><h3>Full Cream Toned Milk</h3><button onclick="selectProduct('Full Cream Toned Milk')">Select</button></div>
-      <div class="card"><span class="product-icon">🥛</span><h3>Rich Toned Milk</h3><button onclick="selectProduct('Rich Toned Milk')">Select</button></div>
-      <div class="card"><span class="product-icon">🥛</span><h3>Standardized Milk</h3><button onclick="selectProduct('Standardized Milk')">Select</button></div>
-      <div class="card"><span class="product-icon">🧈</span><h3>Toned Curd</h3><button onclick="selectProduct('Toned Curd')">Select</button></div>
-      <div class="card"><span class="product-icon">🧈</span><h3>Fresh Curd</h3><button onclick="selectProduct('Fresh Curd')">Select</button></div>
-      <div class="card"><span class="product-icon">🧈</span><h3>Little Curd</h3><button onclick="selectProduct('Little Curd')">Select</button></div>
-      <div class="card"><span class="product-icon">🍫</span><h3>Chocolate</h3><button onclick="selectProduct('Chocolate')">Select</button></div>
-      <div class="card"><span class="product-icon">🍓</span><h3>Strawberry 50ml</h3><button onclick="selectProduct('Strawberry 50ml')">Select</button></div>
-      <div class="card"><span class="product-icon">🍦</span><h3>Gold Ice Cream</h3><button onclick="selectProduct('Gold Ice Cream')">Select</button></div>
+      <div class="card"><img src="cowmilk.jpg" alt=""><h3>Jersey Gold Milk</h3><button onclick="selectProduct('Jersey Gold Milk')">Select</button></div>
+      <div class="card"><img src="bluetonedmilk.png" alt=""><h3>Blue Toned Milk</h3><button onclick="selectProduct('Blue Toned Milk')">Select</button></div>
+      <div class="card"><img src="Enrichedtonedmilk.jpg" alt=""><h3>Enriched Toned Milk</h3><button onclick="selectProduct('Enriched Toned Milk')">Select</button></div>
+      <div class="card"><img src="fullcreamtonedmilk.jpg" alt=""><h3>Full Cream Toned Milk</h3><button onclick="selectProduct('Full Cream Toned Milk')">Select</button></div>
+      <div class="card"><img src="Richtonedmilk.png" alt=""><h3>Rich Toned Milk</h3><button onclick="selectProduct('Rich Toned Milk')">Select</button></div>
+      <div class="card"><img src="standardizedmilk.jpg" alt=""><h3>Standardized Milk</h3><button onclick="selectProduct('Standardized Milk')">Select</button></div>
+      <div class="card"><img src="tonedgreencurd.jpg" alt=""><h3>Toned Curd</h3><button onclick="selectProduct('Toned Curd')">Select</button></div>
+      <div class="card"><img src="tonedcurd.png" alt=""><h3>Fresh Curd</h3><button onclick="selectProduct('Fresh Curd')">Select</button></div>
+      <div class="card"><img src="littlecurd.jpg" alt=""><h3>Little Curd</h3><button onclick="selectProduct('Little Curd')">Select</button></div>
+      <div class="card"><img src="chocolate.png" alt=""><h3>Chocolate</h3><button onclick="selectProduct('Chocolate')">Select</button></div>
+      <div class="card"><img src="Strawberry50ml.png" alt=""><h3>Strawberry 50ml</h3><button onclick="selectProduct('Strawberry 50ml')">Select</button></div>
+      <div class="card"><img src="goldicecream.png" alt=""><h3>Gold Ice Cream</h3><button onclick="selectProduct('Gold Ice Cream')">Select</button></div>
     </div>
   </section>
 
@@ -443,34 +423,62 @@ tr:hover td{background:#f8f8ff;}
 <!-- FIREBASE v8 -->
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-<script>
 
-/* ===== CREDENTIALS ===== */
+<script>
+/* ===== FIREBASE CONFIGURATION ===== */
+var firebaseConfig = {
+  apiKey:            "AIzaSyAQAY_wXDlU5twKU9DLZCh3lgfBfLAy7AQ",
+  authDomain:        "kani-milk-agency-9323b.firebaseapp.com",
+  projectId:         "kani-milk-agency-9323b",
+  storageBucket:     "kani-milk-agency-9323b.firebasestorage.app",
+  messagingSenderId: "317392951345",
+  appId:             "1:317392951345:web:1768ca6b7725812491dd10"
+};
+
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+var db = firebase.firestore();
+
+/* ===== GLOBAL VARIABLES ===== */
 var ADMIN_USER = "kani2025";
 var ADMIN_PASS = "milk@admin";
+var allOrders   = [];
+var userName    = "";
+var userPhone   = "";
+var unsubscribe = null;
 
-/* ===== FIREBASE INIT ===== */
-var db = null;
-try {
-  if (typeof firebase !== 'undefined' && !firebase.apps.length) {
-    firebase.initializeApp({
-      apiKey:            "AIzaSyAQAY_wXDlU5twKU9DLZCh3lgfBfLAy7AQ",
-      authDomain:        "kani-milk-agency-9323b.firebaseapp.com",
-      projectId:         "kani-milk-agency-9323b",
-      storageBucket:     "kani-milk-agency-9323b.firebasestorage.app",
-      messagingSenderId: "317392951345",
-      appId:             "1:317392951345:web:1768ca6b7725812491dd10"
-    });
-    db = firebase.firestore();
-    console.log('Firebase initialized successfully');
-  } else if (typeof firebase !== 'undefined') {
-    db = firebase.firestore();
-  }
-} catch(e) {
-  console.warn('Firebase init error:', e);
+/* ===== PAGE NAVIGATION ===== */
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(function(p){
+    p.classList.remove('active');
+  });
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
 }
 
-var unsubscribe = null;
-var allOrders   = [];
-var u
+/* ===== TABS ===== */
+function switchTab(tab) {
+  ['shop','myorders'].forEach(function(t){
+    document.getElementById('tab-'+t).classList.remove('active');
+    document.getElementById('tc-'+t).classList.remove('active');
+  });
+  document.getElementById('tab-'+tab).classList.add('active');
+  document.getElementById('tc-'+tab).classList.add('active');
+  if (tab === 'myorders') loadMyOrders();
+}
 
+/* ===== USER LOGIN ===== */
+function doUserLogin() {
+  var nameVal  = document.getElementById("uName").value.trim();
+  var phoneVal = document.getElementById("uPhone").value.trim();
+  var msgEl    = document.getElementById("uLoginMsg");
+
+  if (!nameVal) {
+    msgEl.textContent = "⚠️ பெயர் போடுங்கள்!";
+    msgEl.className   = "form-msg error";
+    msgEl.style.display = "block";
+    return;
+  }
+  if (!phoneVal || !/^\d{10}$/.test(phoneVal)) {
+    msgEl.textContent = "⚠️ சரியான 10-digit phone number போடுங்கள்!";
+    msgE
