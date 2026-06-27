@@ -330,9 +330,15 @@ function secretTap() {
 }
 
 /* PRODUCT SELECTION */
-function selectProduct(cardEl, name) {
-  document.querySelectorAll('.card').forEach(function(c){ c.classList.remove('selected'); });
-  cardEl.classList.add('selected');
+function selectProduct(btnEl, name) {
+  document.querySelectorAll('.card').forEach(function(c){
+    c.classList.remove('selected');
+    var b = c.querySelector('button');
+    if (b) b.textContent = 'Select';
+  });
+  var card = btnEl.closest('.card');
+  if (card) card.classList.add('selected');
+  btnEl.textContent = '✓ Selected';
   document.getElementById('custProduct').value = name;
   document.getElementById('orderFormSection').scrollIntoView({behavior:'smooth', block:'start'});
 }
@@ -373,7 +379,11 @@ function sendOrder() {
     document.getElementById('custQuantity').value = '';
     document.getElementById('custAddress').value = '';
     document.getElementById('custProduct').value = '';
-    document.querySelectorAll('.card').forEach(function(c){ c.classList.remove('selected'); });
+    document.querySelectorAll('.card').forEach(function(c){
+      c.classList.remove('selected');
+      var b = c.querySelector('button');
+      if (b) b.textContent = 'Select';
+    });
   }).catch(function(err) {
     showOrderMsg('⚠️ Error: ' + err.message, 'error');
   }).finally(function() {
@@ -407,8 +417,4 @@ function doAdminLogin() {
 }
 
 function doAdminLogout() {
-  allOrders._loggedIn = false;
-  if (unsubscribe) { unsubscribe(); unsubscribe = null; }
-  document.getElementById('adminLoginUser').value = '';
-  document.getElementById('adminLoginPass').value = '';
-  document.getElementById('adminLoginMsg').style.display = '
+  allOrde
