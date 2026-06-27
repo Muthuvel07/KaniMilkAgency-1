@@ -94,7 +94,15 @@ footer a{color:#a5d6a7;text-decoration:none;}
 <marquee behavior="scroll" direction="left" scrollamount="6" style="background:white;padding:10px 0;border-bottom:2px solid #087f23;">
   <img src="cowmilk.jpg" alt="Jersey Gold Milk" style="height:70px;margin:0 18px;vertical-align:middle;">
   <img src="bluetonedmilk.png" alt="Blue Toned Milk" style="height:70px;margin:0 18px;vertical-align:middle;">
+  <img src="Richtonedmilk.png" alt="Rich Toned Milk" style="height:70px;margin:0 18px;vertical-align:middle;">
+  <img src="Enrichedtonedmilk.jpg" alt="Enriched Toned Milk" style="height:70px;margin:0 18px;vertical-align:middle;">
+  <img src="fullcreamtonedmilk.jpg" alt="Full Cream Toned Milk" style="height:70px;margin:0 18px;vertical-align:middle;">
+  <img src="standardizedmilk.png" alt="Standardized Milk" style="height:70px;margin:0 18px;vertical-align:middle;">
+  <img src="chocolate.png" alt="Chocolate Milk" style="height:70px;margin:0 18px;vertical-align:middle;">
+  <img src="Strawberry50ml.png" alt="Strawberry Milk" style="height:70px;margin:0 18px;vertical-align:middle;">
   <img src="tonedcurd.png" alt="Fresh Curd" style="height:70px;margin:0 18px;vertical-align:middle;">
+  <img src="greentonedcurd .jpg" alt="Green Toned Curd" style="height:70px;margin:0 18px;vertical-align:middle;">
+  <img src="littlecurd.jpg" alt="Little Curd" style="height:70px;margin:0 18px;vertical-align:middle;">
   <img src="goldicecream.png" alt="Ice Cream" style="height:70px;margin:0 18px;vertical-align:middle;">
 </marquee>
 
@@ -115,9 +123,57 @@ footer a{color:#a5d6a7;text-decoration:none;}
   </div>
 
   <div class="card">
+    <img src="Richtonedmilk.png" alt="Rich Toned Milk">
+    <h3>Rich Toned Milk</h3>
+    <button onclick="selectProduct('Rich Toned Milk')">Select</button>
+  </div>
+
+  <div class="card">
+    <img src="Enrichedtonedmilk.jpg" alt="Enriched Toned Milk">
+    <h3>Enriched Toned Milk</h3>
+    <button onclick="selectProduct('Enriched Toned Milk')">Select</button>
+  </div>
+
+  <div class="card">
+    <img src="fullcreamtonedmilk.jpg" alt="Full Cream Toned Milk">
+    <h3>Full Cream Toned Milk</h3>
+    <button onclick="selectProduct('Full Cream Toned Milk')">Select</button>
+  </div>
+
+  <div class="card">
+    <img src="standardizedmilk.png" alt="Standardized Milk">
+    <h3>Standardized Milk</h3>
+    <button onclick="selectProduct('Standardized Milk')">Select</button>
+  </div>
+
+  <div class="card">
+    <img src="chocolate.png" alt="Chocolate Milk">
+    <h3>Chocolate Milk</h3>
+    <button onclick="selectProduct('Chocolate Milk')">Select</button>
+  </div>
+
+  <div class="card">
+    <img src="Strawberry50ml.png" alt="Strawberry Milk">
+    <h3>Strawberry Milk (50ml)</h3>
+    <button onclick="selectProduct('Strawberry Milk 50ml')">Select</button>
+  </div>
+
+  <div class="card">
     <img src="tonedcurd.png" alt="Fresh Curd">
     <h3>Fresh Curd</h3>
     <button onclick="selectProduct('Fresh Curd')">Select</button>
+  </div>
+
+  <div class="card">
+    <img src="greentonedcurd .jpg" alt="Green Toned Curd">
+    <h3>Green Toned Curd</h3>
+    <button onclick="selectProduct('Green Toned Curd')">Select</button>
+  </div>
+
+  <div class="card">
+    <img src="littlecurd.jpg" alt="Little Curd">
+    <h3>Little Curd</h3>
+    <button onclick="selectProduct('Little Curd')">Select</button>
   </div>
 
   <div class="card">
@@ -418,37 +474,4 @@ function renderOrders() {
 
     return '' +
       '<div class="order-card">' +
-        '<div class="order-card-head">' +
-          '<strong>' + escapeHtml(o.name) + '</strong>' +
-          '<span class="badge badge-' + statusSlug(status) + '">' + escapeHtml(status) + '</span>' +
-        '</div>' +
-        '<p>📞 ' + escapeHtml(o.phone) + '</p>' +
-        '<p>🛒 ' + escapeHtml(o.product) + ' — ' + escapeHtml(o.quantity) + '</p>' +
-        '<p>📍 ' + escapeHtml(o.address) + '</p>' +
-        '<p class="time">🕒 ' + timeStr + '</p>' +
-        actionsHtml +
-      '</div>';
-  }).join("");
-}
-
-function updateStatus(id, status) {
-  if (currentRole !== "owner") { return; }
-  db.collection("orders").doc(id).update({ status: status })
-    .catch(function(err) {
-      showMsg("dashMsg", "❌ Update failed: " + err.message, "error");
-    });
-}
-
-function deleteOrder(id) {
-  if (currentRole !== "owner") { return; }
-  if (!confirm("Delete this order permanently?")) return;
-  db.collection("orders").doc(id).delete()
-    .catch(function(err) {
-      showMsg("dashMsg", "❌ Delete failed: " + err.message, "error");
-    });
-}
-</script>
-
-</body>
-                                         </html>
-                                         
+        '<div class="orde                                         
