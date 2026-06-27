@@ -145,8 +145,8 @@ footer a{color:#a5d6a7;text-decoration:none;}
 
   <div id="loginSection" class="login-section">
     <div class="login-card">
-      <h2>Staff Login</h2>
-      <input id="loginUsername" type="text" placeholder="Username" autocomplete="username">
+      <h2>Admin Login</h2>
+      <input id="loginUsername" type="text" placeholder="Username (owner or developer)" autocomplete="username">
       <input id="loginPassword" type="password" placeholder="Password" autocomplete="current-password">
       <div id="loginMsg" class="msg" style="display:none;"></div>
       <button id="loginBtn" onclick="adminLogin()">Login</button>
@@ -159,7 +159,10 @@ footer a{color:#a5d6a7;text-decoration:none;}
         <div class="stat-card"><span id="totalCount">0</span><label>Total Orders</label></div>
         <div class="stat-card"><span id="pendingCount">0</span><label>Pending</label></div>
       </div>
-      <button id="logoutBtn" onclick="adminLogout()">Logout</button>
+      <div>
+        <span id="roleLabel" class="badge" style="background:#1976d2;margin-right:10px;"></span>
+        <button id="logoutBtn" onclick="adminLogout()">Logout</button>
+      </div>
     </div>
 
     <div class="filter-bar">
@@ -286,6 +289,7 @@ function sendOrder() {
 
 var allOrders = [];
 var unsubscribeOrders = null;
+var currentRole = null; // "owner" or "developer"
 var STATUSES = ["Pending","Confirmed","Out for Delivery","Delivered","Cancelled"];
 
 function openAdmin() {
@@ -295,10 +299,16 @@ function openAdmin() {
 
 auth.onAuthStateChanged(function(user) {
   if (user) {
+    currentRole = (user.email === "developer" + ADMIN_EMAIL_DOMAIN) ? "developer" : "owner";
+    var roleLabel = document.getElementById("roleLabel");
+    roleLabel.textContent = (currentRole === "owner") ? "Owner" : "Developer (view only)";
+    roleLabel.style.background = (currentRole === "owner") ? "#1976d2" : "#7b1fa2";
+
     document.getElementById("loginSection").style.display = "none";
     document.getElementById("dashboardSection").style.display = "block";
     listenForOrders();
   } else {
+    currentRole = null;
     document.getElementById("dashboardSection").style.display = "none";
     if (unsubscribeOrders) { unsubscribeOrders(); unsubscribeOrders = null; }
     allOrders = [];
@@ -324,7 +334,7 @@ function adminLogin() {
   btn.textContent = "Logging in...";
   auth.signInWithEmailAndPassword(username + ADMIN_EMAIL_DOMAIN, password)
     .catch(function(err) {
-      showMsg("loginMsg", "❌ Incorrect username or password.", "error");
+      showMsg("loginMsg", "❌ [" + err.code + "] " + err.message, "error");
     })
     .finally(function() {
       btn.disabled = false;
@@ -391,6 +401,13 @@ function renderOrders() {
       return '<option value="' + s + '"' + (s === status ? " selected" : "") + '>' + s + '</option>';
     }).join("");
 
+    var actionsHtml = (currentRole === "owner")
+      ? '<div class="order-actions">' +
+          '<select onchange="updateStatus(\'' + o.id + '\', this.value)">' + options + '</select>' +
+          '<button class="del-btn" onclick="deleteOrder(\'' + o.id + '\')">Delete</button>' +
+        '</div>'
+      : '';
+
     return '' +
       '<div class="order-card">' +
         '<div class="order-card-head">' +
@@ -401,15 +418,13 @@ function renderOrders() {
         '<p>🛒 ' + escapeHtml(o.product) + ' — ' + escapeHtml(o.quantity) + '</p>' +
         '<p>📍 ' + escapeHtml(o.address) + '</p>' +
         '<p class="time">🕒 ' + timeStr + '</p>' +
-        '<div class="order-actions">' +
-          '<select onchange="updateStatus(\'' + o.id + '\', this.value)">' + options + '</select>' +
-          '<button class="del-btn" onclick="deleteOrder(\'' + o.id + '\')">Delete</button>' +
-        '</div>' +
+        actionsHtml +
       '</div>';
   }).join("");
 }
 
 function updateStatus(id, status) {
+  if (currentRole !== "owner") { return; }
   db.collection("orders").doc(id).update({ status: status })
     .catch(function(err) {
       showMsg("dashMsg", "❌ Update failed: " + err.message, "error");
@@ -417,6 +432,7 @@ function updateStatus(id, status) {
 }
 
 function deleteOrder(id) {
+  if (currentRole !== "owner") { return; }
   if (!confirm("Delete this order permanently?")) return;
   db.collection("orders").doc(id).delete()
     .catch(function(err) {
@@ -427,4 +443,4 @@ function deleteOrder(id) {
 
 </body>
       </html>
-  
+      
