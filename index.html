@@ -32,6 +32,21 @@ h2{text-align:center;color:#087f23;font-size:1.5rem;margin:30px 0 20px;}
   .hero-float-b{width:56px;height:56px;}
 }
 
+/* ===== MARQUEE BLOB BANNER ===== */
+.marquee-hero{position:relative;background:linear-gradient(160deg,#29b6f6,#0277bd);padding:36px 20px 50px;overflow:hidden;}
+.marquee-blob{position:relative;z-index:2;background:#fff;border-radius:48% 52% 58% 42% / 60% 55% 45% 40%;max-width:480px;margin:0 auto;padding:34px 22px;text-align:center;box-shadow:0 10px 30px rgba(0,0,0,0.18);}
+.marquee-headline{font-size:1.35rem;font-weight:800;color:#0277bd;margin-bottom:6px;letter-spacing:-0.3px;}
+.marquee-sub{color:#555;font-size:0.86rem;margin-bottom:14px;}
+.marquee-strip img{height:60px;margin:0 14px;vertical-align:middle;}
+.marquee-dots{display:flex;justify-content:center;gap:8px;margin-top:16px;}
+.marquee-dots .dot{width:9px;height:9px;border-radius:50%;border:2px solid #0277bd;background:transparent;}
+.marquee-dots .dot.active{background:#0277bd;}
+.marquee-float{position:absolute;top:14px;right:-16px;width:100px;height:100px;border-radius:50%;object-fit:cover;border:4px solid rgba(255,255,255,0.5);box-shadow:0 6px 18px rgba(0,0,0,0.25);}
+@media(max-width:600px){
+  .marquee-headline{font-size:1.15rem;}
+  .marquee-float{width:70px;height:70px;}
+}
+
 /* ===== PRODUCT CAROUSEL ===== */
 .cat-tabs{display:flex;justify-content:center;gap:18px;margin-bottom:18px;flex-wrap:wrap;padding:0 20px;}
 .cat-tab{background:none;border:none;font-size:0.95rem;font-weight:600;color:#888;padding:6px 2px;cursor:pointer;border-bottom:3px solid transparent;}
@@ -140,19 +155,29 @@ footer a{color:#a5d6a7;text-decoration:none;}
 </section>
 
 <!-- IMAGE MARQUEE -->
-<marquee behavior="scroll" direction="left" scrollamount="6" style="background:white;padding:10px 0;border-bottom:2px solid #087f23;">
-  <img src="cowmilk.jpg" alt="Jersey Gold Milk" style="height:70px;margin:0 18px;vertical-align:middle;">
-  <img src="bluetonedmilk.png" alt="Blue Toned Milk" style="height:70px;margin:0 18px;vertical-align:middle;">
-  <img src="fullcreamtonedmilk.jpg" alt="Full Cream Toned Milk" style="height:70px;margin:0 18px;vertical-align:middle;">
-  <img src="standardizedmilk.png" alt="Standardized Milk" style="height:70px;margin:0 18px;vertical-align:middle;">
-  <img src="chocolate.png" alt="Chocolate Milk" style="height:70px;margin:0 18px;vertical-align:middle;">
-  <img src="tonedcurd.png" alt="Fresh Curd" style="height:70px;margin:0 18px;vertical-align:middle;">
-  <img src="goldicecream.png" alt="Ice Cream" style="height:70px;margin:0 18px;vertical-align:middle;">
-</marquee>
-
-<!-- PRODUCTS -->
-<h2>Our Products</h2>
-<div class="products">
+<section class="marquee-hero">
+  <div class="marquee-blob">
+    <h2 class="marquee-headline">DAILY FRESH PICKS</h2>
+    <p class="marquee-sub">Today's must-haves, straight from the dairy</p>
+    <marquee behavior="scroll" direction="left" scrollamount="6" class="marquee-strip">
+      <img src="cowmilk.jpg" alt="Jersey Gold Milk">
+      <img src="bluetonedmilk.png" alt="Blue Toned Milk">
+      <img src="fullcreamtonedmilk.jpg" alt="Full Cream Toned Milk">
+      <img src="standardizedmilk.png" alt="Standardized Milk">
+      <img src="chocolate.png" alt="Chocolate Milk">
+      <img src="tonedcurd.png" alt="Fresh Curd">
+      <img src="goldicecream.png" alt="Ice Cream">
+    </marquee>
+    <div class="marquee-dots">
+      <span class="dot active"></span>
+      <span class="dot"></span>
+      <span class="dot"></span>
+      <span class="dot"></span>
+      <span class="dot"></span>
+    </div>
+  </div>
+  <img class="marquee-float" src="goldicecream.png" alt="">
+</section>
 
 <!-- PRODUCTS -->
 <h2>Our Products</h2>
@@ -380,46 +405,4 @@ function sendOrder() {
     document.getElementById("phone").value    = "";
     document.getElementById("product").value  = "";
     document.getElementById("quantity").value = "";
-    document.getElementById("address").value  = "";
-
-    var msg =
-      "🥛 *Kani Milk Agency Order*\n\n" +
-      "👤 பெயர்: " + name +
-      "\n📞 Phone: " + phone +
-      "\n🛒 Product: " + product +
-      "\n📦 Quantity: " + quantity +
-      "\n📍 Address: " + address +
-      "\n⏳ Status: Pending";
-
-    setTimeout(function() {
-      window.open(
-        "https://wa.me/918838416013?text=" + encodeURIComponent(msg),
-        "_blank"
-      );
-    }, 1500);
-  })
-  .catch(function(error) {
-    showMessage("❌ Error: " + error.message, "error");
-    console.error(error);
-  })
-  .finally(function() {
-    btn.disabled = false;
-    btn.textContent = "🛒 Order Now";
-  });
-}
-
-// ===================== ADMIN AREA =====================
-
-var allOrders = [];
-var unsubscribeOrders = null;
-var currentRole = null; // "owner" or "developer"
-var STATUSES = ["Pending","Confirmed","Out for Delivery","Delivered","Cancelled"];
-
-function openAdmin() {
-  document.getElementById("adminArea").style.display = "block";
-  document.getElementById("adminArea").scrollIntoView({ behavior: "smooth" });
-}
-
-auth.onAuthStateChanged(function(user) {
-  if (user) {
-    currentRole = (user.email
+    document.getElem
