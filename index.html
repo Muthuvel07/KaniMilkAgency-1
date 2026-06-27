@@ -12,54 +12,6 @@ header img{width:90px;height:90px;border-radius:50%;object-fit:cover;border:3px 
 header h1{font-size:2rem;font-weight:700;}
 header p{font-size:0.95rem;opacity:0.85;margin-top:6px;}
 h2{text-align:center;color:#087f23;font-size:1.5rem;margin:30px 0 20px;}
-
-/* ===== HERO BANNER ===== */
-.hero{position:relative;background:linear-gradient(160deg,#0a8a2a,#0c5c1f);padding:50px 20px 60px;overflow:hidden;}
-.hero-blob{position:relative;z-index:2;background:#fff;border-radius:48% 52% 58% 42% / 60% 55% 45% 40%;max-width:460px;margin:0 auto;padding:46px 28px;text-align:center;box-shadow:0 10px 30px rgba(0,0,0,0.18);}
-.hero-headline{font-size:1.6rem;font-weight:800;color:#0c4d1a;letter-spacing:-0.3px;margin-bottom:10px;min-height:2.2em;}
-.hero-sub{color:#3a3a3a;font-size:0.92rem;margin-bottom:20px;min-height:2.4em;}
-.hero-cta{background:#d98c00;color:#fff;border:none;padding:13px 34px;border-radius:30px;font-weight:700;font-size:0.98rem;cursor:pointer;box-shadow:0 4px 12px rgba(217,140,0,0.4);}
-.hero-cta:hover{background:#b87400;}
-.hero-dots{display:flex;justify-content:center;gap:8px;margin-top:20px;}
-.hero-dots .dot{width:9px;height:9px;border-radius:50%;border:2px solid #d98c00;background:transparent;cursor:pointer;}
-.hero-dots .dot.active{background:#d98c00;}
-.hero-float{position:absolute;border-radius:50%;object-fit:cover;border:4px solid rgba(255,255,255,0.5);box-shadow:0 6px 18px rgba(0,0,0,0.25);}
-.hero-float-a{width:110px;height:110px;top:18px;right:-18px;}
-.hero-float-b{width:80px;height:80px;bottom:8px;left:8px;}
-@media(max-width:600px){
-  .hero-headline{font-size:1.3rem;}
-  .hero-float-a{width:74px;height:74px;}
-  .hero-float-b{width:56px;height:56px;}
-}
-
-/* ===== MARQUEE BLOB BANNER ===== */
-.marquee-hero{position:relative;background:linear-gradient(160deg,#29b6f6,#0277bd);padding:36px 20px 50px;overflow:hidden;}
-.marquee-blob{position:relative;z-index:2;background:#fff;border-radius:48% 52% 58% 42% / 60% 55% 45% 40%;max-width:480px;margin:0 auto;padding:34px 22px;text-align:center;box-shadow:0 10px 30px rgba(0,0,0,0.18);}
-.marquee-headline{font-size:1.35rem;font-weight:800;color:#0277bd;margin-bottom:6px;letter-spacing:-0.3px;}
-.marquee-sub{color:#555;font-size:0.86rem;margin-bottom:14px;}
-.marquee-strip img{height:60px;margin:0 14px;vertical-align:middle;}
-.marquee-dots{display:flex;justify-content:center;gap:8px;margin-top:16px;}
-.marquee-dots .dot{width:9px;height:9px;border-radius:50%;border:2px solid #0277bd;background:transparent;}
-.marquee-dots .dot.active{background:#0277bd;}
-.marquee-float{position:absolute;top:14px;right:-16px;width:100px;height:100px;border-radius:50%;object-fit:cover;border:4px solid rgba(255,255,255,0.5);box-shadow:0 6px 18px rgba(0,0,0,0.25);}
-@media(max-width:600px){
-  .marquee-headline{font-size:1.15rem;}
-  .marquee-float{width:70px;height:70px;}
-}
-
-/* ===== PRODUCT CAROUSEL ===== */
-.cat-tabs{display:flex;justify-content:center;gap:18px;margin-bottom:18px;flex-wrap:wrap;padding:0 20px;}
-.cat-tab{background:none;border:none;font-size:0.95rem;font-weight:600;color:#888;padding:6px 2px;cursor:pointer;border-bottom:3px solid transparent;}
-.cat-tab.active{color:#0c5c1f;border-bottom-color:#d98c00;}
-.carousel{display:flex;gap:16px;overflow-x:auto;scroll-snap-type:x mandatory;padding:6px 20px 26px;-webkit-overflow-scrolling:touch;}
-.carousel::-webkit-scrollbar{height:6px;}
-.carousel::-webkit-scrollbar-thumb{background:#cde9d3;border-radius:10px;}
-.carousel-card{flex:0 0 190px;scroll-snap-align:center;background:white;border-radius:16px;padding:18px;text-align:center;box-shadow:0 4px 16px rgba(0,0,0,0.1);}
-.carousel-card.hidden{display:none;}
-.carousel-card img{width:120px;height:120px;object-fit:contain;margin-bottom:10px;}
-.carousel-card h3{font-size:0.92rem;color:#1b5e20;margin-bottom:8px;}
-.carousel-card button{background:#087f23;color:white;border:none;padding:9px 18px;border-radius:20px;cursor:pointer;font-size:0.88rem;}
-.carousel-card button:hover{background:#1b5e20;}
 .products{display:flex;justify-content:center;gap:20px;flex-wrap:wrap;padding:0 20px;}
 .card{background:white;padding:20px;width:200px;text-align:center;border-radius:16px;box-shadow:0 4px 16px rgba(0,0,0,0.1);transition:transform 0.2s;}
 .card:hover{transform:translateY(-5px);}
@@ -138,94 +90,37 @@ footer a{color:#a5d6a7;text-decoration:none;}
   <p>Fresh Milk • Daily Delivery • Pure Quality</p>
 </header>
 
-<!-- HERO BANNER -->
-<section class="hero">
-  <div class="hero-blob">
-    <h2 class="hero-headline" id="heroHeadline" style="color:#0c4d1a;margin:0 0 10px;">FRESH MILK, DAILY JOY</h2>
-    <p class="hero-sub" id="heroSub">உங்க வீட்டுக்கு தினமும் தூய பால், கை தவறாமல்.</p>
-    <button class="hero-cta" onclick="document.querySelector('.order-section').scrollIntoView({behavior:'smooth'})">Order Now</button>
-    <div class="hero-dots" id="heroDots">
-      <span class="dot active" onclick="goToHeroSlide(0)"></span>
-      <span class="dot" onclick="goToHeroSlide(1)"></span>
-      <span class="dot" onclick="goToHeroSlide(2)"></span>
-    </div>
-  </div>
-  <img class="hero-float hero-float-a" src="tonedcurd.png" alt="">
-  <img class="hero-float hero-float-b" src="cowmilk.jpg" alt="">
-</section>
-
 <!-- IMAGE MARQUEE -->
-<section class="marquee-hero">
-  <div class="marquee-blob">
-    <h2 class="marquee-headline">DAILY FRESH PICKS</h2>
-    <p class="marquee-sub">Today's must-haves, straight from the dairy</p>
-    <marquee behavior="scroll" direction="left" scrollamount="6" class="marquee-strip">
-      <img src="cowmilk.jpg" alt="Jersey Gold Milk">
-      <img src="bluetonedmilk.png" alt="Blue Toned Milk">
-      <img src="fullcreamtonedmilk.jpg" alt="Full Cream Toned Milk">
-      <img src="standardizedmilk.png" alt="Standardized Milk">
-      <img src="chocolate.png" alt="Chocolate Milk">
-      <img src="tonedcurd.png" alt="Fresh Curd">
-      <img src="goldicecream.png" alt="Ice Cream">
-    </marquee>
-    <div class="marquee-dots">
-      <span class="dot active"></span>
-      <span class="dot"></span>
-      <span class="dot"></span>
-      <span class="dot"></span>
-      <span class="dot"></span>
-    </div>
-  </div>
-  <img class="marquee-float" src="goldicecream.png" alt="">
-</section>
+<marquee behavior="scroll" direction="left" scrollamount="6" style="background:white;padding:10px 0;border-bottom:2px solid #087f23;">
+  <img src="cowmilk.jpg" alt="Jersey Gold Milk" style="height:70px;margin:0 18px;vertical-align:middle;">
+  <img src="bluetonedmilk.png" alt="Blue Toned Milk" style="height:70px;margin:0 18px;vertical-align:middle;">
+  <img src="tonedcurd.png" alt="Fresh Curd" style="height:70px;margin:0 18px;vertical-align:middle;">
+  <img src="goldicecream.png" alt="Ice Cream" style="height:70px;margin:0 18px;vertical-align:middle;">
+</marquee>
 
 <!-- PRODUCTS -->
 <h2>Our Products</h2>
-<div class="cat-tabs">
-  <button class="cat-tab active" onclick="filterCategory('all', this)">All</button>
-  <button class="cat-tab" onclick="filterCategory('Milk', this)">Milk</button>
-  <button class="cat-tab" onclick="filterCategory('Curd', this)">Curd</button>
-  <button class="cat-tab" onclick="filterCategory('Ice Cream', this)">Ice Cream</button>
-</div>
-<div class="carousel" id="productCarousel">
+<div class="products">
 
-  <div class="carousel-card" data-cat="Milk">
+  <div class="card">
     <img src="cowmilk.jpg" alt="Jersey Gold Milk">
     <h3>Jersey Gold Milk</h3>
     <button onclick="selectProduct('Jersey Gold Milk')">Select</button>
   </div>
 
-  <div class="carousel-card" data-cat="Milk">
+  <div class="card">
     <img src="bluetonedmilk.png" alt="Blue Toned Milk">
     <h3>Blue Toned Milk</h3>
     <button onclick="selectProduct('Blue Toned Milk')">Select</button>
   </div>
 
-  <div class="carousel-card" data-cat="Milk">
-    <img src="fullcreamtonedmilk.jpg" alt="Full Cream Toned Milk">
-    <h3>Full Cream Toned Milk</h3>
-    <button onclick="selectProduct('Full Cream Toned Milk')">Select</button>
-  </div>
-
-  <div class="carousel-card" data-cat="Milk">
-    <img src="standardizedmilk.png" alt="Standardized Milk">
-    <h3>Standardized Milk</h3>
-    <button onclick="selectProduct('Standardized Milk')">Select</button>
-  </div>
-
-  <div class="carousel-card" data-cat="Milk">
-    <img src="chocolate.png" alt="Chocolate Milk">
-    <h3>Chocolate Milk</h3>
-    <button onclick="selectProduct('Chocolate Milk')">Select</button>
-  </div>
-
-  <div class="carousel-card" data-cat="Curd">
+  <div class="card">
     <img src="tonedcurd.png" alt="Fresh Curd">
     <h3>Fresh Curd</h3>
     <button onclick="selectProduct('Fresh Curd')">Select</button>
   </div>
 
-  <div class="carousel-card" data-cat="Ice Cream">
+  <div class="card">
     <img src="goldicecream.png" alt="Ice Cream">
     <h3>Gold Ice Cream</h3>
     <button onclick="selectProduct('Ice Cream')">Select</button>
@@ -326,41 +221,6 @@ function selectProduct(name) {
   document.querySelector(".order-section").scrollIntoView({ behavior: "smooth" });
 }
 
-// ===================== HERO BANNER =====================
-
-var HERO_SLIDES = [
-  { h: "FRESH MILK, DAILY JOY", s: "உங்க வீட்டுக்கு தினமும் தூய பால், கை தவறாமல்." },
-  { h: "FARM TO YOUR DOORSTEP", s: "No middlemen, no shortcuts — straight from the dairy to you." },
-  { h: "TRUSTED SINCE DAY ONE", s: "எங்க பால் தர்மம், உங்க குடும்ப நம்பிக்கை." }
-];
-var heroIndex = 0;
-var heroTimer = setInterval(function(){ goToHeroSlide((heroIndex + 1) % HERO_SLIDES.length); }, 4500);
-
-function goToHeroSlide(i) {
-  heroIndex = i;
-  document.getElementById("heroHeadline").textContent = HERO_SLIDES[i].h;
-  document.getElementById("heroSub").textContent = HERO_SLIDES[i].s;
-  var dots = document.querySelectorAll("#heroDots .dot");
-  for (var d = 0; d < dots.length; d++) {
-    dots[d].classList.toggle("active", d === i);
-  }
-}
-
-// ===================== PRODUCT CAROUSEL =====================
-
-function filterCategory(cat, btn) {
-  var tabs = document.querySelectorAll(".cat-tab");
-  for (var t = 0; t < tabs.length; t++) { tabs[t].classList.remove("active"); }
-  btn.classList.add("active");
-
-  var cards = document.querySelectorAll(".carousel-card");
-  for (var c = 0; c < cards.length; c++) {
-    var show = (cat === "all") || (cards[c].dataset.cat === cat);
-    cards[c].classList.toggle("hidden", !show);
-  }
-  document.getElementById("productCarousel").scrollTo({ left: 0, behavior: "smooth" });
-}
-
 function showMessage(msg, type) {
   var el = document.getElementById("orderMsg");
   el.textContent = msg;
@@ -405,4 +265,190 @@ function sendOrder() {
     document.getElementById("phone").value    = "";
     document.getElementById("product").value  = "";
     document.getElementById("quantity").value = "";
-    document.getElem
+    document.getElementById("address").value  = "";
+
+    var msg =
+      "🥛 *Kani Milk Agency Order*\n\n" +
+      "👤 பெயர்: " + name +
+      "\n📞 Phone: " + phone +
+      "\n🛒 Product: " + product +
+      "\n📦 Quantity: " + quantity +
+      "\n📍 Address: " + address +
+      "\n⏳ Status: Pending";
+
+    setTimeout(function() {
+      window.open(
+        "https://wa.me/918838416013?text=" + encodeURIComponent(msg),
+        "_blank"
+      );
+    }, 1500);
+  })
+  .catch(function(error) {
+    showMessage("❌ Error: " + error.message, "error");
+    console.error(error);
+  })
+  .finally(function() {
+    btn.disabled = false;
+    btn.textContent = "🛒 Order Now";
+  });
+}
+
+// ===================== ADMIN AREA =====================
+
+var allOrders = [];
+var unsubscribeOrders = null;
+var currentRole = null; // "owner" or "developer"
+var STATUSES = ["Pending","Confirmed","Out for Delivery","Delivered","Cancelled"];
+
+function openAdmin() {
+  document.getElementById("adminArea").style.display = "block";
+  document.getElementById("adminArea").scrollIntoView({ behavior: "smooth" });
+}
+
+auth.onAuthStateChanged(function(user) {
+  if (user) {
+    currentRole = (user.email === "developer" + ADMIN_EMAIL_DOMAIN) ? "developer" : "owner";
+    var roleLabel = document.getElementById("roleLabel");
+    roleLabel.textContent = (currentRole === "owner") ? "Owner" : "Developer (view only)";
+    roleLabel.style.background = (currentRole === "owner") ? "#1976d2" : "#7b1fa2";
+
+    document.getElementById("loginSection").style.display = "none";
+    document.getElementById("dashboardSection").style.display = "block";
+    listenForOrders();
+  } else {
+    currentRole = null;
+    document.getElementById("dashboardSection").style.display = "none";
+    if (unsubscribeOrders) { unsubscribeOrders(); unsubscribeOrders = null; }
+    allOrders = [];
+  }
+});
+
+function showMsg(elId, text, type) {
+  var el = document.getElementById(elId);
+  el.textContent = text;
+  el.className = "msg " + type;
+  el.style.display = "block";
+}
+
+function adminLogin() {
+  var username = document.getElementById("loginUsername").value.trim().toLowerCase();
+  var password = document.getElementById("loginPassword").value;
+  if (!username || !password) {
+    showMsg("loginMsg", "⚠️ Enter username and password.", "error");
+    return;
+  }
+  var btn = document.getElementById("loginBtn");
+  btn.disabled = true;
+  btn.textContent = "Logging in...";
+  auth.signInWithEmailAndPassword(username + ADMIN_EMAIL_DOMAIN, password)
+    .catch(function(err) {
+      showMsg("loginMsg", "❌ [" + err.code + "] " + err.message, "error");
+    })
+    .finally(function() {
+      btn.disabled = false;
+      btn.textContent = "Login";
+    });
+}
+
+function adminLogout() {
+  auth.signOut();
+  document.getElementById("loginSection").style.display = "flex";
+  document.getElementById("loginUsername").value = "";
+  document.getElementById("loginPassword").value = "";
+}
+
+function listenForOrders() {
+  if (unsubscribeOrders) unsubscribeOrders();
+  unsubscribeOrders = db.collection("orders").orderBy("time", "desc")
+    .onSnapshot(function(snapshot) {
+      allOrders = snapshot.docs.map(function(doc) {
+        var data = doc.data();
+        data.id = doc.id;
+        return data;
+      });
+      renderOrders();
+    }, function(err) {
+      showMsg("dashMsg", "❌ Could not load orders: " + err.message, "error");
+    });
+}
+
+function statusSlug(status) {
+  return (status || "Pending").toLowerCase().replace(/\s+/g, "");
+}
+
+function escapeHtml(str) {
+  if (str === undefined || str === null) return "";
+  return String(str)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+function renderOrders() {
+  var filter = document.getElementById("statusFilter").value;
+  var list = allOrders.filter(function(o) {
+    return filter === "all" || (o.status || "Pending") === filter;
+  });
+
+  document.getElementById("totalCount").textContent = allOrders.length;
+  document.getElementById("pendingCount").textContent =
+    allOrders.filter(function(o) { return (o.status || "Pending") === "Pending"; }).length;
+
+  var container = document.getElementById("ordersList");
+  if (list.length === 0) {
+    container.innerHTML = '<p class="empty">No orders found.</p>';
+    return;
+  }
+
+  container.innerHTML = list.map(function(o) {
+    var status = o.status || "Pending";
+    var timeStr = (o.time && o.time.toDate) ? o.time.toDate().toLocaleString() : "—";
+    var options = STATUSES.map(function(s) {
+      return '<option value="' + s + '"' + (s === status ? " selected" : "") + '>' + s + '</option>';
+    }).join("");
+
+    var actionsHtml = (currentRole === "owner")
+      ? '<div class="order-actions">' +
+          '<select onchange="updateStatus(\'' + o.id + '\', this.value)">' + options + '</select>' +
+          '<button class="del-btn" onclick="deleteOrder(\'' + o.id + '\')">Delete</button>' +
+        '</div>'
+      : '';
+
+    return '' +
+      '<div class="order-card">' +
+        '<div class="order-card-head">' +
+          '<strong>' + escapeHtml(o.name) + '</strong>' +
+          '<span class="badge badge-' + statusSlug(status) + '">' + escapeHtml(status) + '</span>' +
+        '</div>' +
+        '<p>📞 ' + escapeHtml(o.phone) + '</p>' +
+        '<p>🛒 ' + escapeHtml(o.product) + ' — ' + escapeHtml(o.quantity) + '</p>' +
+        '<p>📍 ' + escapeHtml(o.address) + '</p>' +
+        '<p class="time">🕒 ' + timeStr + '</p>' +
+        actionsHtml +
+      '</div>';
+  }).join("");
+}
+
+function updateStatus(id, status) {
+  if (currentRole !== "owner") { return; }
+  db.collection("orders").doc(id).update({ status: status })
+    .catch(function(err) {
+      showMsg("dashMsg", "❌ Update failed: " + err.message, "error");
+    });
+}
+
+function deleteOrder(id) {
+  if (currentRole !== "owner") { return; }
+  if (!confirm("Delete this order permanently?")) return;
+  db.collection("orders").doc(id).delete()
+    .catch(function(err) {
+      showMsg("dashMsg", "❌ Delete failed: " + err.message, "error");
+    });
+}
+</script>
+
+</body>
+      </html>
+  
