@@ -1,419 +1,430 @@
 <!DOCTYPE html>
-<html lang="ta">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <title>Kani Milk Agency</title>
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-<script>
-  try {
-    if (!firebase.apps.length) {
-      firebase.initializeApp({
-        apiKey:"AIzaSyAQAY_wXDlU5twKU9DLZCh3lgfBfLAy7AQ",
-        authDomain:"kani-milk-agency-9323b.firebaseapp.com",
-        projectId:"kani-milk-agency-9323b",
-        storageBucket:"kani-milk-agency-9323b.firebasestorage.app",
-        messagingSenderId:"317392951345",
-        appId:"1:317392951345:web:1768ca6b7725812491dd10"
-      });
-    }
-    window.db = firebase.firestore();
-  } catch(e) { window.db = null; }
-</script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
-body{font-family:'Segoe UI',Arial,sans-serif;background:#f0faf0;min-height:100vh;}
-.page{display:none;}
-.page.active{display:block;}
-
-/* HEADER */
-.brand-header{
-  background:linear-gradient(135deg,#087f23,#1b5e20);
-  color:white;text-align:center;padding:30px 16px 26px;
-}
-.brand-logo{
-  width:80px;height:80px;border-radius:50%;object-fit:cover;
-  border:3px solid white;margin-bottom:10px;
-  box-shadow:0 4px 16px rgba(0,0,0,0.2);
-}
-.brand-title{font-size:1.6rem;font-weight:800;}
-.brand-sub{font-size:0.85rem;opacity:0.9;margin-top:4px;}
-
-/* MARQUEE */
-.marquee-wrap{background:linear-gradient(90deg,#1b5e20,#087f23,#1b5e20);padding:11px 0;}
-.marquee-item{
-  display:inline-flex;align-items:center;gap:9px;
-  background:rgba(255,255,255,0.15);border-radius:30px;
-  padding:5px 15px;margin:0 8px;
-  color:white;font-size:0.88rem;font-weight:600;white-space:nowrap;
-}
-.marquee-item img{width:34px;height:34px;object-fit:contain;border-radius:50%;background:white;padding:3px;}
-
-/* PRODUCTS */
-.products-section{padding:24px 16px 8px;}
-.section-title{text-align:center;color:#087f23;font-size:1.25rem;font-weight:700;margin-bottom:16px;}
-.products{display:flex;justify-content:center;gap:14px;flex-wrap:wrap;}
-.card{
-  background:white;padding:16px;width:150px;text-align:center;
-  border-radius:16px;box-shadow:0 4px 14px rgba(0,0,0,0.09);
-  border:2px solid transparent;transition:border-color 0.15s;
-}
-.card.selected{border-color:#087f23;}
-.card img{width:100px;height:100px;object-fit:contain;margin-bottom:10px;}
-.card h3{font-size:0.8rem;color:#1b5e20;margin-bottom:10px;font-weight:600;}
-.card button{
-  background:#087f23;color:white;border:none;
-  padding:10px 16px;border-radius:18px;cursor:pointer;font-size:0.8rem;
-  touch-action:manipulation;width:100%;
-}
-.card button:active{background:#1b5e20;}
-
-/* ORDER FORM */
-.order-section{padding:20px 16px 10px;}
-.order{
-  background:white;max-width:420px;margin:0 auto;
-  padding:24px 20px;border-radius:20px;
-  box-shadow:0 4px 18px rgba(0,0,0,0.09);
-  display:flex;flex-direction:column;gap:12px;
-}
-.order label{font-size:0.82rem;font-weight:600;color:#444;margin-bottom:-6px;}
-.order input,.order textarea{
-  width:100%;padding:13px 14px;border:1.5px solid #ddd;
-  border-radius:10px;font-size:0.95rem;font-family:inherit;
-  resize:vertical;-webkit-appearance:none;
-}
+body{font-family:'Segoe UI',Arial,sans-serif;background:#f0faf0;}
+header{background:linear-gradient(135deg,#087f23,#1b5e20);color:white;text-align:center;padding:30px 20px;}
+header img{width:90px;height:90px;border-radius:50%;object-fit:cover;border:3px solid rgba(255,255,255,0.4);margin-bottom:10px;}
+header h1{font-size:2rem;font-weight:700;}
+header p{font-size:0.95rem;opacity:0.85;margin-top:6px;}
+h2{text-align:center;color:#087f23;font-size:1.5rem;margin:30px 0 20px;}
+.products{display:flex;justify-content:center;gap:20px;flex-wrap:wrap;padding:0 20px;}
+.card{background:white;padding:20px;width:200px;text-align:center;border-radius:16px;box-shadow:0 4px 16px rgba(0,0,0,0.1);transition:transform 0.2s;}
+.card:hover{transform:translateY(-5px);}
+.card img{width:140px;height:140px;object-fit:contain;margin-bottom:10px;}
+.card h3{font-size:0.95rem;color:#1b5e20;margin-bottom:8px;}
+.card button{background:#087f23;color:white;border:none;padding:10px 20px;border-radius:20px;cursor:pointer;font-size:0.9rem;}
+.card button:hover{background:#1b5e20;}
+.order-section{padding:30px 20px;}
+.order{background:white;max-width:400px;margin:0 auto;padding:28px 24px;border-radius:20px;box-shadow:0 4px 20px rgba(0,0,0,0.1);display:flex;flex-direction:column;gap:12px;}
+.order input,.order textarea{width:100%;padding:12px 14px;border:1.5px solid #ddd;border-radius:10px;font-size:0.95rem;font-family:inherit;resize:vertical;}
 .order input:focus,.order textarea:focus{outline:none;border-color:#087f23;}
-.order input[readonly]{background:#f0faf0;color:#444;}
-#orderBtn{
-  background:#087f23;color:white;border:none;padding:16px;
-  border-radius:12px;font-size:1rem;font-weight:700;cursor:pointer;
-  touch-action:manipulation;
-}
-#orderBtn:active{background:#1b5e20;}
+.order input[readonly]{background:#f5f5f5;}
+#orderBtn{background:#087f23;color:white;border:none;padding:14px;border-radius:12px;font-size:1rem;font-weight:600;cursor:pointer;}
+#orderBtn:hover{background:#1b5e20;}
 #orderBtn:disabled{opacity:0.6;cursor:not-allowed;}
-.order-msg{padding:12px;border-radius:10px;font-size:0.9rem;text-align:center;display:none;}
+.order-msg{padding:12px;border-radius:10px;font-size:0.9rem;text-align:center;}
 .order-msg.success{background:#e8f5e9;color:#2e7d32;border:1px solid #a5d6a7;}
 .order-msg.error{background:#fce4ec;color:#c62828;border:1px solid #ef9a9a;}
-
-/* FOOTER */
-footer{background:#1b5e20;color:white;text-align:center;padding:20px;margin-top:30px;font-size:0.88rem;}
+footer{background:#1b5e20;color:white;text-align:center;padding:20px;margin-top:40px;position:relative;}
 footer a{color:#a5d6a7;text-decoration:none;}
-
-/* ADMIN LOGIN (hidden route, only reachable via #admin) */
-.admin-login-bg{min-height:100vh;background:linear-gradient(160deg,#e8eaf6,#f5f5f5,#c5cae9);display:flex;align-items:center;justify-content:center;padding:30px 16px;}
-.admin-login-card{background:white;width:100%;max-width:360px;padding:32px 26px;border-radius:22px;box-shadow:0 8px 36px rgba(0,0,0,0.13);}
-.admin-login-card h2{color:#1a237e;font-size:1.25rem;font-weight:700;margin-bottom:6px;text-align:center;}
-.admin-login-card p{text-align:center;color:#777;font-size:0.83rem;margin-bottom:18px;}
-.form-group{margin-bottom:15px;}
-.form-group label{display:block;font-size:0.85rem;font-weight:600;color:#444;margin-bottom:6px;}
-.form-group input{
-  width:100%;padding:13px 14px;border:1.5px solid #ddd;
-  border-radius:10px;font-size:0.95rem;-webkit-appearance:none;
-}
-.form-group input:focus{outline:none;border-color:#1a237e;}
-.form-msg{text-align:center;padding:10px;border-radius:8px;font-size:0.87rem;margin-top:10px;display:none;}
-.form-msg.error{background:#fce4ec;color:#c62828;}
-.form-msg.success{background:#e8f5e9;color:#2e7d32;}
-.admin-btn{width:100%;background:#1a237e;color:white;border:none;padding:16px;border-radius:12px;font-size:1rem;font-weight:700;cursor:pointer;touch-action:manipulation;}
-.admin-btn:active{background:#283593;}
-.back-link{display:block;text-align:center;margin-top:16px;color:#1a237e;cursor:pointer;font-size:0.87rem;text-decoration:underline;padding:10px;touch-action:manipulation;}
-
-/* ADMIN DASHBOARD */
-.admin-header{background:linear-gradient(135deg,#1a237e,#283593);color:white;padding:18px 22px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;}
-.admin-header h1{font-size:1.3rem;font-weight:700;}
-.logout-btn{background:rgba(255,255,255,0.18);border:1.5px solid rgba(255,255,255,0.4);color:white;padding:8px 16px;border-radius:18px;cursor:pointer;font-size:0.83rem;font-weight:600;touch-action:manipulation;}
-.stats{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;padding:16px 14px 6px;}
-.stat-box{background:white;padding:12px 20px;border-radius:14px;text-align:center;box-shadow:0 3px 10px rgba(0,0,0,0.08);min-width:90px;}
-.stat-box h3{font-size:1.7rem;color:#087f23;font-weight:700;}
-.stat-box h3.orange{color:#e65100;}
-.stat-box h3.blue{color:#1565c0;}
-.stat-box p{font-size:0.76rem;color:#777;margin-top:3px;}
-.admin-tools{display:flex;gap:10px;flex-wrap:wrap;padding:14px;align-items:center;}
-.search-box{flex:1;min-width:160px;padding:10px 14px;border:1.5px solid #ddd;border-radius:10px;font-size:0.88rem;outline:none;}
-.filter-select{padding:10px 12px;border:1.5px solid #ddd;border-radius:10px;font-size:0.85rem;background:white;}
-.export-btn{background:#1a237e;color:white;border:none;padding:10px 16px;border-radius:10px;cursor:pointer;font-size:0.84rem;font-weight:600;}
-.admin-wrap{padding:0 14px 30px;}
-.admin-wrap h2{color:#1a237e;margin-bottom:10px;font-size:1.1rem;padding-top:14px;}
-.table-wrap{overflow-x:auto;border-radius:12px;box-shadow:0 3px 14px rgba(0,0,0,0.08);}
-table{width:100%;border-collapse:collapse;background:white;}
-thead{background:#1a237e;color:white;}
-th,td{padding:10px 12px;text-align:left;font-size:0.82rem;border-bottom:1px solid #f0f0f0;}
-tr:hover td{background:#f8f8ff;}
-.status-btn{color:white;border:none;padding:6px 12px;border-radius:16px;cursor:pointer;font-size:0.77rem;font-weight:600;touch-action:manipulation;}
-.delete-btn{background:#c62828;color:white;border:none;padding:6px 10px;border-radius:8px;cursor:pointer;font-size:0.77rem;touch-action:manipulation;}
-
+#adminDot{display:inline-block;width:10px;height:10px;margin-left:8px;opacity:0.35;cursor:pointer;user-select:none;}
 @media(max-width:600px){
+  header h1{font-size:1.4rem;}
   .products{flex-direction:column;align-items:center;}
-  .card{width:92%;}
-  th,td{font-size:0.72rem;padding:7px 8px;}
-  .admin-tools{flex-direction:column;}
-  .search-box{min-width:100%;}
+  .card{width:90%;}
 }
+
+/* ===== ADMIN (hidden by default) ===== */
+#adminArea{display:none;background:#f0faf0;border-top:6px solid #087f23;}
+.login-section{display:flex;justify-content:center;padding:60px 20px;}
+.login-card{background:white;max-width:360px;width:100%;padding:32px 28px;border-radius:20px;box-shadow:0 4px 20px rgba(0,0,0,0.1);display:flex;flex-direction:column;gap:14px;}
+.login-card h2{color:#087f23;text-align:center;margin-bottom:6px;}
+.login-card input{width:100%;padding:12px 14px;border:1.5px solid #ddd;border-radius:10px;font-size:0.95rem;font-family:inherit;}
+.login-card input:focus{outline:none;border-color:#087f23;}
+#loginBtn{background:#087f23;color:white;border:none;padding:14px;border-radius:12px;font-size:1rem;font-weight:600;cursor:pointer;}
+#loginBtn:hover{background:#1b5e20;}
+#loginBtn:disabled{opacity:0.6;cursor:not-allowed;}
+.msg{padding:12px;border-radius:10px;font-size:0.88rem;text-align:center;}
+.msg.success{background:#e8f5e9;color:#2e7d32;border:1px solid #a5d6a7;}
+.msg.error{background:#fce4ec;color:#c62828;border:1px solid #ef9a9a;}
+.dashboard-section{max-width:900px;margin:0 auto;padding:24px 16px 60px;}
+.dash-top{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px;margin-bottom:20px;}
+.stats{display:flex;gap:12px;flex-wrap:wrap;}
+.stat-card{background:white;border-radius:14px;padding:14px 22px;text-align:center;box-shadow:0 2px 10px rgba(0,0,0,0.07);}
+.stat-card span{display:block;font-size:1.6rem;font-weight:700;color:#087f23;}
+.stat-card label{font-size:0.78rem;color:#555;}
+#logoutBtn{background:white;color:#087f23;border:1.5px solid #087f23;padding:10px 18px;border-radius:10px;font-size:0.9rem;font-weight:600;cursor:pointer;}
+#logoutBtn:hover{background:#087f23;color:white;}
+.filter-bar{margin-bottom:16px;}
+.filter-bar select{padding:10px 14px;border-radius:10px;border:1.5px solid #ddd;font-size:0.9rem;background:white;}
+.orders-list{display:flex;flex-direction:column;gap:14px;}
+.empty{text-align:center;color:#777;padding:40px 0;}
+.order-card{background:white;border-radius:16px;padding:18px 20px;box-shadow:0 2px 12px rgba(0,0,0,0.07);}
+.order-card-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;flex-wrap:wrap;gap:6px;}
+.order-card-head strong{color:#1b5e20;font-size:1.05rem;}
+.badge{font-size:0.75rem;font-weight:700;padding:4px 10px;border-radius:20px;color:white;}
+.badge-pending{background:#f9a825;}
+.badge-confirmed{background:#1976d2;}
+.badge-outfordelivery{background:#7b1fa2;}
+.badge-delivered{background:#2e7d32;}
+.badge-cancelled{background:#c62828;}
+.order-card p{font-size:0.9rem;color:#333;margin-bottom:4px;}
+.order-card .time{color:#888;font-size:0.78rem;}
+.order-actions{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap;}
+.order-actions select{padding:8px 10px;border-radius:8px;border:1.5px solid #ddd;font-size:0.85rem;}
+.del-btn{background:#fce4ec;color:#c62828;border:1.5px solid #ef9a9a;padding:8px 14px;border-radius:8px;font-size:0.85rem;cursor:pointer;}
+.del-btn:hover{background:#c62828;color:white;}
 </style>
 </head>
 <body>
 
-<!-- ORDER PAGE (default view, no login required) -->
-<div id="orderPage" class="page active">
-  <div class="brand-header">
-    <img src="logo.png" alt="Kani Milk Logo" class="brand-logo" id="brandLogo" onclick="secretTap()">
-    <div class="brand-title">Kani Milk Agency</div>
-    <div class="brand-sub">🥛 Fresh Milk • Daily Delivery • Pure Quality</div>
+<!-- HEADER -->
+<header>
+  <img src="logo.png" alt="Kani Milk Logo">
+  <h1>Kani Milk Agency</h1>
+  <p>Fresh Milk • Daily Delivery • Pure Quality</p>
+</header>
+
+<!-- PRODUCTS -->
+<h2>Our Products</h2>
+<div class="products">
+
+  <div class="card">
+    <img src="cowmilk.jpg" alt="Jersey Gold Milk">
+    <h3>Jersey Gold Milk</h3>
+    <button onclick="selectProduct('Jersey Gold Milk')">Select</button>
   </div>
 
-  <div class="marquee-wrap">
-    <marquee behavior="scroll" direction="left" scrollamount="4">
-      <span class="marquee-item"><img src="cowmilk.jpg" alt="">Jersey Gold Milk</span>
-      <span class="marquee-item"><img src="bluetonedmilk.png" alt="">Blue Toned Milk</span>
-      <span class="marquee-item"><img src="Enrichedtonedmilk.jpg" alt="">Enriched Toned Milk</span>
-      <span class="marquee-item"><img src="fullcreamtonedmilk.jpg" alt="">Full Cream Toned Milk</span>
-      <span class="marquee-item"><img src="Richtonedmilk.png" alt="">Rich Toned Milk</span>
-      <span class="marquee-item"><img src="standardizedmilk.jpg" alt="">Standardized Milk</span>
-      <span class="marquee-item"><img src="tonedgreencurd.jpg" alt="">Toned Curd</span>
-      <span class="marquee-item"><img src="greentonedcurd.png" alt="">Fresh Curd</span>
-      <span class="marquee-item"><img src="littlecurd.jpg" alt="">Little Curd</span>
-      <span class="marquee-item"><img src="chocolate.png" alt="">Chocolate</span>
-      <span class="marquee-item"><img src="Strawberry50ml.png" alt="">Strawberry 50ml</span>
-      <span class="marquee-item"><img src="goldicecream.png" alt="">Gold Ice Cream</span>
-    </marquee>
+  <div class="card">
+    <img src="bluetonedmilk.png" alt="Blue Toned Milk">
+    <h3>Blue Toned Milk</h3>
+    <button onclick="selectProduct('Blue Toned Milk')">Select</button>
   </div>
 
-  <section class="products-section">
-    <div class="section-title">🛍️ Our Products</div>
-    <div class="products" id="productGrid">
-      <div class="card" data-product="Jersey Gold Milk"><img src="cowmilk.jpg" alt=""><h3>Jersey Gold Milk</h3><button onclick="selectProduct(this,'Jersey Gold Milk')">Select</button></div>
-      <div class="card" data-product="Blue Toned Milk"><img src="bluetonedmilk.png" alt=""><h3>Blue Toned Milk</h3><button onclick="selectProduct(this,'Blue Toned Milk')">Select</button></div>
-      <div class="card" data-product="Enriched Toned Milk"><img src="Enrichedtonedmilk.jpg" alt=""><h3>Enriched Toned Milk</h3><button onclick="selectProduct(this,'Enriched Toned Milk')">Select</button></div>
-      <div class="card" data-product="Full Cream Toned Milk"><img src="fullcreamtonedmilk.jpg" alt=""><h3>Full Cream Toned Milk</h3><button onclick="selectProduct(this,'Full Cream Toned Milk')">Select</button></div>
-      <div class="card" data-product="Rich Toned Milk"><img src="Richtonedmilk.png" alt=""><h3>Rich Toned Milk</h3><button onclick="selectProduct(this,'Rich Toned Milk')">Select</button></div>
-      <div class="card" data-product="Standardized Milk"><img src="standardizedmilk.jpg" alt=""><h3>Standardized Milk</h3><button onclick="selectProduct(this,'Standardized Milk')">Select</button></div>
-      <div class="card" data-product="Toned Curd"><img src="tonedgreencurd.jpg" alt=""><h3>Toned Curd</h3><button onclick="selectProduct(this,'Toned Curd')">Select</button></div>
-      <div class="card" data-product="Fresh Curd"><img src="greentonedcurd.png" alt=""><h3>Fresh Curd</h3><button onclick="selectProduct(this,'Fresh Curd')">Select</button></div>
-      <div class="card" data-product="Little Curd"><img src="littlecurd.jpg" alt=""><h3>Little Curd</h3><button onclick="selectProduct(this,'Little Curd')">Select</button></div>
-      <div class="card" data-product="Chocolate"><img src="chocolate.png" alt=""><h3>Chocolate</h3><button onclick="selectProduct(this,'Chocolate')">Select</button></div>
-      <div class="card" data-product="Strawberry 50ml"><img src="Strawberry50ml.png" alt=""><h3>Strawberry 50ml</h3><button onclick="selectProduct(this,'Strawberry 50ml')">Select</button></div>
-      <div class="card" data-product="Gold Ice Cream"><img src="goldicecream.png" alt=""><h3>Gold Ice Cream</h3><button onclick="selectProduct(this,'Gold Ice Cream')">Select</button></div>
+  <div class="card">
+    <img src="tonedcurd.png" alt="Fresh Curd">
+    <h3>Fresh Curd</h3>
+    <button onclick="selectProduct('Fresh Curd')">Select</button>
+  </div>
+
+  <div class="card">
+    <img src="goldicecream.png" alt="Ice Cream">
+    <h3>Gold Ice Cream</h3>
+    <button onclick="selectProduct('Ice Cream')">Select</button>
+  </div>
+
+</div>
+
+<!-- ORDER FORM -->
+<section class="order-section">
+  <h2>Place Your Order</h2>
+  <div class="order">
+    <input id="name"     type="text" placeholder="உங்கள் பெயர் (Your Name)">
+    <input id="phone"    type="tel"  placeholder="Phone Number (10 digits)" maxlength="10">
+    <input id="product"  type="text" placeholder="மேலே product select செய்யுங்கள்" readonly>
+    <input id="quantity" type="text" placeholder="Quantity (எ.கா: 1 Litre)">
+    <textarea id="address" placeholder="Delivery Address" rows="3"></textarea>
+    <div id="orderMsg" class="order-msg" style="display:none;"></div>
+    <button id="orderBtn" onclick="sendOrder()">🛒 Order Now</button>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>📞 Call us: <a href="tel:+918838416013">8838416013</a></p>
+  <p>© 2025 Kani Milk Agency. All rights reserved.<span id="adminDot" onclick="openAdmin()" title=""> </span></p>
+</footer>
+
+<!-- ===== ADMIN AREA (hidden until the footer dot is tapped) ===== -->
+<div id="adminArea">
+
+  <div id="loginSection" class="login-section">
+    <div class="login-card">
+      <h2>Staff Login</h2>
+      <input id="loginUsername" type="text" placeholder="Username" autocomplete="username">
+      <input id="loginPassword" type="password" placeholder="Password" autocomplete="current-password">
+      <div id="loginMsg" class="msg" style="display:none;"></div>
+      <button id="loginBtn" onclick="adminLogin()">Login</button>
     </div>
+  </div>
+
+  <section id="dashboardSection" class="dashboard-section" style="display:none;">
+    <div class="dash-top">
+      <div class="stats">
+        <div class="stat-card"><span id="totalCount">0</span><label>Total Orders</label></div>
+        <div class="stat-card"><span id="pendingCount">0</span><label>Pending</label></div>
+      </div>
+      <button id="logoutBtn" onclick="adminLogout()">Logout</button>
+    </div>
+
+    <div class="filter-bar">
+      <select id="statusFilter" onchange="renderOrders()">
+        <option value="all">All Statuses</option>
+        <option value="Pending">Pending</option>
+        <option value="Confirmed">Confirmed</option>
+        <option value="Out for Delivery">Out for Delivery</option>
+        <option value="Delivered">Delivered</option>
+        <option value="Cancelled">Cancelled</option>
+      </select>
+    </div>
+
+    <div id="dashMsg" class="msg" style="display:none;margin-bottom:14px;"></div>
+    <div id="ordersList" class="orders-list"></div>
   </section>
 
-  <section class="order-section" id="orderFormSection">
-    <div class="section-title">📋 Place Your Order</div>
-    <div class="order">
-      <div>
-        <label>உங்கள் பெயர் (Your Name)</label>
-        <input id="custName" type="text" placeholder="பெயர் போடுங்கள்" autocomplete="name">
-      </div>
-      <div>
-        <label>Phone Number</label>
-        <input id="custPhone" type="tel" placeholder="10-digit phone number" maxlength="10" autocomplete="tel">
-      </div>
-      <div>
-        <label>Product</label>
-        <input id="custProduct" type="text" placeholder="மேலே product select செய்யுங்கள்" readonly>
-      </div>
-      <div>
-        <label>Quantity</label>
-        <input id="custQuantity" type="text" placeholder="எ.கா: 1 Litre">
-      </div>
-      <div>
-        <label>Delivery Address</label>
-        <textarea id="custAddress" placeholder="உங்கள் முகவரி" rows="3"></textarea>
-      </div>
-      <div id="orderMsg" class="order-msg"></div>
-      <button id="orderBtn" onclick="sendOrder()">🛒 Order Now</button>
-    </div>
-  </section>
-
-  <footer>
-    <p>📞 Call us: <a href="tel:+918838416013">8838416013</a></p>
-    <p style="margin-top:6px;">© 2025 Kani Milk Agency</p>
-  </footer>
 </div>
 
-<!-- ADMIN LOGIN — only reachable by opening the page with #admin in the URL. No visible link anywhere. -->
-<div id="adminLoginPage" class="page">
-<div class="admin-login-bg">
-  <div class="admin-login-card">
-    <h2>🔐 Admin Login</h2>
-    <p>Authorized personnel only</p>
-    <div class="form-group">
-      <label>Username</label>
-      <input id="adminLoginUser" type="text" placeholder="admin username" autocomplete="off">
-    </div>
-    <div class="form-group">
-      <label>Password</label>
-      <input id="adminLoginPass" type="password" placeholder="password" autocomplete="off">
-    </div>
-    <div id="adminLoginMsg" class="form-msg"></div>
-    <button class="admin-btn" id="adminLoginBtn" onclick="doAdminLogin()">Login →</button>
-    <a class="back-link" onclick="doAdminLogout()">← Back to order page</a>
-  </div>
-</div>
-</div>
-
-<!-- ADMIN DASHBOARD -->
-<div id="adminPage" class="page">
-<div class="admin-header">
-  <div>
-    <h1>🛡️ Kani Milk Admin</h1>
-    <p style="font-size:0.8rem;opacity:0.8;margin-top:2px;">Real-time Orders</p>
-  </div>
-  <button class="logout-btn" onclick="doAdminLogout()">Logout ↩</button>
-</div>
-<div class="stats">
-  <div class="stat-box"><h3 id="totalCount">0</h3><p>மொத்தம்</p></div>
-  <div class="stat-box"><h3 id="pendingCount" class="orange">0</h3><p>Pending</p></div>
-  <div class="stat-box"><h3 id="deliveredCount">0</h3><p>Delivered</p></div>
-  <div class="stat-box"><h3 id="todayCount" class="blue">0</h3><p>Today</p></div>
-</div>
-<div class="admin-tools">
-  <input class="search-box" id="searchBox" type="text" placeholder="🔍 தேடுங்கள்..." oninput="renderOrders()">
-  <select class="filter-select" id="filterStatus" onchange="renderOrders()">
-    <option value="all">All</option>
-    <option value="Pending">Pending</option>
-    <option value="Delivered">Delivered</option>
-  </select>
-  <button class="export-btn" onclick="exportCSV()">📥 CSV</button>
-</div>
-<div class="admin-wrap">
-  <h2>📋 Live Orders <span id="orderCountLabel" style="font-size:0.82rem;color:#888;font-weight:400;"></span></h2>
-  <div class="table-wrap">
-    <table>
-      <thead><tr><th>#</th><th>பெயர்</th><th>Phone</th><th>Product</th><th>Qty</th><th>Address</th><th>நேரம்</th><th>Status</th><th>Del</th></tr></thead>
-      <tbody id="ordersBody"><tr><td colspan="9" style="text-align:center;padding:30px;color:#888;">⏳ Loading...</td></tr></tbody>
-    </table>
-  </div>
-</div>
-</div>
+<!-- FIREBASE v8 CDN — Neocities compatible ✅ -->
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 
 <script>
-var ADMIN_USER = "kani2025";
-var ADMIN_PASS = "milk@admin";
-var unsubscribe = null;
-var allOrders   = [];
+// ✅ Firebase Config
+firebase.initializeApp({
+  apiKey: "AIzaSyAQAY_wXDlU5twKU9DLZCh3lgfBfLAy7AQ",
+  authDomain: "kani-milk-agency-9323b.firebaseapp.com",
+  projectId: "kani-milk-agency-9323b",
+  storageBucket: "kani-milk-agency-9323b.firebasestorage.app",
+  messagingSenderId: "317392951345",
+  appId: "1:317392951345:web:1768ca6b7725812491dd10"
+});
 
-/* PAGE NAV */
-function showPage(id) {
-  document.querySelectorAll('.page').forEach(function(p){ p.classList.remove('active'); });
-  document.getElementById(id).classList.add('active');
-  window.scrollTo(0,0);
+var db = firebase.firestore();
+var auth = firebase.auth();
+
+// Username is mapped to a fake email behind the scenes so the login box
+// can just say "Username" — Firebase Auth itself still requires an
+// email-shaped identifier internally.
+var ADMIN_EMAIL_DOMAIN = "@kani-admin.local";
+
+// ===================== PUBLIC ORDER FORM =====================
+
+function selectProduct(name) {
+  document.getElementById("product").value = name;
+  document.querySelector(".order-section").scrollIntoView({ behavior: "smooth" });
 }
 
-/* ROUTING — admin dashboard is only reachable via #admin in the URL.
-   There is no visible link to it anywhere on the order page. */
-function routeByHash() {
-  if (window.location.hash === '#admin') {
-    if (allOrders._loggedIn) { showPage('adminPage'); }
-    else { showPage('adminLoginPage'); }
-  } else {
-    if (unsubscribe) { unsubscribe(); unsubscribe = null; }
-    showPage('orderPage');
-  }
-}
-window.addEventListener('hashchange', routeByHash);
-routeByHash();
-
-/* HIDDEN ADMIN ENTRY — tap the logo 5 times within 1.5s to open admin login.
-   No visible button or link exists anywhere on the page. */
-var secretTapCount = 0;
-var secretTapTimer = null;
-function secretTap() {
-  secretTapCount++;
-  clearTimeout(secretTapTimer);
-  secretTapTimer = setTimeout(function(){ secretTapCount = 0; }, 1500);
-  if (secretTapCount >= 5) {
-    secretTapCount = 0;
-    window.location.hash = '#admin';
-    routeByHash();
-  }
+function showMessage(msg, type) {
+  var el = document.getElementById("orderMsg");
+  el.textContent = msg;
+  el.className = "order-msg " + type;
+  el.style.display = "block";
+  setTimeout(function(){ el.style.display = "none"; }, 5000);
 }
 
-/* PRODUCT SELECTION */
-function selectProduct(btnEl, name) {
-  document.querySelectorAll('.card').forEach(function(c){
-    c.classList.remove('selected');
-    var b = c.querySelector('button');
-    if (b) b.textContent = 'Select';
-  });
-  var card = btnEl.closest('.card');
-  if (card) card.classList.add('selected');
-  btnEl.textContent = '✓ Selected';
-  document.getElementById('custProduct').value = name;
-  document.getElementById('orderFormSection').scrollIntoView({behavior:'smooth', block:'start'});
-}
-
-/* ORDER SUBMISSION */
 function sendOrder() {
-  var name     = document.getElementById('custName').value.trim();
-  var phone    = document.getElementById('custPhone').value.trim();
-  var product  = document.getElementById('custProduct').value.trim();
-  var quantity = document.getElementById('custQuantity').value.trim();
-  var address  = document.getElementById('custAddress').value.trim();
-  var msgEl    = document.getElementById('orderMsg');
-  var btn      = document.getElementById('orderBtn');
+  var name     = document.getElementById("name").value.trim();
+  var phone    = document.getElementById("phone").value.trim();
+  var product  = document.getElementById("product").value.trim();
+  var quantity = document.getElementById("quantity").value.trim();
+  var address  = document.getElementById("address").value.trim();
 
-  msgEl.style.display = 'none';
+  if (!name || !phone || !product || !quantity || !address) {
+    showMessage("⚠️ எல்லா fields-உம் fill செய்யுங்கள்!", "error");
+    return;
+  }
+  if (!/^\d{10}$/.test(phone)) {
+    showMessage("⚠️ 10 digit phone number போடுங்கள்!", "error");
+    return;
+  }
 
-  if (!name) return showOrderMsg('⚠️ பெயர் போடுங்கள்!', 'error');
-  if (!/^\d{10}$/.test(phone)) return showOrderMsg('⚠️ சரியான 10-digit phone number போடுங்கள்!', 'error');
-  if (!product) return showOrderMsg('⚠️ மேலே ஒரு product select செய்யுங்கள்!', 'error');
-  if (!quantity) return showOrderMsg('⚠️ Quantity போடுங்கள்!', 'error');
-  if (!address) return showOrderMsg('⚠️ முகவரி போடுங்கள்!', 'error');
-
-  if (!window.db) return showOrderMsg('⚠️ Service unavailable. தயவுசெய்து கால் செய்யுங்கள்: 8838416013', 'error');
-
+  var btn = document.getElementById("orderBtn");
   btn.disabled = true;
-  btn.textContent = 'Sending...';
+  btn.textContent = "Saving...";
 
-  window.db.collection('orders').add({
-    name: name,
-    phone: phone,
-    product: product,
+  db.collection("orders").add({
+    name:     name,
+    phone:    phone,
+    product:  product,
     quantity: quantity,
-    address: address,
-    status: 'Pending',
-    timestamp: firebase.firestore.FieldValue.serverTimestamp()
-  }).then(function() {
-    showOrderMsg('✅ Order வைக்கப்பட்டது! நாங்கள் உங்களை தொடர்பு கொள்வோம்.', 'success');
-    document.getElementById('custQuantity').value = '';
-    document.getElementById('custAddress').value = '';
-    document.getElementById('custProduct').value = '';
-    document.querySelectorAll('.card').forEach(function(c){
-      c.classList.remove('selected');
-      var b = c.querySelector('button');
-      if (b) b.textContent = 'Select';
-    });
-  }).catch(function(err) {
-    showOrderMsg('⚠️ Error: ' + err.message, 'error');
-  }).finally(function() {
+    address:  address,
+    status:   "Pending",
+    time:     firebase.firestore.FieldValue.serverTimestamp()
+  })
+  .then(function() {
+    showMessage("✅ Order வெற்றிகரமாக save ஆச்சு!", "success");
+
+    document.getElementById("name").value     = "";
+    document.getElementById("phone").value    = "";
+    document.getElementById("product").value  = "";
+    document.getElementById("quantity").value = "";
+    document.getElementById("address").value  = "";
+
+    var msg =
+      "🥛 *Kani Milk Agency Order*\n\n" +
+      "👤 பெயர்: " + name +
+      "\n📞 Phone: " + phone +
+      "\n🛒 Product: " + product +
+      "\n📦 Quantity: " + quantity +
+      "\n📍 Address: " + address +
+      "\n⏳ Status: Pending";
+
+    setTimeout(function() {
+      window.open(
+        "https://wa.me/918838416013?text=" + encodeURIComponent(msg),
+        "_blank"
+      );
+    }, 1500);
+  })
+  .catch(function(error) {
+    showMessage("❌ Error: " + error.message, "error");
+    console.error(error);
+  })
+  .finally(function() {
     btn.disabled = false;
-    btn.textContent = '🛒 Order Now';
+    btn.textContent = "🛒 Order Now";
   });
 }
 
-function showOrderMsg(text, type) {
-  var msgEl = document.getElementById('orderMsg');
-  msgEl.textContent = text;
-  msgEl.className = 'order-msg ' + type;
-  msgEl.style.display = 'block';
+// ===================== ADMIN AREA =====================
+
+var allOrders = [];
+var unsubscribeOrders = null;
+var STATUSES = ["Pending","Confirmed","Out for Delivery","Delivered","Cancelled"];
+
+function openAdmin() {
+  document.getElementById("adminArea").style.display = "block";
+  document.getElementById("adminArea").scrollIntoView({ behavior: "smooth" });
 }
 
-/* ADMIN LOGIN */
-function doAdminLogin() {
-  var u = document.getElementById('adminLoginUser').value.trim();
-  var p = document.getElementById('adminLoginPass').value.trim();
-  var msgEl = document.getElementById('adminLoginMsg');
-
-  if (u === ADMIN_USER && p === ADMIN_PASS) {
-    allOrders._loggedIn = true;
-    showPage('adminPage');
-    attachOrdersListener();
+auth.onAuthStateChanged(function(user) {
+  if (user) {
+    document.getElementById("loginSection").style.display = "none";
+    document.getElementById("dashboardSection").style.display = "block";
+    listenForOrders();
   } else {
-    msgEl.textContent = '⚠️ தவறான username/password!';
-    msgEl.className = 'form-msg error';
-    msgEl.style.display = 'block';
+    document.getElementById("dashboardSection").style.display = "none";
+    if (unsubscribeOrders) { unsubscribeOrders(); unsubscribeOrders = null; }
+    allOrders = [];
   }
+});
+
+function showMsg(elId, text, type) {
+  var el = document.getElementById(elId);
+  el.textContent = text;
+  el.className = "msg " + type;
+  el.style.display = "block";
 }
 
-function doAdminLogout() {
+function adminLogin() {
+  var username = document.getElementById("loginUsername").value.trim().toLowerCase();
+  var password = document.getElementById("loginPassword").value;
+  if (!username || !password) {
+    showMsg("loginMsg", "⚠️ Enter username and password.", "error");
+    return;
+  }
+  var btn = document.getElementById("loginBtn");
+  btn.disabled = true;
+  btn.textContent = "Logging in...";
+  auth.signInWithEmailAndPassword(username + ADMIN_EMAIL_DOMAIN, password)
+    .catch(function(err) {
+      showMsg("loginMsg", "❌ Incorrect username or password.", "error");
+    })
+    .finally(function() {
+      btn.disabled = false;
+      btn.textContent = "Login";
+    });
+}
+
+function adminLogout() {
+  auth.signOut();
+  document.getElementById("loginSection").style.display = "flex";
+  document.getElementById("loginUsername").value = "";
+  document.getElementById("loginPassword").value = "";
+}
+
+function listenForOrders() {
+  if (unsubscribeOrders) unsubscribeOrders();
+  unsubscribeOrders = db.collection("orders").orderBy("time", "desc")
+    .onSnapshot(function(snapshot) {
+      allOrders = snapshot.docs.map(function(doc) {
+        var data = doc.data();
+        data.id = doc.id;
+        return data;
+      });
+      renderOrders();
+    }, function(err) {
+      showMsg("dashMsg", "❌ Could not load orders: " + err.message, "error");
+    });
+}
+
+function statusSlug(status) {
+  return (status || "Pending").toLowerCase().replace(/\s+/g, "");
+}
+
+function escapeHtml(str) {
+  if (str === undefined || str === null) return "";
+  return String(str)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+function renderOrders() {
+  var filter = document.getElementById("statusFilter").value;
+  var list = allOrders.filter(function(o) {
+    return filter === "all" || (o.status || "Pending") === filter;
+  });
+
+  document.getElementById("totalCount").textContent = allOrders.length;
+  document.getElementById("pendingCount").textContent =
+    allOrders.filter(function(o) { return (o.status || "Pending") === "Pending"; }).length;
+
+  var container = document.getElementById("ordersList");
+  if (list.length === 0) {
+    container.innerHTML = '<p class="empty">No orders found.</p>';
+    return;
+  }
+
+  container.innerHTML = list.map(function(o) {
+    var status = o.status || "Pending";
+    var timeStr = (o.time && o.time.toDate) ? o.time.toDate().toLocaleString() : "—";
+    var options = STATUSES.map(function(s) {
+      return '<option value="' + s + '"' + (s === status ? " selected" : "") + '>' + s + '</option>';
+    }).join("");
+
+    return '' +
+      '<div class="order-card">' +
+        '<div class="order-card-head">' +
+          '<strong>' + escapeHtml(o.name) + '</strong>' +
+          '<span class="badge badge-' + statusSlug(status) + '">' + escapeHtml(status) + '</span>' +
+        '</div>' +
+        '<p>📞 ' + escapeHtml(o.phone) + '</p>' +
+        '<p>🛒 ' + escapeHtml(o.product) + ' — ' + escapeHtml(o.quantity) + '</p>' +
+        '<p>📍 ' + escapeHtml(o.address) + '</p>' +
+        '<p class="time">🕒 ' + timeStr + '</p>' +
+        '<div class="order-actions">' +
+          '<select onchange="updateStatus(\'' + o.id + '\', this.value)">' + options + '</select>' +
+          '<button class="del-btn" onclick="deleteOrder(\'' + o.id + '\')">Delete</button>' +
+        '</div>' +
+      '</div>';
+  }).join("");
+}
+
+function updateStatus(id, status) {
+  db.collection("orders").doc(id).update({ status: status })
+    .catch(function(err) {
+      showMsg("dashMsg", "❌ Update failed: " + err.message, "error");
+    });
+}
+
+function deleteOrder(id) {
+  if (!confirm("Delete this order permanently?")) return;
+  db.collection("orders").doc(id).delete()
+    .catch(function(err) {
+      showMsg("dashMsg", "❌ Delete failed: " + err.message, "error");
+    });
+}
+</script>
+
+</body>
+      </html>
+  
