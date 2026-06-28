@@ -91,11 +91,14 @@ footer a{color:#a5d6a7;text-decoration:none;}
 </header>
 
 <!-- IMAGE MARQUEE -->
-<marquee behavior="scroll" direction="left" scrollamount="6" style="background:white;padding:10px 0;border-bottom:2px solid #087f23;">
-  <img src="cowmilk.jpg" alt="Jersey Gold Milk" style="height:70px;margin:0 18px;vertical-align:middle;">
-  <img src="bluetonedmilk.png" alt="Blue Toned Milk" style="height:70px;margin:0 18px;vertical-align:middle;">
-  <img src="tonedcurd.png" alt="Fresh Curd" style="height:70px;margin:0 18px;vertical-align:middle;">
-  <img src="goldicecream.png" alt="Ice Cream" style="height:70px;margin:0 18px;vertical-align:middle;">
+<marquee behavior="scroll" direction="left" scrollamount="6" style="background:white;padding:14px 0;border-bottom:2px solid #087f23;">
+  <img src="cowmilk.jpg" alt="Jersey Gold Milk" style="height:80px;width:80px;object-fit:cover;border-radius:50%;border:3px solid #d98c00;box-shadow:0 4px 10px rgba(0,0,0,0.18);margin:0 16px;vertical-align:middle;">
+  <img src="bluetonedmilk.png" alt="Blue Toned Milk" style="height:80px;width:80px;object-fit:cover;border-radius:50%;border:3px solid #d98c00;box-shadow:0 4px 10px rgba(0,0,0,0.18);margin:0 16px;vertical-align:middle;">
+  <img src="tonedcurd.png" alt="Fresh Curd" style="height:80px;width:80px;object-fit:cover;border-radius:50%;border:3px solid #d98c00;box-shadow:0 4px 10px rgba(0,0,0,0.18);margin:0 16px;vertical-align:middle;">
+  <img src="goldicecream.png" alt="Ice Cream" style="height:80px;width:80px;object-fit:cover;border-radius:50%;border:3px solid #d98c00;box-shadow:0 4px 10px rgba(0,0,0,0.18);margin:0 16px;vertical-align:middle;">
+  <img src="fullcreamtonedmilk.jpg" alt="Full Cream Toned Milk" style="height:80px;width:80px;object-fit:cover;border-radius:50%;border:3px solid #d98c00;box-shadow:0 4px 10px rgba(0,0,0,0.18);margin:0 16px;vertical-align:middle;">
+  <img src="standardizedmilk.png" alt="Standardized Milk" style="height:80px;width:80px;object-fit:cover;border-radius:50%;border:3px solid #d98c00;box-shadow:0 4px 10px rgba(0,0,0,0.18);margin:0 16px;vertical-align:middle;">
+  <img src="chocolate.png" alt="Chocolate Milk" style="height:80px;width:80px;object-fit:cover;border-radius:50%;border:3px solid #d98c00;box-shadow:0 4px 10px rgba(0,0,0,0.18);margin:0 16px;vertical-align:middle;">
 </marquee>
 
 <!-- PRODUCTS -->
@@ -124,6 +127,24 @@ footer a{color:#a5d6a7;text-decoration:none;}
     <img src="goldicecream.png" alt="Ice Cream">
     <h3>Gold Ice Cream</h3>
     <button onclick="selectProduct('Ice Cream')">Select</button>
+  </div>
+
+  <div class="card">
+    <img src="fullcreamtonedmilk.jpg" alt="Full Cream Toned Milk">
+    <h3>Full Cream Toned Milk</h3>
+    <button onclick="selectProduct('Full Cream Toned Milk')">Select</button>
+  </div>
+
+  <div class="card">
+    <img src="standardizedmilk.png" alt="Standardized Milk">
+    <h3>Standardized Milk</h3>
+    <button onclick="selectProduct('Standardized Milk')">Select</button>
+  </div>
+
+  <div class="card">
+    <img src="chocolate.png" alt="Chocolate Milk">
+    <h3>Chocolate Milk</h3>
+    <button onclick="selectProduct('Chocolate Milk')">Select</button>
   </div>
 
 </div>
@@ -439,16 +460,4 @@ function updateStatus(id, status) {
     });
 }
 
-function deleteOrder(id) {
-  if (currentRole !== "owner") { return; }
-  if (!confirm("Delete this order permanently?")) return;
-  db.collection("orders").doc(id).delete()
-    .catch(function(err) {
-      showMsg("dashMsg", "❌ Delete failed: " + err.message, "error");
-    });
-}
-</script>
-
-</body>
-      </html>
-  
+functio
