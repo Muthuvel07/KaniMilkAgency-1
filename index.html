@@ -27,6 +27,8 @@ h2{text-align:center;color:#087f23;font-size:1.5rem;margin:30px 0 20px;}
 #orderBtn{background:#087f23;color:white;border:none;padding:14px;border-radius:12px;font-size:1rem;font-weight:600;cursor:pointer;}
 #orderBtn:hover{background:#1b5e20;}
 #orderBtn:disabled{opacity:0.6;cursor:not-allowed;}
+#gpayBtn{display:block;text-align:center;background:#1a73e8;color:white;border:none;padding:14px;border-radius:12px;font-size:1rem;font-weight:600;text-decoration:none;}
+#gpayBtn:hover{background:#1558b0;}
 .order-msg{padding:12px;border-radius:10px;font-size:0.9rem;text-align:center;}
 .order-msg.success{background:#e8f5e9;color:#2e7d32;border:1px solid #a5d6a7;}
 .order-msg.error{background:#fce4ec;color:#c62828;border:1px solid #ef9a9a;}
@@ -160,6 +162,7 @@ footer a{color:#a5d6a7;text-decoration:none;}
     <textarea id="address" placeholder="Delivery Address" rows="3"></textarea>
     <div id="orderMsg" class="order-msg" style="display:none;"></div>
     <button id="orderBtn" onclick="sendOrder()">🛒 Order Now</button>
+    <a id="gpayBtn" href="upi://pay?pa=muthuvelmuthuvel887@okaxis&pn=Kani%20Milk%20Agency&cu=INR&tn=Milk%20Order%20Payment">💳 Pay via GPay</a>
   </div>
 </section>
 
@@ -471,5 +474,5 @@ function deleteOrder(id) {
 </script>
 
 </body>
-      </html>
-      
+  </html>
+  
