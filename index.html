@@ -29,9 +29,6 @@ h2{text-align:center;color:#087f23;font-size:1.5rem;margin:30px 0 20px;}
 #orderBtn:disabled{opacity:0.6;cursor:not-allowed;}
 #gpayBtn{display:block;text-align:center;background:#1a73e8;color:white;border:none;padding:14px;border-radius:12px;font-size:1rem;font-weight:600;text-decoration:none;}
 #gpayBtn:hover{background:#1558b0;}
-.map-wrap{max-width:600px;margin:0 auto 30px;padding:0 20px;text-align:center;}
-.map-directions{display:inline-block;margin-top:14px;background:#087f23;color:white;padding:10px 24px;border-radius:20px;text-decoration:none;font-weight:600;font-size:0.9rem;}
-.map-directions:hover{background:#1b5e20;}
 .order-msg{padding:12px;border-radius:10px;font-size:0.9rem;text-align:center;}
 .order-msg.success{background:#e8f5e9;color:#2e7d32;border:1px solid #a5d6a7;}
 .order-msg.error{background:#fce4ec;color:#c62828;border:1px solid #ef9a9a;}
@@ -169,17 +166,6 @@ footer a{color:#a5d6a7;text-decoration:none;}
   </div>
 </section>
 
-<!-- LOCATION MAP -->
-<h2>Find Us</h2>
-<div class="map-wrap">
-  <iframe
-    src="https://maps.google.com/maps?q=8.532943,77.710150&z=16&output=embed"
-    width="100%" height="280" style="border:0;border-radius:16px;"
-    allowfullscreen="" loading="lazy">
-  </iframe>
-  <a class="map-directions" href="https://www.google.com/maps/dir/?api=1&destination=8.532943,77.710150" target="_blank">📍 Get Directions</a>
-</div>
-
 <!-- FOOTER -->
 <footer>
   <p>📞 Call us: <a href="tel:+918838416013">8838416013</a></p>
@@ -228,13 +214,13 @@ footer a{color:#a5d6a7;text-decoration:none;}
 
 </div>
 
-<!-- FIREBASE v8 CDN -->
+<!-- FIREBASE v8 CDN — Neocities compatible ✅ -->
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 
 <script>
-// Firebase Config
+// ✅ Firebase Config
 firebase.initializeApp({
   apiKey: "AIzaSyAQAY_wXDlU5twKU9DLZCh3lgfBfLAy7AQ",
   authDomain: "kani-milk-agency-9323b.firebaseapp.com",
@@ -247,6 +233,9 @@ firebase.initializeApp({
 var db = firebase.firestore();
 var auth = firebase.auth();
 
+// Username is mapped to a fake email behind the scenes so the login box
+// can just say "Username" — Firebase Auth itself still requires an
+// email-shaped identifier internally.
 var ADMIN_EMAIL_DOMAIN = "@kani-admin.local";
 
 // ===================== PUBLIC ORDER FORM =====================
@@ -332,7 +321,7 @@ function sendOrder() {
 
 var allOrders = [];
 var unsubscribeOrders = null;
-var currentRole = null;
+var currentRole = null; // "owner" or "developer"
 var STATUSES = ["Pending","Confirmed","Out for Delivery","Delivered","Cancelled"];
 
 function openAdmin() {
@@ -466,7 +455,23 @@ function renderOrders() {
   }).join("");
 }
 
-function updateStatus(id, newStatus) {
-  db.collection("orders").doc(id).update({ status: newStatus })
+function updateStatus(id, status) {
+  if (currentRole !== "owner") { return; }
+  db.collection("orders").doc(id).update({ status: status })
     .catch(function(err) {
-      showMsg("dashMsg", "❌ Update failed: " + err.message,
+      showMsg("dashMsg", "❌ Update failed: " + err.message, "error");
+    });
+}
+
+function deleteOrder(id) {
+  if (currentRole !== "owner") { return; }
+  if (!confirm("Delete this order permanently?")) return;
+  db.collection("orders").doc(id).delete()
+    .catch(function(err) {
+      showMsg("dashMsg", "❌ Delete failed: " + err.message, "error");
+    });
+}
+</script>
+
+</body>
+</html>
