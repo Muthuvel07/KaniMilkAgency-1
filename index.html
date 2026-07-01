@@ -81,65 +81,6 @@ footer a{color:#a5d6a7;text-decoration:none;}
 .order-actions select{padding:8px 10px;border-radius:8px;border:1.5px solid #ddd;font-size:0.85rem;}
 .del-btn{background:#fce4ec;color:#c62828;border:1.5px solid #ef9a9a;padding:8px 14px;border-radius:8px;font-size:0.85rem;cursor:pointer;}
 .del-btn:hover{background:#c62828;color:white;}
-
-/* ===== TABS ===== */
-.tab-bar{display:flex;gap:10px;margin-bottom:20px;}
-.tab-btn{flex:1;background:white;color:#087f23;border:1.5px solid #087f23;padding:12px;border-radius:12px;font-size:0.95rem;font-weight:700;cursor:pointer;}
-.tab-btn.active{background:#087f23;color:white;}
-.view-only-note{background:#fff3e0;color:#e65100;border:1px solid #ffcc80;padding:10px 14px;border-radius:10px;font-size:0.85rem;margin-bottom:16px;text-align:center;}
-
-/* ===== BILLING (adapted from e-bill tool) ===== */
-#billingTab .bill-wrap{max-width:700px;margin:0 auto;background:white;border-radius:16px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,0.07);}
-#billingTab .shop-info{padding:14px 20px;border-bottom:1px solid #e0e0e0;display:flex;justify-content:space-between;font-size:13px;color:#555;}
-#billingTab .shop-info span{font-weight:700;color:#087f23;}
-#billingTab .customer-section{padding:14px 20px;border-bottom:1px solid #eee;}
-#billingTab .customer-section input{width:100%;padding:9px 12px;border:1.5px solid #ddd;border-radius:8px;font-size:14px;outline:none;}
-#billingTab .customer-section input:focus{border-color:#087f23;}
-#billingTab .bill-status-bar{padding:10px 20px;font-size:13px;font-weight:600;text-align:center;display:none;background:#e8f5e9;color:#2e7d32;border-top:1px solid #c8e6c9;}
-#billingTab .bill-status-bar.error{background:#fdecea;color:#c62828;border-color:#ffcdd2;}
-#billingTab .input-section{padding:16px 20px;border-bottom:2px dashed #e0e0e0;}
-#billingTab .input-section h3{font-size:13px;font-weight:700;color:#333;margin-bottom:12px;text-transform:uppercase;}
-#billingTab .input-row{display:flex;gap:8px;flex-wrap:wrap;}
-#billingTab .input-row input,#billingTab .input-row select{flex:1;min-width:100px;padding:9px 10px;border:1.5px solid #ddd;border-radius:8px;font-size:13px;outline:none;}
-#billingTab .input-row input:focus,#billingTab .input-row select:focus{border-color:#087f23;}
-#billingTab .btn-add{background:#087f23;color:white;border:none;padding:10px;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;width:100%;margin-top:10px;}
-#billingTab .btn-add:hover{background:#1b5e20;}
-#billingTab .table-section{padding:0 20px 10px;}
-#billingTab .table-header{display:grid;grid-template-columns:2fr 0.7fr 1fr 1fr 0.4fr;padding:10px 8px;background:#f5f5f5;font-size:11px;font-weight:700;color:#555;text-transform:uppercase;border-radius:6px;margin-bottom:4px;margin-top:10px;}
-#billingTab .product-row{display:grid;grid-template-columns:2fr 0.7fr 1fr 1fr 0.4fr;padding:9px 8px;border-bottom:1px solid #f0f0f0;font-size:13px;align-items:center;}
-#billingTab .product-name{font-weight:600;color:#222;}
-#billingTab .bill-amount{color:#087f23;font-weight:700;}
-#billingTab .btn-delete{background:none;border:none;color:#e53935;font-size:15px;cursor:pointer;padding:2px 5px;border-radius:4px;}
-#billingTab .btn-delete:hover{background:#fdecea;}
-#billingTab .empty-state{text-align:center;padding:28px;color:#aaa;font-size:14px;}
-#billingTab .bill-summary{padding:18px 20px;border-top:2px solid #e0e0e0;}
-#billingTab .summary-row{display:flex;justify-content:space-between;font-size:14px;color:#555;margin-bottom:8px;}
-#billingTab .gst-row{display:flex;align-items:center;gap:10px;margin-top:8px;font-size:13px;color:#555;}
-#billingTab .gst-row input{width:60px;padding:6px 8px;border:1.5px solid #ddd;border-radius:6px;font-size:13px;outline:none;}
-#billingTab .divider{border:none;border-top:1.5px dashed #ddd;margin:12px 0;}
-#billingTab .total-row{display:flex;justify-content:space-between;font-size:20px;font-weight:800;color:#087f23;}
-#billingTab .bill-actions{display:flex;gap:10px;padding:14px 20px;background:white;flex-wrap:wrap;}
-#billingTab .btn-save{flex:2;background:#34a853;color:white;border:none;padding:13px;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;}
-#billingTab .btn-print{flex:1;background:#1a73e8;color:white;border:none;padding:13px;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;}
-#billingTab .btn-clear{background:#e53935;color:white;border:none;padding:13px 16px;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;}
-#billingTab .btn-history{flex:1;background:#f57c00;color:white;border:none;padding:13px;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;}
-.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:100;padding:20px;overflow-y:auto;}
-.bill-modal{background:white;border-radius:16px;max-width:650px;margin:0 auto;overflow:hidden;}
-.bill-modal-header{background:linear-gradient(135deg,#087f23,#1b5e20);color:white;padding:18px 20px;display:flex;justify-content:space-between;align-items:center;}
-.bill-modal-header h2{font-size:18px;}
-.btn-close{background:rgba(255,255,255,0.2);border:none;color:white;padding:6px 12px;border-radius:8px;cursor:pointer;font-size:14px;}
-.history-item{padding:14px 20px;border-bottom:1px solid #f0f0f0;}
-.history-item .bill-no{font-weight:700;color:#087f23;font-size:14px;}
-.history-item .bill-info{font-size:12px;color:#888;margin-top:3px;}
-.history-item .bill-total{font-weight:800;color:#34a853;font-size:15px;float:right;}
-.loading{text-align:center;padding:30px;color:#aaa;font-size:14px;}
-
-@media print{
-  body *{visibility:hidden;}
-  #billingTab, #billingTab *{visibility:visible;}
-  #billingTab{position:absolute;top:0;left:0;width:100%;}
-  #billingTab .input-section,#billingTab .bill-actions,#billingTab .btn-delete,.tab-bar{display:none !important;}
-}
 </style>
 </head>
 <body>
@@ -165,22 +106,58 @@ footer a{color:#a5d6a7;text-decoration:none;}
 <!-- PRODUCTS -->
 <h2>Our Products</h2>
 <div class="products">
-  <div class="card"><img src="cowmilk.jpg" alt="Jersey Gold Milk"><h3>Jersey Gold Milk</h3><button onclick="selectProduct('Jersey Gold Milk')">Select</button></div>
-  <div class="card"><img src="bluetonedmilk.png" alt="Blue Toned Milk"><h3>Blue Toned Milk</h3><button onclick="selectProduct('Blue Toned Milk')">Select</button></div>
-  <div class="card"><img src="tonedcurd.png" alt="Fresh Curd"><h3>Fresh Curd</h3><button onclick="selectProduct('Fresh Curd')">Select</button></div>
-  <div class="card"><img src="goldicecream.png" alt="Ice Cream"><h3>Gold Ice Cream</h3><button onclick="selectProduct('Ice Cream')">Select</button></div>
-  <div class="card"><img src="fullcreamtonedmilk.jpg" alt="Full Cream Toned Milk"><h3>Full Cream Toned Milk</h3><button onclick="selectProduct('Full Cream Toned Milk')">Select</button></div>
-  <div class="card"><img src="standardizedmilk.png" alt="Standardized Milk"><h3>Standardized Milk</h3><button onclick="selectProduct('Standardized Milk')">Select</button></div>
-  <div class="card"><img src="chocolate.png" alt="Chocolate Milk"><h3>Chocolate Milk</h3><button onclick="selectProduct('Chocolate Milk')">Select</button></div>
+
+  <div class="card">
+    <img src="cowmilk.jpg" alt="Jersey Gold Milk">
+    <h3>Jersey Gold Milk</h3>
+    <button onclick="selectProduct('Jersey Gold Milk')">Select</button>
+  </div>
+
+  <div class="card">
+    <img src="bluetonedmilk.png" alt="Blue Toned Milk">
+    <h3>Blue Toned Milk</h3>
+    <button onclick="selectProduct('Blue Toned Milk')">Select</button>
+  </div>
+
+  <div class="card">
+    <img src="tonedcurd.png" alt="Fresh Curd">
+    <h3>Fresh Curd</h3>
+    <button onclick="selectProduct('Fresh Curd')">Select</button>
+  </div>
+
+  <div class="card">
+    <img src="goldicecream.png" alt="Ice Cream">
+    <h3>Gold Ice Cream</h3>
+    <button onclick="selectProduct('Ice Cream')">Select</button>
+  </div>
+
+  <div class="card">
+    <img src="fullcreamtonedmilk.jpg" alt="Full Cream Toned Milk">
+    <h3>Full Cream Toned Milk</h3>
+    <button onclick="selectProduct('Full Cream Toned Milk')">Select</button>
+  </div>
+
+  <div class="card">
+    <img src="standardizedmilk.png" alt="Standardized Milk">
+    <h3>Standardized Milk</h3>
+    <button onclick="selectProduct('Standardized Milk')">Select</button>
+  </div>
+
+  <div class="card">
+    <img src="chocolate.png" alt="Chocolate Milk">
+    <h3>Chocolate Milk</h3>
+    <button onclick="selectProduct('Chocolate Milk')">Select</button>
+  </div>
+
 </div>
 
 <!-- ORDER FORM -->
 <section class="order-section">
   <h2>Place Your Order</h2>
   <div class="order">
-    <input id="name" type="text" placeholder="உங்கள் பெயர் (Your Name)">
-    <input id="phone" type="tel" placeholder="Phone Number (10 digits)" maxlength="10">
-    <input id="product" type="text" placeholder="மேலே product select செய்யுங்கள்" readonly>
+    <input id="name"     type="text" placeholder="உங்கள் பெயர் (Your Name)">
+    <input id="phone"    type="tel"  placeholder="Phone Number (10 digits)" maxlength="10">
+    <input id="product"  type="text" placeholder="மேலே product select செய்யுங்கள்" readonly>
     <input id="quantity" type="text" placeholder="Quantity (எ.கா: 1 Litre)">
     <textarea id="address" placeholder="Delivery Address" rows="3"></textarea>
     <div id="orderMsg" class="order-msg" style="display:none;"></div>
@@ -195,7 +172,7 @@ footer a{color:#a5d6a7;text-decoration:none;}
   <p>© 2025 Kani Milk Agency. All rights reserved.<span id="adminDot" onclick="openAdmin()" title=""> </span></p>
 </footer>
 
-<!-- ===== ADMIN AREA ===== -->
+<!-- ===== ADMIN AREA (hidden until the footer dot is tapped) ===== -->
 <div id="adminArea">
 
   <div id="loginSection" class="login-section">
@@ -220,87 +197,281 @@ footer a{color:#a5d6a7;text-decoration:none;}
       </div>
     </div>
 
-    <!-- TABS -->
-    <div class="tab-bar">
-      <button id="tabOrdersBtn" class="tab-btn active" onclick="switchTab('orders')">📋 Orders</button>
-      <button id="tabBillingBtn" class="tab-btn" onclick="switchTab('billing')">🧾 Billing</button>
+    <div class="filter-bar">
+      <select id="statusFilter" onchange="renderOrders()">
+        <option value="all">All Statuses</option>
+        <option value="Pending">Pending</option>
+        <option value="Confirmed">Confirmed</option>
+        <option value="Out for Delivery">Out for Delivery</option>
+        <option value="Delivered">Delivered</option>
+        <option value="Cancelled">Cancelled</option>
+      </select>
     </div>
 
-    <!-- ORDERS TAB -->
-    <div id="ordersTab">
-      <div class="filter-bar">
-        <select id="statusFilter" onchange="renderOrders()">
-          <option value="all">All Statuses</option>
-          <option value="Pending">Pending</option>
-          <option value="Confirmed">Confirmed</option>
-          <option value="Out for Delivery">Out for Delivery</option>
-          <option value="Delivered">Delivered</option>
-          <option value="Cancelled">Cancelled</option>
-        </select>
-      </div>
-      <div id="dashMsg" class="msg" style="display:none;margin-bottom:14px;"></div>
-      <div id="ordersList" class="orders-list"></div>
-    </div>
+    <div id="dashMsg" class="msg" style="display:none;margin-bottom:14px;"></div>
+    <div id="ordersList" class="orders-list"></div>
+  </section>
 
-    <!-- BILLING TAB -->
-    <div id="billingTab" style="display:none;">
-      <div id="billingViewOnlyNote" class="view-only-note" style="display:none;">👁️ Developer role — view only. Only Owner can create/save bills.</div>
+</div>
 
-      <div class="bill-wrap">
-        <div class="shop-info">
-          <div>Bill No: <span id="billNo">Loading...</span><br>Date: <span id="billDate"></span></div>
-          <div style="text-align:right;">Time: <span id="billTime"></span><br><span style="color:#34a853;">🟢 Firebase Connected</span></div>
-        </div>
+<!-- FIREBASE v8 CDN — Neocities compatible ✅ -->
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 
-        <div class="customer-section">
-          <input type="text" id="customerName" placeholder="👤 Customer Name (optional)">
-        </div>
+<script>
+// ✅ Firebase Config
+firebase.initializeApp({
+  apiKey: "AIzaSyAQAY_wXDlU5twKU9DLZCh3lgfBfLAy7AQ",
+  authDomain: "kani-milk-agency-9323b.firebaseapp.com",
+  projectId: "kani-milk-agency-9323b",
+  storageBucket: "kani-milk-agency-9323b.firebasestorage.app",
+  messagingSenderId: "317392951345",
+  appId: "1:317392951345:web:1768ca6b7725812491dd10"
+});
 
-        <div class="bill-status-bar" id="billStatusBar"></div>
+var db = firebase.firestore();
+var auth = firebase.auth();
 
-        <div class="input-section" id="billInputSection">
-          <h3>➕ Add Product</h3>
-          <div class="input-row">
-            <input type="text" id="productName" placeholder="Product Name">
-            <input type="number" id="qty" placeholder="Qty" min="1" value="1">
-            <input type="number" id="price" placeholder="Price (₹)" min="0" step="0.01">
-            <select id="unit">
-              <option value="pcs">pcs</option>
-              <option value="L">L</option>
-              <option value="kg">kg</option>
-              <option value="g">g</option>
-              <option value="ml">ml</option>
-              <option value="packet">packet</option>
-              <option value="box">box</option>
-            </select>
-          </div>
-          <button class="btn-add" onclick="addProduct()">➕ Add to Bill</button>
-        </div>
+// Username is mapped to a fake email behind the scenes so the login box
+// can just say "Username" — Firebase Auth itself still requires an
+// email-shaped identifier internally.
+var ADMIN_EMAIL_DOMAIN = "@kani-admin.local";
 
-        <div class="table-section">
-          <div class="table-header"><div>Product</div><div>Qty</div><div>Price</div><div>Amount</div><div></div></div>
-          <div id="productList"><div class="empty-state"><div class="icon">🛒</div>No products added yet.</div></div>
-        </div>
+// ===================== PUBLIC ORDER FORM =====================
 
-        <div class="bill-summary">
-          <div class="summary-row"><span>Subtotal</span><span id="subtotal">₹0.00</span></div>
-          <div class="gst-row">
-            <span>GST (%)</span>
-            <input type="number" id="taxRate" value="0" min="0" max="100" oninput="updateSummary()">
-            <span id="taxAmount" style="margin-left:auto;color:#f57c00;font-weight:600;">+₹0.00</span>
-          </div>
-          <div class="gst-row">
-            <span>Discount (%)</span>
-            <input type="number" id="discountRate" value="0" min="0" max="100" oninput="updateSummary()">
-            <span id="discountAmount" style="margin-left:auto;color:#e53935;font-weight:600;">-₹0.00</span>
-          </div>
-          <hr class="divider">
-          <div class="total-row"><span>TOTAL</span><span id="totalAmount">₹0.00</span></div>
-          <div style="font-size:12px;color:#aaa;margin-top:6px;text-align:right;"><span id="itemCount">0 items</span></div>
-        </div>
+function selectProduct(name) {
+  document.getElementById("product").value = name;
+  document.querySelector(".order-section").scrollIntoView({ behavior: "smooth" });
+}
 
-        <div class="bill-actions" id="billActionButtons">
-          <button class="btn-save" onclick="saveBill()">💾 Save to Firebase</button>
-          <button class="btn-history" onclick="openHistory()">📋 History</button>
-          <button class="btn-print" onclick="window.print()">🖨️ Print</button>
-          <button class="btn-clear" onclick="clearAll()">🗑️</butt
+function showMessage(msg, type) {
+  var el = document.getElementById("orderMsg");
+  el.textContent = msg;
+  el.className = "order-msg " + type;
+  el.style.display = "block";
+  setTimeout(function(){ el.style.display = "none"; }, 5000);
+}
+
+function sendOrder() {
+  var name     = document.getElementById("name").value.trim();
+  var phone    = document.getElementById("phone").value.trim();
+  var product  = document.getElementById("product").value.trim();
+  var quantity = document.getElementById("quantity").value.trim();
+  var address  = document.getElementById("address").value.trim();
+
+  if (!name || !phone || !product || !quantity || !address) {
+    showMessage("⚠️ எல்லா fields-உம் fill செய்யுங்கள்!", "error");
+    return;
+  }
+  if (!/^\d{10}$/.test(phone)) {
+    showMessage("⚠️ 10 digit phone number போடுங்கள்!", "error");
+    return;
+  }
+
+  var btn = document.getElementById("orderBtn");
+  btn.disabled = true;
+  btn.textContent = "Saving...";
+
+  db.collection("orders").add({
+    name:     name,
+    phone:    phone,
+    product:  product,
+    quantity: quantity,
+    address:  address,
+    status:   "Pending",
+    time:     firebase.firestore.FieldValue.serverTimestamp()
+  })
+  .then(function() {
+    showMessage("✅ Order வெற்றிகரமாக save ஆச்சு!", "success");
+
+    document.getElementById("name").value     = "";
+    document.getElementById("phone").value    = "";
+    document.getElementById("product").value  = "";
+    document.getElementById("quantity").value = "";
+    document.getElementById("address").value  = "";
+
+    var msg =
+      "🥛 *Kani Milk Agency Order*\n\n" +
+      "👤 பெயர்: " + name +
+      "\n📞 Phone: " + phone +
+      "\n🛒 Product: " + product +
+      "\n📦 Quantity: " + quantity +
+      "\n📍 Address: " + address +
+      "\n⏳ Status: Pending";
+
+    setTimeout(function() {
+      window.open(
+        "https://wa.me/918838416013?text=" + encodeURIComponent(msg),
+        "_blank"
+      );
+    }, 1500);
+  })
+  .catch(function(error) {
+    showMessage("❌ Error: " + error.message, "error");
+    console.error(error);
+  })
+  .finally(function() {
+    btn.disabled = false;
+    btn.textContent = "🛒 Order Now";
+  });
+}
+
+// ===================== ADMIN AREA =====================
+
+var allOrders = [];
+var unsubscribeOrders = null;
+var currentRole = null; // "owner" or "developer"
+var STATUSES = ["Pending","Confirmed","Out for Delivery","Delivered","Cancelled"];
+
+function openAdmin() {
+  document.getElementById("adminArea").style.display = "block";
+  document.getElementById("adminArea").scrollIntoView({ behavior: "smooth" });
+}
+
+auth.onAuthStateChanged(function(user) {
+  if (user) {
+    currentRole = (user.email === "developer" + ADMIN_EMAIL_DOMAIN) ? "developer" : "owner";
+    var roleLabel = document.getElementById("roleLabel");
+    roleLabel.textContent = (currentRole === "owner") ? "Owner" : "Developer (view only)";
+    roleLabel.style.background = (currentRole === "owner") ? "#1976d2" : "#7b1fa2";
+
+    document.getElementById("loginSection").style.display = "none";
+    document.getElementById("dashboardSection").style.display = "block";
+    listenForOrders();
+  } else {
+    currentRole = null;
+    document.getElementById("dashboardSection").style.display = "none";
+    if (unsubscribeOrders) { unsubscribeOrders(); unsubscribeOrders = null; }
+    allOrders = [];
+  }
+});
+
+function showMsg(elId, text, type) {
+  var el = document.getElementById(elId);
+  el.textContent = text;
+  el.className = "msg " + type;
+  el.style.display = "block";
+}
+
+function adminLogin() {
+  var username = document.getElementById("loginUsername").value.trim().toLowerCase();
+  var password = document.getElementById("loginPassword").value;
+  if (!username || !password) {
+    showMsg("loginMsg", "⚠️ Enter username and password.", "error");
+    return;
+  }
+  var btn = document.getElementById("loginBtn");
+  btn.disabled = true;
+  btn.textContent = "Logging in...";
+  auth.signInWithEmailAndPassword(username + ADMIN_EMAIL_DOMAIN, password)
+    .catch(function(err) {
+      showMsg("loginMsg", "❌ [" + err.code + "] " + err.message, "error");
+    })
+    .finally(function() {
+      btn.disabled = false;
+      btn.textContent = "Login";
+    });
+}
+
+function adminLogout() {
+  auth.signOut();
+  document.getElementById("loginSection").style.display = "flex";
+  document.getElementById("loginUsername").value = "";
+  document.getElementById("loginPassword").value = "";
+}
+
+function listenForOrders() {
+  if (unsubscribeOrders) unsubscribeOrders();
+  unsubscribeOrders = db.collection("orders").orderBy("time", "desc")
+    .onSnapshot(function(snapshot) {
+      allOrders = snapshot.docs.map(function(doc) {
+        var data = doc.data();
+        data.id = doc.id;
+        return data;
+      });
+      renderOrders();
+    }, function(err) {
+      showMsg("dashMsg", "❌ Could not load orders: " + err.message, "error");
+    });
+}
+
+function statusSlug(status) {
+  return (status || "Pending").toLowerCase().replace(/\s+/g, "");
+}
+
+function escapeHtml(str) {
+  if (str === undefined || str === null) return "";
+  return String(str)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+function renderOrders() {
+  var filter = document.getElementById("statusFilter").value;
+  var list = allOrders.filter(function(o) {
+    return filter === "all" || (o.status || "Pending") === filter;
+  });
+
+  document.getElementById("totalCount").textContent = allOrders.length;
+  document.getElementById("pendingCount").textContent =
+    allOrders.filter(function(o) { return (o.status || "Pending") === "Pending"; }).length;
+
+  var container = document.getElementById("ordersList");
+  if (list.length === 0) {
+    container.innerHTML = '<p class="empty">No orders found.</p>';
+    return;
+  }
+
+  container.innerHTML = list.map(function(o) {
+    var status = o.status || "Pending";
+    var timeStr = (o.time && o.time.toDate) ? o.time.toDate().toLocaleString() : "—";
+    var options = STATUSES.map(function(s) {
+      return '<option value="' + s + '"' + (s === status ? " selected" : "") + '>' + s + '</option>';
+    }).join("");
+
+    var actionsHtml = (currentRole === "owner")
+      ? '<div class="order-actions">' +
+          '<select onchange="updateStatus(\'' + o.id + '\', this.value)">' + options + '</select>' +
+          '<button class="del-btn" onclick="deleteOrder(\'' + o.id + '\')">Delete</button>' +
+        '</div>'
+      : '';
+
+    return '' +
+      '<div class="order-card">' +
+        '<div class="order-card-head">' +
+          '<strong>' + escapeHtml(o.name) + '</strong>' +
+          '<span class="badge badge-' + statusSlug(status) + '">' + escapeHtml(status) + '</span>' +
+        '</div>' +
+        '<p>📞 ' + escapeHtml(o.phone) + '</p>' +
+        '<p>🛒 ' + escapeHtml(o.product) + ' — ' + escapeHtml(o.quantity) + '</p>' +
+        '<p>📍 ' + escapeHtml(o.address) + '</p>' +
+        '<p class="time">🕒 ' + timeStr + '</p>' +
+        actionsHtml +
+      '</div>';
+  }).join("");
+}
+
+function updateStatus(id, status) {
+  if (currentRole !== "owner") { return; }
+  db.collection("orders").doc(id).update({ status: status })
+    .catch(function(err) {
+      showMsg("dashMsg", "❌ Update failed: " + err.message, "error");
+    });
+}
+
+function deleteOrder(id) {
+  if (currentRole !== "owner") { return; }
+  if (!confirm("Delete this order permanently?")) return;
+  db.collection("orders").doc(id).delete()
+    .catch(function(err) {
+      showMsg("dashMsg", "❌ Delete failed: " + err.message, "error");
+    });
+}
+</script>
+
+</body>
+</html>
