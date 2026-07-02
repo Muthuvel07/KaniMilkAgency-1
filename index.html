@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -13,7 +13,8 @@ header h1{font-size:2rem;font-weight:700;}
 header p{font-size:0.95rem;opacity:0.85;margin-top:6px;}
 h2{text-align:center;color:#087f23;font-size:1.5rem;margin:30px 0 20px;}
 .products{display:flex;justify-content:center;gap:20px;flex-wrap:wrap;padding:0 20px;}
-.card{background:white;padding:20px;width:200px;text-align:center;border-radius:16px;box-shadow:0 4px 16px rgba(0,0,0,0.1);transition:transform 0.2s;}
+.card{background:white;padding:20px;width:200px;text-align:center;border-radius:16px;box-shadow:0 4px 16px rgba(0,0,0,0.1);transition:transform 0.2s, box-shadow 0.2s, border 0.2s;border:3px solid transparent;}
+.card.selected{border:3px solid #087f23;box-shadow:0 4px 20px rgba(8,127,35,0.3);}
 .card:hover{transform:translateY(-5px);}
 .card img{width:140px;height:140px;object-fit:contain;margin-bottom:10px;}
 .card h3{font-size:0.95rem;color:#1b5e20;margin-bottom:8px;}
@@ -223,31 +224,41 @@ footer a{color:#a5d6a7;text-decoration:none;}
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 
 <script>
-firebase.initializeApp({
-  apiKey: "AIzaSyAQAY_wXDlU5twKU9DLZCh3lgfBfLAy7AQ",
-  authDomain: "kani-milk-agency-9323b.firebaseapp.com",
-  projectId: "kani-milk-agency-9323b",
-  storageBucket: "kani-milk-agency-9323b.firebasestorage.app",
-  messagingSenderId: "317392951345",
-  appId: "1:317392951345:web:1768ca6b7725812491dd10"
-});
+var db = null;
+var auth = null;
+var firebaseReady = false;
 
-var db = firebase.firestore();
-var auth = firebase.auth();
+try {
+  firebase.initializeApp({
+    apiKey: "AIzaSyAQAY_wXDlU5twKU9DLZCh3lgfBfLAy7AQ",
+    authDomain: "kani-milk-agency-9323b.firebaseapp.com",
+    projectId: "kani-milk-agency-9323b",
+    storageBucket: "kani-milk-agency-9323b.firebasestorage.app",
+    messagingSenderId: "317392951345",
+    appId: "1:317392951345:web:1768ca6b7725812491dd10"
+  });
+  db = firebase.firestore();
+  auth = firebase.auth();
+  firebaseReady = true;
+} catch (e) {
+  console.error("Firebase failed to load (site UI will still work, but ordering/admin needs Firebase):", e);
+}
 var ADMIN_EMAIL_DOMAIN = "@kani-admin.local";
 
 // ===================== PUBLIC ORDER FORM =====================
 
 function selectProduct(name) {
+  console.log("selectProduct called with:", name);
   document.getElementById("product").value = name;
   var btn = document.getElementById("orderBtn");
   btn.disabled = false;
   btn.textContent = "🛒 Order Now";
 
   document.querySelectorAll('.card').forEach(function(card) {
+    var isMatch = card.dataset.product === name;
     var img = card.querySelector('img');
-    if (!img) return;
-    img.style.display = (card.dataset.product === name) ? 'block' : 'none';
+    if (img) img.style.display = isMatch ? 'block' : 'none';
+    card.classList.toggle('selected', isMatch);
   });
 
   document.querySelector(".order-section").scrollIntoView({ behavior: "smooth" });
@@ -262,6 +273,10 @@ function showMessage(msg, type) {
 }
 
 function sendOrder() {
+  if (!firebaseReady) {
+    showMessage("⚠️ Connection issue — please disable ad-blocker/Shields for this site and reload.", "error");
+    return;
+  }
   var name = document.getElementById("name").value.trim();
   var phone = document.getElementById("phone").value.trim();
   var product = document.getElementById("product").value.trim();
@@ -353,24 +368,4 @@ function showReceipt(orderId, name, phone, product, quantity, address) {
     '<div class="receipt-row"><span>Status</span><span>Pending</span></div>' +
     totalHtml;
 
-  document.getElementById("receiptModal").style.display = "flex";
-}
-
-function closeReceipt() {
-  document.getElementById("receiptModal").style.display = "none";
-}
-
-function escapeHtmlPublic(str) {
-  if (str === undefined || str === null) return "";
-  return String(str).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;");
-}
-
-// ===================== ADMIN AREA (Orders) =====================
-
-var allOrders = [];
-var unsubscribeOrders = null;
-var currentRole = null;
-var STATUSES = ["Pending","Confirmed","Out for Delivery","Delivered","Cancelled"];
-
-function openAdmin() {
-  document.g
+  document.getE
