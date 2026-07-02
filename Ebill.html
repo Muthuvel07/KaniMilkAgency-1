@@ -143,11 +143,11 @@
   <div class="status-bar" id="statusBar"></div>
 
   <div class="input-section">
-    <h3>➕ Add Product</h3>
+    <h3>➕ Add Product <span id="productCountBadge" style="text-transform:none;font-weight:400;color:#aaa;"></span></h3>
     <div class="input-row">
-      <input type="text" id="productName" placeholder="Product Name" oninput="autoFillPrice()" />
+      <select id="productName" onchange="fillFromCatalog()"><option value="">Loading products...</option></select>
       <input type="number" id="qty" placeholder="Qty" min="1" value="1" />
-      <input type="number" id="price" placeholder="Price (₹)" min="0" step="0.01" oninput="this.dataset.userEdited='true'" />
+      <input type="number" id="price" placeholder="Price (₹)" min="0" step="0.01" readonly />
       <select id="unit">
         <option value="pcs">pcs</option>
         <option value="L">L</option>
@@ -159,6 +159,25 @@
       </select>
     </div>
     <button class="btn-add" onclick="addProduct()">➕ Add to Bill</button>
+    <button class="btn-add" style="background:#f57c00;margin-top:8px;" onclick="toggleManageProducts()">⚙️ Manage Products</button>
+
+    <div id="manageProductsPanel" style="display:none;margin-top:14px;border-top:2px dashed #e0e0e0;padding-top:14px;">
+      <div class="input-row">
+        <input type="text" id="newProductName" placeholder="New Product Name" />
+        <input type="number" id="newProductPrice" placeholder="Price (₹)" min="0" step="0.01" />
+        <select id="newProductUnit">
+          <option value="pcs">pcs</option>
+          <option value="L">L</option>
+          <option value="kg">kg</option>
+          <option value="g">g</option>
+          <option value="ml">ml</option>
+          <option value="packet">packet</option>
+          <option value="box">box</option>
+        </select>
+      </div>
+      <button class="btn-add" style="background:#34a853;" onclick="addCatalogProduct()">💾 Save Product to Database</button>
+      <div id="catalogList" style="margin-top:10px;"></div>
+    </div>
   </div>
 
   <div class="table-section">
@@ -303,54 +322,99 @@
     return String(str).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;");
   }
 
-  var PRICE_LIST = [
-    { match: "strawberry milk", price: 10 },
-    { match: "enriched toned milk", price: 59 },
-    { match: "rich toned milk", price: 67 },
-    { match: "blue toned milk", price: 59 },
-    { match: "full cream toned milk", price: 76 },
-    { match: "jersey", price: 76 },
-    { match: "cow milk", price: 76 },
-    { match: "standardized milk", price: 67 },
-    { match: "green toned curd", price: 44 },
-    { match: "toned curd", price: 44 },
-    { match: "little curd", price: 23 },
-    { match: "chocolate milk", price: 30 },
-    { match: "gold ice cream", price: 50 },
-    { match: "ice cream", price: 50 },
-    { match: "curd", price: 44 }
-  ];
+  var CATALOG = []; // loaded from Firestore 'products' collection
 
-  function lookupPrice(nameLower) {
-    for (var i = 0; i < PRICE_LIST.length; i++) {
-      if (nameLower.indexOf(PRICE_LIST[i].match) !== -1) return PRICE_LIST[i].price;
+  function loadCatalog() {
+    return db.collection('products').orderBy('name').get().then(function(snap) {
+      CATALOG = snap.docs.map(function(d) { return Object.assign({ id: d.id }, d.data()); });
+      renderProductDropdown();
+      renderCatalogList();
+      document.getElementById('productCountBadge').textContent = '(' + CATALOG.length + ' in database)';
+    }).catch(function(err) {
+      document.getElementById('productName').innerHTML = '<option value="">Error loading products</option>';
+      showStatus('❌ Could not load product database: ' + err.message, true);
+    });
+  }
+
+  function renderProductDropdown() {
+    var sel = document.getElementById('productName');
+    if (CATALOG.length === 0) {
+      sel.innerHTML = '<option value="">No products in database — use Manage Products</option>';
+      return;
     }
-    return null;
+    sel.innerHTML = '<option value="">Select a product…</option>' + CATALOG.map(function(p) {
+      return '<option value="' + escapeHtml(p.name) + '" data-price="' + p.price + '" data-unit="' + escapeHtml(p.unit || 'pcs') + '">' +
+        escapeHtml(p.name) + ' — ₹' + Number(p.price).toFixed(2) + '</option>';
+    }).join('');
   }
 
-  function autoFillPrice() {
-    var name = document.getElementById('productName').value.trim().toLowerCase();
-    var priceField = document.getElementById('price');
-    if (priceField.dataset.userEdited) return;
-    var price = lookupPrice(name);
-    if (price !== null) priceField.value = price;
+  function fillFromCatalog() {
+    var sel = document.getElementById('productName');
+    var opt = sel.options[sel.selectedIndex];
+    if (!opt || !opt.value) { document.getElementById('price').value = ''; return; }
+    document.getElementById('price').value = opt.dataset.price;
+    document.getElementById('unit').value = opt.dataset.unit || 'pcs';
   }
+
+  function toggleManageProducts() {
+    var panel = document.getElementById('manageProductsPanel');
+    panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+  }
+
+  function addCatalogProduct() {
+    var name = document.getElementById('newProductName').value.trim();
+    var price = parseFloat(document.getElementById('newProductPrice').value);
+    var unit = document.getElementById('newProductUnit').value;
+    if (!name) { showStatus('Enter a product name', true); return; }
+    if (!price || price < 0) { showStatus('Enter a valid price', true); return; }
+
+    db.collection('products').add({ name: name, price: price, unit: unit }).then(function() {
+      document.getElementById('newProductName').value = '';
+      document.getElementById('newProductPrice').value = '';
+      showStatus('✅ Product added to database', false);
+      loadCatalog();
+    }).catch(function(err) {
+      showStatus('❌ Error: ' + err.message, true);
+    });
+  }
+
+  function deleteCatalogProduct(id) {
+    if (!confirm('Remove this product from the database?')) return;
+    db.collection('products').doc(id).delete().then(function() {
+      loadCatalog();
+    }).catch(function(err) {
+      showStatus('❌ Error: ' + err.message, true);
+    });
+  }
+
+  function renderCatalogList() {
+    var list = document.getElementById('catalogList');
+    if (CATALOG.length === 0) {
+      list.innerHTML = '<div style="color:#aaa;font-size:13px;">No products yet.</div>';
+      return;
+    }
+    list.innerHTML = CATALOG.map(function(p) {
+      return '<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid #f0f0f0;font-size:13px;">' +
+        '<span>' + escapeHtml(p.name) + ' — ₹' + Number(p.price).toFixed(2) + ' / ' + escapeHtml(p.unit || 'pcs') + '</span>' +
+        '<button class="btn-delete" onclick="deleteCatalogProduct(\'' + p.id + '\')">✕</button></div>';
+    }).join('');
+  }
+
+  loadCatalog();
 
   function addProduct() {
     var name = document.getElementById('productName').value.trim();
     var qty = parseFloat(document.getElementById('qty').value);
     var price = parseFloat(document.getElementById('price').value);
     var unit = document.getElementById('unit').value;
-    if (!name) { showStatus('Enter product name', true); return; }
+    if (!name) { showStatus('Select a product from the list', true); return; }
     if (!qty || qty <= 0) { showStatus('Enter valid quantity', true); return; }
-    if (!price || price < 0) { showStatus('Enter valid price', true); return; }
+    if (!price || price < 0) { showStatus('Product has no valid price', true); return; }
 
     window._products.push({ id: Date.now(), name: name, qty: qty, price: price, unit: unit, amount: qty * price });
-    document.getElementById('productName').value = '';
+    document.getElementById('productName').selectedIndex = 0;
     document.getElementById('qty').value = '1';
     document.getElementById('price').value = '';
-    delete document.getElementById('price').dataset.userEdited;
-    document.getElementById('productName').focus();
     renderProducts(); updateSummary();
     showStatus('', false);
   }
@@ -363,62 +427,4 @@
   function renderProducts() {
     var list = document.getElementById('productList');
     if (window._products.length === 0) {
-      list.innerHTML = '<div class="empty-state"><div class="icon">🛒</div>No products added yet.</div>';
-      return;
-    }
-    list.innerHTML = window._products.map(function(p, i) {
-      return '<div class="product-row"><div class="product-name">' + (i+1) + '. ' + escapeHtml(p.name) +
-        ' <span style="font-size:11px;color:#aaa">(' + p.unit + ')</span></div><div>' + p.qty + '</div>' +
-        '<div>₹' + p.price.toFixed(2) + '</div><div class="amount">₹' + p.amount.toFixed(2) + '</div>' +
-        '<div><button class="btn-delete" onclick="removeProduct(' + p.id + ')">✕</button></div></div>';
-    }).join('');
-  }
-
-  function updateSummary() {
-    var subtotal = window._products.reduce(function(s, p) { return s + p.amount; }, 0);
-    var taxRate = parseFloat(document.getElementById('taxRate').value) || 0;
-    var discountRate = parseFloat(document.getElementById('discountRate').value) || 0;
-    var discountAmt = subtotal * (discountRate / 100);
-    var taxAmt = (subtotal - discountAmt) * (taxRate / 100);
-    var total = subtotal - discountAmt + taxAmt;
-    document.getElementById('subtotal').textContent = '₹' + subtotal.toFixed(2);
-    document.getElementById('taxAmount').textContent = '+₹' + taxAmt.toFixed(2);
-    document.getElementById('discountAmount').textContent = '-₹' + discountAmt.toFixed(2);
-    document.getElementById('totalAmount').textContent = '₹' + total.toFixed(2);
-    document.getElementById('itemCount').textContent = window._products.length + ' item(s)';
-  }
-
-  function clearAll() {
-    if (window._products.length === 0) return;
-    if (confirm('Clear all and start new bill?')) {
-      window._products = [];
-      document.getElementById('taxRate').value = 0;
-      document.getElementById('discountRate').value = 0;
-      document.getElementById('customerName').value = '';
-      renderProducts(); updateSummary();
-    }
-  }
-
-  function openHistory() {
-    document.getElementById('historyModal').style.display = 'block';
-    loadHistory();
-  }
-  function closeHistory() { document.getElementById('historyModal').style.display = 'none'; }
-
-  function showStatus(msg, isError) {
-    var bar = document.getElementById('statusBar');
-    if (!msg) { bar.style.display = 'none'; return; }
-    bar.textContent = msg;
-    bar.className = 'status-bar' + (isError ? ' error' : '');
-    bar.style.display = 'block';
-    if (!isError) setTimeout(function() { bar.style.display = 'none'; }, 4000);
-  }
-
-  document.addEventListener('keydown', function(e) {
-    if (e.key === 'Enter' && document.activeElement.closest('.input-section')) addProduct();
-  });
-</script>
-</body>
-</html>
-
-          
+      list.innerHTML = '<div class="empty-state"><div class="ic
