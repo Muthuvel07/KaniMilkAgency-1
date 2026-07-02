@@ -101,8 +101,6 @@ footer .ebill-link:hover{background:rgba(255,255,255,0.22);}
   <img src="tonedcurd.png" alt="Fresh Curd" style="height:70px;margin:0 18px;vertical-align:middle;">
   <img src="goldicecream.png" alt="Ice Cream" style="height:70px;margin:0 18px;vertical-align:middle;">
   <img src="fullcreamtonedmilk.jpg" alt="Full Cream Toned Milk" style="height:70px;margin:0 18px;vertical-align:middle;">
-  <img src="standardizedmilk.png" alt="Standardized Milk" style="height:70px;margin:0 18px;vertical-align:middle;">
-  <img src="chocolate.png" alt="Chocolate Milk" style="height:70px;margin:0 18px;vertical-align:middle;">
 </marquee>
 
 <!-- PRODUCTS -->
@@ -139,17 +137,6 @@ footer .ebill-link:hover{background:rgba(255,255,255,0.22);}
     <button onclick="selectProduct('Full Cream Toned Milk')">Select</button>
   </div>
 
-  <div class="card">
-    <img src="standardizedmilk.png" alt="Standardized Milk">
-    <h3>Standardized Milk</h3>
-    <button onclick="selectProduct('Standardized Milk')">Select</button>
-  </div>
-
-  <div class="card">
-    <img src="chocolate.png" alt="Chocolate Milk">
-    <h3>Chocolate Milk</h3>
-    <button onclick="selectProduct('Chocolate Milk')">Select</button>
-  </div>
 
 </div>
 
@@ -332,16 +319,48 @@ function openAdmin() {
   document.getElementById("adminArea").scrollIntoView({ behavior: "smooth" });
 }
 
+// -----------------------------------------------------------------
+// SECURITY FIX
+// -----------------------------------------------------------------
+// The role used to be decided purely by matching the login email in
+// the browser:  role = (email === "developer@...") ? "developer" : "owner"
+// That meant ANY account other than literally "developer" was treated
+// as full "owner" (able to edit/delete every order) — including new
+// accounts nobody intended to grant that access to.
+//
+// Fix: look up the role from a Firestore document instead, e.g.
+//   admins/{uid}  ->  { role: "owner" | "developer" }
+// and default to the safe, view-only role if no document exists.
+//
+// IMPORTANT: this client-side check only controls what buttons show
+// in the UI. The real enforcement has to happen in Firestore Security
+// Rules (see the rules block below this script) — otherwise anyone
+// with dev tools open could still call updateStatus()/deleteOrder()
+// directly. Please add those rules in the Firebase console.
+// -----------------------------------------------------------------
+
 auth.onAuthStateChanged(function(user) {
   if (user) {
-    currentRole = (user.email === "developer" + ADMIN_EMAIL_DOMAIN) ? "developer" : "owner";
-    var roleLabel = document.getElementById("roleLabel");
-    roleLabel.textContent = (currentRole === "owner") ? "Owner" : "Developer (view only)";
-    roleLabel.style.background = (currentRole === "owner") ? "#1976d2" : "#7b1fa2";
+    db.collection("admins").doc(user.uid).get()
+      .then(function(doc) {
+        currentRole = (doc.exists && doc.data().role === "owner") ? "owner" : "developer";
 
-    document.getElementById("loginSection").style.display = "none";
-    document.getElementById("dashboardSection").style.display = "block";
-    listenForOrders();
+        var roleLabel = document.getElementById("roleLabel");
+        roleLabel.textContent = (currentRole === "owner") ? "Owner" : "Developer (view only)";
+        roleLabel.style.background = (currentRole === "owner") ? "#1976d2" : "#7b1fa2";
+
+        document.getElementById("loginSection").style.display = "none";
+        document.getElementById("dashboardSection").style.display = "block";
+        listenForOrders();
+      })
+      .catch(function(err) {
+        // If we can't confirm the role, fail safe: view-only.
+        currentRole = "developer";
+        console.error("Could not load admin role:", err);
+        document.getElementById("loginSection").style.display = "none";
+        document.getElementById("dashboardSection").style.display = "block";
+        listenForOrders();
+      });
   } else {
     currentRole = null;
     document.getElementById("dashboardSection").style.display = "none";
@@ -440,33 +459,4 @@ function renderOrders() {
       ? '<div class="order-actions">' +
           '<select onchange="updateStatus(\'' + o.id + '\', this.value)">' + options + '</select>' +
           '<button class="del-btn" onclick="deleteOrder(\'' + o.id + '\')">Delete</button>' +
-        '</div>'
-      : '';
-
-    return '' +
-      '<div class="order-card">' +
-        '<div class="order-card-head">' +
-          '<strong>' + escapeHtml(o.name) + '</strong>' +
-          '<span class="badge badge-' + statusSlug(status) + '">' + escapeHtml(status) + '</span>' +
-        '</div>' +
-        '<p>📞 ' + escapeHtml(o.phone) + '</p>' +
-        '<p>🛒 ' + escapeHtml(o.product) + ' — ' + escapeHtml(o.quantity) + '</p>' +
-        '<p>📍 ' + escapeHtml(o.address) + '</p>' +
-        '<p class="time">🕒 ' + timeStr + '</p>' +
-        actionsHtml +
-      '</div>';
-  }).join("");
-}
-
-function updateStatus(id, status) {
-  if (currentRole !== "owner") { return; }
-  db.collection("orders").doc(id).update({ status: status })
-    .catch(function(err) {
-      showMsg("dashMsg", "❌ Update failed: " + err.message, "error");
-    });
-}
-
-function deleteOrder(id) {
-  if (currentRole !== "owner") { return; }
-  if (!confirm("Delete this order permanently?")) return;
-  db.colle
+       
