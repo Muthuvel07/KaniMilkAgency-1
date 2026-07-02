@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>E-Billing — Kani Milk Agency</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Segoe UI',Arial,sans-serif;background:#f0faf0;}
+header{background:linear-gradient(135deg,#087f23,#1b5e20);color:white;text-align:center;padding:24px 20px;}
+header h1{font-size:1.6rem;font-weight:700;}
+header p{font-size:0.9rem;opacity:0.85;margin-top:4px;}
+header a.back{position:absolute;left:16px;top:20px;color:white;text-decoration:none;font-size:0.9rem;background:rgba(255,255,255,0.15);padding:8px 14px;border-radius:20px;}
+header{position:relative;}
+
+.login-section{display:flex;justify-content:center;padding:60px 20px;}
+.login-card{background:white;max-width:360px;width:100%;padding:32px 28px;border-radius:20px;box-shadow:0 4px 20px rgba(0,0,0,0.1);display:flex;flex-direction:column;gap:14px;}
+.login-card h2{color:#087f23;text-align:center;margin-bottom:6px;}
+.login-card input{width:100%;padding:12px 14px;border:1.5px solid #ddd;border-radius:10px;font-size:0.95rem;font-family:inherit;}
+.login-card input:focus{outline:none;border-color:#087f23;}
+#loginBtn{background:#087f23;color:white;border:none;padding:14px;border-radius:12px;font-size:1rem;font-weight:600;cursor:pointer;}
+#loginBtn:hover{background:#1b5e20;}
+#loginBtn:disabled{opacity:0.6;cursor:not-allowed;}
+
+.msg{padding:12px;border-radius:10px;font-size:0.88rem;text-align:center;}
+.msg.success{background:#e8f5e9;color:#2e7d32;border:1px solid #a5d6a7;}
+.msg.error{background:#fce4ec;color:#c62828;border:1px solid #ef9a9a;}
+
+#billingArea{display:none;}
+.wrap{max-width:900px;margin:0 auto;padding:24px 16px 60px;}
+.top-bar{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:20px;}
+#logoutBtn{background:white;color:#087f23;border:1.5px solid #087f23;padding:10px 18px;border-radius:10px;font-size:0.9rem;font-weight:600;cursor:pointer;}
+#logoutBtn:hover{background:#087f23;color:white;}
+
+.panel{background:white;border-radius:16px;padding:22px 20px;box-shadow:0 2px 12px rgba(0,0,0,0.07);margin-bottom:24px;}
+.panel h2{color:#087f23;font-size:1.15rem;margin-bottom:16px;}
+.field-row{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:12px;}
+.field-row input{flex:1;min-width:140px;padding:11px 13px;border:1.5px solid #ddd;border-radius:10px;font-size:0.9rem;font-family:inherit;}
+.field-row input:focus{outline:none;border-color:#087f23;}
+
+.items-table{width:100%;border-collapse:collapse;margin:14px 0;}
+.items-table th{text-align:left;font-size:0.78rem;color:#666;padding:6px 8px;border-bottom:2px solid #eee;}
+.items-table td{padding:6px 8px;}
+.items-table input{width:100%;padding:8px 10px;border:1.5px solid #ddd;border-radius:8px;font-size:0.88rem;font-family:inherit;}
+.items-table input:focus{outline:none;border-color:#087f23;}
+.rm-item{background:#fce4ec;color:#c62828;border:1.5px solid #ef9a9a;border-radius:8px;padding:7px 10px;cursor:pointer;font-size:0.85rem;}
+.rm-item:hover{background:#c62828;color:white;}
+
+.add-item{background:#e8f5e9;color:#087f23;border:1.5px dashed #087f23;padding:9px 16px;border-radius:10px;font-size:0.88rem;cursor:pointer;font-weight:600;margin-top:4px;}
+.add-item:hover{background:#087f23;color:white;}
+
+.total-row{display:flex;justify-content:flex-end;gap:10px;align-items:center;margin-top:16px;font-size:1.1rem;font-weight:700;color:#1b5e20;}
+.save-btn{margin-top:16px;width:100%;background:#087f23;color:white;border:none;padding:14px;border-radius:12px;font-size:1rem;font-weight:600;cursor:pointer;}
+.save-btn:hover{background:#1b5e20;}
+.save-btn:disabled{opacity:0.6;cursor:not-allowed;}
+
+.search-bar{margin-bottom:14px;}
+.search-bar input{width:100%;padding:11px 14px;border:1.5px solid #ddd;border-radius:10px;font-size:0.9rem;font-family:inherit;}
+.search-bar input:focus{outline:none;border-color:#087f23;}
+
+.bills-list{display:flex;flex-direction:column;gap:14px;}
+.empty{text-align:center;color:#777;padding:30px 0;}
+.bill-card{background:#fafffa;border:1px solid #e0efe0;border-radius:14px;padding:16px 18px;}
+.bill-card-head{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;margin-bottom:8px;}
+.bill-card-head strong{color:#1b5e20;font-size:1.02rem;}
+.bill-card .time{color:#888;font-size:0.78rem;}
+.bill-card table{width:100%;border-collapse:collapse;margin:8px 0;}
+.bill-card th{text-align:left;font-size:0.75rem;color:#777;padding:4px 6px;border-bottom:1px solid #e5e5e5;}
+.bill-card td{padding:5px 6px;font-size:0.87rem;}
+.bill-card .grand-total{text-align:right;font-weight:700;color:#087f23;font-size:1rem;margin-top:6px;}
+.bill-actions{display:flex;gap:10px;margin-top:10px;}
+.print-btn{background:#e3f2fd;color:#1565c0;border:1.5px solid #90caf9;padding:8px 14px;border-radius:8px;font-size:0.83rem;cursor:pointer;}
+.print-btn:hover{background:#1565c0;color:white;}
+.del-btn{background:#fce4ec;color:#c62828;border:1.5px solid #ef9a9a;padding:8px 14px;border-radius:8px;font-size:0.83rem;cursor:pointer;}
+.del-btn:hover{background:#c62828;color:white;}
+
+@media print{
+  header,.top-bar,.panel:first-of-type,.search-bar,.bill-actions,#logoutBtn{display:none !important;}
+  body{background:white;}
+  .bill-card{border:1px solid #ccc;box-shadow:none;}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <a class="back" href="index.html">← Home</a>
+  <h1>🧾 E-Billing System</h1>
+  <p>Kani Milk Agency</p>
+</header>
+
+<!-- LOGIN -->
+<div id="loginSection" class="login-section">
+  <div class="login-card">
+    <h2>Admin Login</h2>
+    <input id="loginUsername" type="text" placeholder="Username (owner or developer)" autocomplete="username">
+    <input id="loginPassword" type="password" placeholder="Password" autocomplete="current-password">
+    <div id="loginMsg" class="msg" style="display:none;"></div>
+    <button id="loginBtn" onclick="adminLogin()">Login</button>
+  </div>
+</div>
+
+<!-- BILLING AREA -->
+<div id="billingArea">
+  <div class="wrap">
+    <div class="top-bar">
+      <span id="roleLabel" style="color:#1b5e20;font-weight:600;"></span>
+      <button id="logoutBtn" onclick="adminLogout()">Logout</button>
+    </div>
+
+    <!-- NEW BILL -->
+    <div class="panel" id="newBillPanel">
+      <h2>Create New Bill</h2>
+      <div class="field-row">
+        <input id="custName" type="text" placeholder="Customer Name">
+        <input id="custPhone" type="tel" placeholder="Phone Number" maxlength="10">
+      </div>
+
+      <table class="items-table">
+        <thead>
+          <tr><th style="width:40%">Item</th><th style="width:18%">Qty</th><th style="width:18%">Price (₹)</th><th style="width:16%">Amount</th><th></th></tr>
+        </thead>
+        <tbody id="itemsBody"></tbody>
+      </table>
+      <button class="add-item" onclick="addItemRow()">+ Add Item</button>
+
+      <div class="total-row">Grand Total: ₹<span id="grandTotal">0.00</span></div>
+      <div id="billMsg" class="msg" style="display:none;margin-top:10px;"></div>
+      <button class="save-btn" id="saveBillBtn" onclick="saveBill()">💾 Save Bill</button>
+    </div>
+
+    <!-- BILL HISTORY -->
+    <div class="panel">
+      <h2>Bill History</h2>
+      <div class="search-bar">
+        <input id="searchInput" type="text" placeholder="Search by customer name or phone..." oninput="renderBills()">
+      </div>
+      <div id="dashMsg" class="msg" style="display:none;margin-bottom:12px;"></div>
+      <div id="billsList" class="bills-list"></div>
+    </div>
+  </div>
+</div>
+
+<!-- FIREBASE v8 CDN -->
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+
+<script>
+// Same Firebase project as index.html
+firebase.initializeApp({
+  apiKey: "AIzaSyAQAY_wXDlU5twKU9DLZCh3lgfBfLAy7AQ",
+  authDomain: "kani-milk-agency-9323b.firebaseapp.com",
+  projectId: "kani-milk-agency-9323b",
+  storageBucket: "kani-milk-agency-9323b.firebasestorage.app",
+  messagingSenderId: "317392951345",
+  appId: "1:317392951345:web:1768ca6b7725812491dd10"
+});
+
+var db = firebase.firestore();
+var auth = firebase.auth();
+var ADMIN_EMAIL_DOMAIN = "@kani-admin.local";
+
+var currentRole = null;
+var allBills = [];
+var unsubscribeBills = null;
+var itemCounter = 0;
+
+// ===================== AUTH =====================
+
+auth.onAuthStateChanged(function(user) {
+  if (user) {
+    db.collection("admins").doc(user.uid).get()
+      .then(function(doc) {
+        currentRole = (doc.exists && doc.data().role === "owner") ? "owner" : "developer";
+        document.getElementById("roleLabel").textContent =
+          "Logged in as " + (currentRole === "owner" ? "Owner" : "Developer (view only)");
+
+        // View-only accounts can't create/delete bills
+        document.getElementById("newBillPanel").style.display =
+          (currentRole === "owner") ? "block" : "none";
+
+        document.getElementById("loginSection").style.display = "none";
+        document.getElementById("billingArea").style.display = "block";
+        if (addItemRow.count === undefined) { addItemRow(); addItemRow.count = 1; }
+        listenForBills();
+      })
+      .catch(function(err) {
+        currentRole = "developer";
+        console.error("Could not load admin role:", err);
+        document.getElementById("newBillPanel").style.display = "none";
+        document.getElementById("loginSection").style.display = "none";
+        document.getElementById("billingArea").style.display = "block";
+        listenForBills();
+      });
+  } else {
+    currentRole = null;
+    document.getElementById("billingArea").style.display = "none";
+    document.getElementById("loginSection").style.display = "flex";
+    if (unsubscribeBills) { unsubscribeBills(); unsubscribeBills = null; }
+    allBills = [];
+  }
+});
+
+function showMsg(elId, text, type) {
+  var el = document.getElementById(elId);
+  el.textContent = text;
+  el.className = "msg " + type;
+  el.style.display = "block";
+}
+
+function adminLogin() {
+  var username = document.getElementById("loginUsername").value.trim().toLowerCase();
+  var password = document.getElementById("loginPassword").value;
+  if (!username || !password) {
+    showMsg("loginMsg", "⚠️ Enter username and password.", "error");
+    return;
+  }
+  var btn = document.getElementById("loginBtn");
+  btn.disabled = true;
+  btn.textContent = "Logging in...";
+  auth.signInWithEmailAndPassword(username + ADMIN_EMAIL_DOMAIN, password)
+    .catch(function(err) {
+      showMsg("loginMsg", "❌ [" + err.code + "] " + err.message, "error");
+    })
+    .finally(function() {
+      btn.disabled = false;
+      btn.textContent = "Login";
+    });
+}
+
+function adminLogout() {
+  auth.signOut();
+  document.getElementById("loginUsername").value = "";
+  document.getElementById("loginPassword").value = "";
+}
+
+// ===================== ITEM ROWS =====================
+
+function addItemRow() {
+  itemCounter++;
+  var id = "row" + itemCounter;
+  var tbody = document.getElementById("itemsBody");
+  var tr = document.createElement("tr");
+  tr.id = id;
+  tr.innerHTML =
+    '<td><input type="text" placeholder="e.g. Jersey Gold Milk" class="item-name"></td>' +
+    '<td><input type="number" min="0" step="0.5" placeholder="0" class="item-qty" oninput="calcTotal()"></td>' +
+    '<td><input type="number" min="0" step="0.01" placeholder="0.00" class="item-price" oninput="calcTotal()"></td>' +
+    '<td class="item-amount">₹0.00</td>' +
+    '<td><button class="rm-item" onclick="removeItemRow(\'' + id + '\')">✕</button></td>';
+  tbody.appendChild(tr);
+}
+
+function removeItemRow(id) {
+  var row = document.getElementById(id);
+  if (row) row.remove();
+  calcTotal();
+}
+
+function calcTotal() {
+  var rows = document.querySelectorAll("#itemsBody tr");
+  var grand = 0;
+  rows.forEach(function(row) {
+    var qty = parseFloat(row.querySelector(".item-qty").value) || 0;
+    var price = parseFloat(row.querySelector(".item-price").value) || 0;
+    var amount = qty * price;
+    row.querySelector(".item-amount").textContent = "₹" + amount.toFixed(2);
+    grand += amount;
+  });
+  document.getElementById("grandTotal").textContent = grand.toFixed(2);
+  return grand;
+}
+
+// ===================== SAVE BILL =====================
+
+function saveBill() {
+  if (currentRole !== "owner") return;
+
+  var custName = document.getElementById("custName").value.trim();
+  var custPhone = document.getElementById("custPhone").value.trim();
+  var rows = document.querySelectorAll("#itemsBody tr");
+
+  if (!custName || !custPhone) {
+    showMsg("billMsg", "⚠️ Enter customer name and phone.", "error");
+    return;
+  }
+  if (!/^\d{10}$/.test(custPhone)) {
+    showMsg("billMsg", "⚠️ Phone must be 10 digits.", "error");
+    return;
+  }
+
+  var items = [];
+  rows.forEach(function(row) {
+    var name = row.querySelector(".item-name").value.trim();
+    var qty = parseFloat(row.querySelector(".item-qty").value) || 0;
+    var price = parseFloat(row.querySelector(".item-price").value) || 0;
+    if (name && qty > 0 && price > 0) {
+      items.push({ name: name, qty: qty, price: price, amount: qty * price });
+    }
+  });
+
+  if (items.length === 0) {
+    showMsg("billMsg", "⚠️ Add at least one valid item.", "error");
+    return;
+  }
+
+  var total = calcTotal();
+  var btn = document.getElementById("saveBillBtn");
+  btn.disabled = true;
+  btn.textContent = "Saving...";
+
+  db.collection("bills").add({
+    customerName: custName,
+    customerPhone: custPhone,
+    items: items,
+    total: total,
+    time: firebase.firestore.FieldValue.serverTimestamp()
+  })
+  .then(function() {
+    showMsg("billMsg", "✅ Bill saved successfully!", "success");
+    document.getElementById("custName").value = "";
+    document.getElementById("custPhone").value = "";
+    document.getElementById("itemsBody").innerHTML = "";
+    addItemRow();
+    calcTotal();
+  })
+  .catch(function(err) {
+    showMsg("billMsg", "❌ Error: " + err.message, "error");
+  })
+  .finally(function() {
+    btn.disabled = false;
+    btn.textContent = "💾 Save Bill";
+  });
+}
+
+// ===================== BILL HISTORY =====================
+
+function listenForBills() {
+  if (unsubscribeBills) unsubscribeBills();
+  unsubscribeBills = db.collection("bills").orderBy("time", "desc")
+    .onSnapshot(function(snapshot) {
+      allBills = snapshot.docs.map(function(doc) {
+        var data = doc.data();
+        data.id = doc.id;
+        return data;
+      });
+      renderBills();
+    }, function(err) {
+      showMsg("dashMsg", "❌ Could not load bills: " + err.message, "error");
+    });
+}
+
+function escapeHtml(str) {
+  if (str === undefined || str === null) return "";
+  return String(str)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+function renderBills() {
+  var query = document.getElementById("searchInput").value.trim().toLowerCase();
+  var list = allBills.filter(function(b) {
+    if (!query) return true;
+    return (b.customerName || "").toLowerCase().indexOf(query) !== -1 ||
+           (b.customerPhone || "").indexOf(query) !== -1;
+  });
+
+  var container = document.getElementById("billsList");
+  if (list.length === 0) {
+    container.innerHTML = '<p class="empty">No bills found.</p>';
+    return;
+  }
+
+  container.innerHTML = list.map(function(b) {
+    var timeStr = (b.time && b.time.toDate) ? b.time.toDate().toLocaleString() : "—";
+    var itemRows = (b.items || []).map(function(it) {
+      return '<tr><td>' + escapeHtml(it.name) + '</td><td>' + it.qty + '</td><td>₹' +
+        Number(it.price).toFixed(2) + '</td><td>₹' + Number(it.amount).toFixed(2) + '</td></tr>';
+    }).join("");
+
+    var actionsHtml = (currentRole === "owner")
+      ? '<div class="bill-actions">' +
+          '<button class="print-btn" onclick="printBill(\'' + b.id + '\')">🖨️ Print</button>' +
+          '<button class="del-btn" onclick="deleteBill(\'' + b.id + '\')">Delete</button>' +
+        '</div>'
+      : '<div class="bill-actions"><button class="print-btn" onclick="printBill(\'' + b.id + '\')">🖨️ Print</button></div>';
+
+    return '' +
+      '<div class="bill-card" id="bill-' + b.id + '">' +
+        '<div class="bill-card-head">' +
+          '<strong>' + escapeHtml(b.customerName) + ' — ' + escapeHtml(b.customerPhone) + '</strong>' +
+          '<span class="time">🕒 ' + timeStr + '</span>' +
+        '</div>' +
+        '<table><thead><tr><th>Item</th><th>Qty</th><th>Price</th><th>Amount</th></tr></thead><tbody>' +
+          itemRows +
+        '</tbody></table>' +
+        '<div class="grand-total">Total: ₹' + Number(b.total).toFixed(2) + '</div>' +
+        actionsHtml +
+      '</div>';
+  }).join("");
+}
+
+function deleteBill(id) {
+  if (currentRole !== "owner") return;
+  if (!confirm("Delete this bill permanently?")) return;
+  db.collection("bills").doc(id).delete()
+    .catch(function(err) {
+      showMsg("dashMsg", "❌ Delete failed: " + err.message, "error");
+    });
+}
+
+function printBill(id) {
+  var card = document.getElementById("bill-" + id);
+  if (!card) return;
+  var w = window.open("", "_blank");
+  w.document.write(
+    '<html><head><title>Invoice</title><style>' +
+    'body{font-family:Arial,sans-serif;padding:24px;} h2{color:#087f23;} ' +
+    'table{width:100%;border-collapse:collapse;margin:14px 0;} ' +
+    'th,td{padding:8px;border-bottom:1px solid #ddd;text-align:left;} ' +
+    '.grand-total{text-align:right;font-weight:700;font-size:1.1rem;}' +
+    '</style></head><body>' +
+    '<h2>Kani Milk Agency — Invoice</h2>' +
+    card.innerHTML +
+    '</body></html>'
+  );
+  w.document.close();
+  w.focus();
+  setTimeout(function() { w.print(); }, 400);
+}
+</script>
+
+</body>
+</html>
