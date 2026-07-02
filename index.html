@@ -159,7 +159,6 @@ footer .ebill-link:hover{background:rgba(255,255,255,0.22);}
 <footer>
   <p>📞 Call us: <a href="tel:+918838416013">8838416013</a></p>
   <p>© 2025 Kani Milk Agency. All rights reserved.<span id="adminDot" onclick="openAdmin()" title=""> </span></p>
-  <a class="ebill-link" href="ebill.html">🧾 E-Billing System</a>
 </footer>
 
 <!-- ===== ADMIN AREA (hidden until the footer dot is tapped) ===== -->
@@ -180,6 +179,12 @@ footer .ebill-link:hover{background:rgba(255,255,255,0.22);}
       <div class="stats">
         <div class="stat-card"><span id="totalCount">0</span><label>Total Orders</label></div>
         <div class="stat-card"><span id="pendingCount">0</span><label>Pending</label></div>
+        <div class="stat-card"><span id="qtyToday">0</span><label>Qty Today</label></div>
+        <div class="stat-card"><span id="qtyWeek">0</span><label>Qty This Week</label></div>
+        <div class="stat-card"><span id="qtyMonth">0</span><label>Qty This Month</label></div>
+        <div class="stat-card"><span id="moneyToday">₹0</span><label>Sales Today</label></div>
+        <div class="stat-card"><span id="moneyWeek">₹0</span><label>Sales This Week</label></div>
+        <div class="stat-card"><span id="moneyMonth">₹0</span><label>Sales This Month</label></div>
       </div>
       <div>
         <span id="roleLabel" class="badge" style="background:#1976d2;margin-right:10px;"></span>
@@ -432,31 +437,22 @@ function escapeHtml(str) {
     .replace(/'/g, "&#039;");
 }
 
-function renderOrders() {
-  var filter = document.getElementById("statusFilter").value;
-  var list = allOrders.filter(function(o) {
-    return filter === "all" || (o.status || "Pending") === filter;
-  });
-
-  document.getElementById("totalCount").textContent = allOrders.length;
-  document.getElementById("pendingCount").textContent =
-    allOrders.filter(function(o) { return (o.status || "Pending") === "Pending"; }).length;
-
-  var container = document.getElementById("ordersList");
-  if (list.length === 0) {
-    container.innerHTML = '<p class="empty">No orders found.</p>';
-    return;
+// ---------- Quantity parsing & day/week/month totals ----------
+// Orders store quantity as free text like "1 Litre", "2 L", "500 ml", "2".
+// We pull out the numeric part and normalise ml -> litres and g -> kg so
+// the totals are comparable. Anything without a recognisable number is
+// skipped.
+function parseQuantityValue(qtyStr) {
+  if (!qtyStr) return 0;
+  var str = String(qtyStr).toLowerCase();
+  var match = str.match(/(\d+(\.\d+)?)/);
+  if (!match) return 0;
+  var num = parseFloat(match[1]);
+  if (str.indexOf("ml") !== -1) {
+    return num / 1000; // convert ml to litres
   }
-
-  container.innerHTML = list.map(function(o) {
-    var status = o.status || "Pending";
-    var timeStr = (o.time && o.time.toDate) ? o.time.toDate().toLocaleString() : "—";
-    var options = STATUSES.map(function(s) {
-      return '<option value="' + s + '"' + (s === status ? " selected" : "") + '>' + s + '</option>';
-    }).join("");
-
-    var actionsHtml = (currentRole === "owner")
-      ? '<div class="order-actions">' +
-          '<select onchange="updateStatus(\'' + o.id + '\', this.value)">' + options + '</select>' +
-          '<button class="del-btn" onclick="deleteOrder(\'' + o.id + '\')">Delete</button>' +
-       
+  if (str.indexOf("kg") !== -1) {
+    return num; // already kilograms
+  }
+  if (str.indexOf("g") !== -1) {
+    return num / 100
