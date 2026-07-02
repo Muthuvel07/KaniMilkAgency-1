@@ -94,15 +94,6 @@ footer .ebill-link:hover{background:rgba(255,255,255,0.22);}
   <p>Fresh Milk • Daily Delivery • Pure Quality</p>
 </header>
 
-<!-- IMAGE MARQUEE -->
-<marquee behavior="scroll" direction="left" scrollamount="6" style="background:white;padding:10px 0;border-bottom:2px solid #087f23;">
-  <img src="cowmilk.jpg" alt="Jersey Gold Milk" style="height:70px;margin:0 18px;vertical-align:middle;">
-  <img src="bluetonedmilk.png" alt="Blue Toned Milk" style="height:70px;margin:0 18px;vertical-align:middle;">
-  <img src="tonedcurd.png" alt="Fresh Curd" style="height:70px;margin:0 18px;vertical-align:middle;">
-  <img src="goldicecream.png" alt="Ice Cream" style="height:70px;margin:0 18px;vertical-align:middle;">
-  <img src="fullcreamtonedmilk.jpg" alt="Full Cream Toned Milk" style="height:70px;margin:0 18px;vertical-align:middle;">
-</marquee>
-
 <!-- PRODUCTS -->
 <h2>Our Products</h2>
 <div class="products">
@@ -455,4 +446,19 @@ function parseQuantityValue(qtyStr) {
     return num; // already kilograms
   }
   if (str.indexOf("g") !== -1) {
-    return num / 100
+    return num / 1000; // convert grams to kilograms
+  }
+  return num;
+}
+
+// ---------- Sales (₹) totals ----------
+// Approx. Jersey-brand prices you provided. "unit" tells us what the
+// quantity number (from parseQuantityValue) represents for that product:
+//  - "L"    -> price is per litre, multiply by parsed litres
+//  - "kg"   -> price is per kilogram, multiply by parsed kilograms
+//  - "unit" -> flat price per item, multiply by the raw number typed
+// Adjust these anytime your prices change.
+var PRICE_MAP = {
+  "Jersey Gold Milk":       { price: 76, unit: "L" },   // Cow Milk (1 L) ₹76
+  "Blue Toned Milk":        { price: 59, unit: "L" },   // Blue Toned Milk (1 L) ₹59
+  "Fresh Curd":             { price: 88, unit: "kg
