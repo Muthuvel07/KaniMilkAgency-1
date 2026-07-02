@@ -117,14 +117,27 @@ footer a{color:#a5d6a7;text-decoration:none;}
   <p>Fresh Milk • Daily Delivery • Pure Quality</p>
 </header>
 
+<!-- IMAGE MARQUEE -->
+<marquee behavior="scroll" direction="left" scrollamount="6" style="background:white;padding:10px 0;border-bottom:2px solid #087f23;">
+  <img src="cowmilk.jpg" alt="Jersey Gold Milk" loading="lazy" style="height:70px;margin:0 18px;vertical-align:middle;">
+  <img src="bluetonedmilk.png" alt="Blue Toned Milk" loading="lazy" style="height:70px;margin:0 18px;vertical-align:middle;">
+  <img src="tonedcurd.png" alt="Fresh Curd" loading="lazy" style="height:70px;margin:0 18px;vertical-align:middle;">
+  <img src="goldicecream.png" alt="Ice Cream" loading="lazy" style="height:70px;margin:0 18px;vertical-align:middle;">
+  <img src="fullcreamtonedmilk.jpg" alt="Full Cream Toned Milk" loading="lazy" style="height:70px;margin:0 18px;vertical-align:middle;">
+  <img src="standardizedmilk.png" alt="Standardized Milk" loading="lazy" style="height:70px;margin:0 18px;vertical-align:middle;">
+  <img src="chocolate.png" alt="Chocolate Milk" loading="lazy" style="height:70px;margin:0 18px;vertical-align:middle;">
+</marquee>
+
 <!-- PRODUCTS -->
 <h2>Our Products</h2>
 <div class="products">
   <div class="card" data-product="Jersey Gold Milk"><img src="cowmilk.jpg" alt="Jersey Gold Milk" loading="lazy"><h3>Jersey Gold Milk</h3><button onclick="selectProduct('Jersey Gold Milk')">Select</button></div>
   <div class="card" data-product="Blue Toned Milk"><img src="bluetonedmilk.png" alt="Blue Toned Milk" loading="lazy"><h3>Blue Toned Milk</h3><button onclick="selectProduct('Blue Toned Milk')">Select</button></div>
   <div class="card" data-product="Fresh Curd"><img src="tonedcurd.png" alt="Fresh Curd" loading="lazy"><h3>Fresh Curd</h3><button onclick="selectProduct('Fresh Curd')">Select</button></div>
+  <div class="card" data-product="Ice Cream"><img src="goldicecream.png" alt="Ice Cream" loading="lazy"><h3>Gold Ice Cream</h3><button onclick="selectProduct('Ice Cream')">Select</button></div>
   <div class="card" data-product="Full Cream Toned Milk"><img src="fullcreamtonedmilk.jpg" alt="Full Cream Toned Milk" loading="lazy"><h3>Full Cream Toned Milk</h3><button onclick="selectProduct('Full Cream Toned Milk')">Select</button></div>
-  <div class="card" data-product="Little Curd"><img src="littlecurd.png" alt="Little Curd" loading="lazy"><h3>Little Curd</h3><button onclick="selectProduct('Little Curd')">Select</button></div>
+  <div class="card" data-product="Standardized Milk"><img src="standardizedmilk.png" alt="Standardized Milk" loading="lazy"><h3>Standardized Milk</h3><button onclick="selectProduct('Standardized Milk')">Select</button></div>
+  <div class="card" data-product="Chocolate Milk"><img src="chocolate.png" alt="Chocolate Milk" loading="lazy"><h3>Chocolate Milk</h3><button onclick="selectProduct('Chocolate Milk')">Select</button></div>
 </div>
 
 <!-- ORDER FORM -->
@@ -325,8 +338,10 @@ function showReceipt(orderId, name, phone, product, quantity, address) {
     "Jersey Gold Milk": 76,
     "Blue Toned Milk": 59,
     "Fresh Curd": 44,
+    "Ice Cream": 50,
     "Full Cream Toned Milk": 76,
-    "Little Curd": 23
+    "Standardized Milk": 67,
+    "Chocolate Milk": 30
   };
   var unitPrice = (product in PRODUCT_PRICES) ? PRODUCT_PRICES[product] : null;
   var qtyNumMatch = quantity.match(/[\d.]+/);
@@ -350,45 +365,4 @@ function showReceipt(orderId, name, phone, product, quantity, address) {
     '<div class="receipt-row"><span>Phone</span><span>' + escapeHtmlPublic(phone) + '</span></div>' +
     '<div class="receipt-row"><span>Product</span><span>' + escapeHtmlPublic(product) + '</span></div>' +
     '<div class="receipt-row"><span>Quantity</span><span>' + escapeHtmlPublic(quantity) + '</span></div>' +
-    '<div class="receipt-row"><span>Address</span><span style="text-align:right;max-width:60%;">' + escapeHtmlPublic(address) + '</span></div>' +
-    '<div class="receipt-row"><span>Status</span><span>Pending</span></div>' +
-    totalHtml;
-
-  document.getElementById("receiptModal").style.display = "flex";
-}
-
-function closeReceipt() {
-  document.getElementById("receiptModal").style.display = "none";
-}
-
-function escapeHtmlPublic(str) {
-  if (str === undefined || str === null) return "";
-  return String(str).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;");
-}
-
-// ===================== ADMIN AREA (Orders) =====================
-
-var allOrders = [];
-var unsubscribeOrders = null;
-var currentRole = null;
-var STATUSES = ["Pending","Confirmed","Out for Delivery","Delivered","Cancelled"];
-
-function openAdmin() {
-  document.getElementById("adminArea").style.display = "block";
-  document.getElementById("adminArea").scrollIntoView({ behavior: "smooth" });
-}
-
-if (firebaseReady) {
-auth.onAuthStateChanged(function(user) {
-  if (user) {
-    currentRole = (user.email === "developer" + ADMIN_EMAIL_DOMAIN) ? "developer" : "owner";
-    var roleLabel = document.getElementById("roleLabel");
-    roleLabel.textContent = (currentRole === "owner") ? "Owner" : "Developer (view only)";
-    roleLabel.style.background = (currentRole === "owner") ? "#1976d2" : "#7b1fa2";
-
-    document.getElementById("loginSection").style.display = "none";
-    document.getElementById("dashboardSection").style.display = "block";
-    listenForOrders();
-  } else {
-    currentRole = null;
-    document.getElementById("dashboardSect
+    '<div class="receipt-row"><span>Address</span><span style="text-align:right;max-width:60%;">' + escapeHtmlPublic(address) + '</span></d
