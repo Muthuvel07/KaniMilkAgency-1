@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Kani Milk Agency - E-Bill</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', sans-serif; background: #f0faf0; min-height: 100vh; padding: 20px; }
+    .container { max-width: 700px; margin: 0 auto; }
+
+    .back-link { display:inline-block; margin-bottom:14px; color:#087f23; font-weight:700; text-decoration:none; font-size:14px; }
+    .back-link:hover { text-decoration:underline; }
+
+    .header {
+      background: linear-gradient(135deg, #087f23, #1b5e20);
+      color: white; padding: 24px 20px;
+      border-radius: 16px 16px 0 0; text-align: center;
+    }
+    .header h1 { font-size: 22px; font-weight: 700; }
+    .header p { font-size: 12px; opacity: 0.85; margin-top: 4px; }
+
+    .shop-info {
+      background: white; padding: 14px 20px;
+      border-bottom: 1px solid #e0e0e0;
+      display: flex; justify-content: space-between; font-size: 13px; color: #555;
+    }
+    .shop-info span { font-weight: 700; color: #087f23; }
+
+    .customer-section {
+      background: white; padding: 14px 20px; border-bottom: 1px solid #eee;
+    }
+    .customer-section input {
+      width: 100%; padding: 9px 12px; border: 1.5px solid #ddd;
+      border-radius: 8px; font-size: 14px; outline: none;
+    }
+    .customer-section input:focus { border-color: #087f23; }
+
+    .input-section { background: white; padding: 16px 20px; border-bottom: 2px dashed #e0e0e0; }
+    .input-section h3 { font-size: 13px; font-weight: 700; color: #333; margin-bottom: 12px; text-transform: uppercase; }
+    .input-row { display: flex; gap: 8px; flex-wrap: wrap; }
+    .input-row input, .input-row select {
+      flex: 1; min-width: 100px; padding: 9px 10px;
+      border: 1.5px solid #ddd; border-radius: 8px; font-size: 13px; outline: none;
+    }
+    .input-row input:focus, .input-row select:focus { border-color: #087f23; }
+    .btn-add {
+      background: #087f23; color: white; border: none;
+      padding: 10px; border-radius: 8px; font-size: 14px;
+      font-weight: 700; cursor: pointer; width: 100%; margin-top: 10px;
+    }
+    .btn-add:hover { background: #1b5e20; }
+
+    .table-section { background: white; padding: 0 20px 10px; }
+    .table-header {
+      display: grid; grid-template-columns: 2fr 0.7fr 1fr 1fr 0.4fr;
+      padding: 10px 8px; background: #f5f5f5;
+      font-size: 11px; font-weight: 700; color: #555;
+      text-transform: uppercase; border-radius: 6px; margin-bottom: 4px;
+    }
+    .product-row {
+      display: grid; grid-template-columns: 2fr 0.7fr 1fr 1fr 0.4fr;
+      padding: 9px 8px; border-bottom: 1px solid #f0f0f0;
+      font-size: 13px; align-items: center; animation: fadeIn 0.3s;
+    }
+    @keyframes fadeIn { from { opacity:0; transform:translateY(-5px); } to { opacity:1; transform:translateY(0); } }
+    .product-name { font-weight: 600; color: #222; }
+    .amount { color: #087f23; font-weight: 700; }
+    .btn-delete { background: none; border: none; color: #e53935; font-size: 15px; cursor: pointer; padding: 2px 5px; border-radius: 4px; }
+    .btn-delete:hover { background: #fdecea; }
+    .empty-state { text-align: center; padding: 28px; color: #aaa; font-size: 14px; }
+    .empty-state .icon { font-size: 34px; margin-bottom: 8px; }
+
+    .summary { background: white; padding: 18px 20px; border-top: 2px solid #e0e0e0; }
+    .summary-row { display: flex; justify-content: space-between; font-size: 14px; color: #555; margin-bottom: 8px; }
+    .gst-row { display: flex; align-items: center; gap: 10px; margin-top: 8px; font-size: 13px; color: #555; }
+    .gst-row input { width: 60px; padding: 6px 8px; border: 1.5px solid #ddd; border-radius: 6px; font-size: 13px; outline: none; }
+    .gst-row input:focus { border-color: #087f23; }
+    .divider { border: none; border-top: 1.5px dashed #ddd; margin: 12px 0; }
+    .total-row { display: flex; justify-content: space-between; font-size: 20px; font-weight: 800; color: #087f23; }
+
+    .actions { display: flex; gap: 10px; padding: 14px 20px; background: white; border-radius: 0 0 16px 16px; flex-wrap: wrap; }
+    .btn-save { flex: 2; background: #34a853; color: white; border: none; padding: 13px; border-radius: 10px; font-size: 14px; font-weight: 700; cursor: pointer; }
+    .btn-print { flex: 1; background: #1a73e8; color: white; border: none; padding: 13px; border-radius: 10px; font-size: 14px; font-weight: 700; cursor: pointer; }
+    .btn-clear { background: #e53935; color: white; border: none; padding: 13px 16px; border-radius: 10px; font-size: 14px; font-weight: 700; cursor: pointer; }
+    .btn-save:hover { background: #2d8f47; }
+    .btn-print:hover { background: #1558c0; }
+    .btn-clear:hover { background: #c62828; }
+    .btn-history { flex: 1; background: #f57c00; color: white; border: none; padding: 13px; border-radius: 10px; font-size: 14px; font-weight: 700; cursor: pointer; }
+    .btn-history:hover { background: #e65100; }
+
+    .status-bar {
+      background: #e8f5e9; color: #2e7d32; padding: 10px 20px;
+      font-size: 13px; font-weight: 600; text-align: center;
+      display: none; border-top: 1px solid #c8e6c9;
+    }
+    .status-bar.error { background: #fdecea; color: #c62828; border-color: #ffcdd2; }
+
+    .modal-overlay {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,0.5); z-index: 100; padding: 20px;
+      overflow-y: auto;
+    }
+    .modal { background: white; border-radius: 16px; max-width: 650px; margin: 0 auto; overflow: hidden; }
+    .modal-header {
+      background: linear-gradient(135deg, #087f23, #1b5e20);
+      color: white; padding: 18px 20px;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .modal-header h2 { font-size: 18px; }
+    .btn-close { background: rgba(255,255,255,0.2); border: none; color: white; padding: 6px 12px; border-radius: 8px; cursor: pointer; font-size: 14px; }
+    .history-item { padding: 14px 20px; border-bottom: 1px solid #f0f0f0; }
+    .history-item .bill-no { font-weight: 700; color: #087f23; font-size: 14px; }
+    .history-item .bill-info { font-size: 12px; color: #888; margin-top: 3px; }
+    .history-item .bill-total { font-weight: 800; color: #34a853; font-size: 15px; float: right; }
+    .loading { text-align: center; padding: 30px; color: #aaa; font-size: 14px; }
+
+    @media print {
+      body { background: white; padding: 0; }
+      .back-link, .input-section, .actions, .btn-delete, .status-bar, .modal-overlay { display: none !important; }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <a class="back-link" href="index.html">← Back to site</a>
+
+  <div class="header">
+    <h1>🥛 Kani Milk Agency</h1>
+    <p>Digital E-Bill System • Firebase Connected</p>
+  </div>
+
+  <div class="shop-info">
+    <div>Bill No: <span id="billNo">Loading...</span><br>Date: <span id="billDate"></span></div>
+    <div style="text-align:right;">Time: <span id="billTime"></span><br><span style="color:#34a853;">🟢 Firebase Connected</span></div>
+  </div>
+
+  <div class="customer-section">
+    <input type="text" id="customerName" placeholder="👤 Customer Name (optional)" />
+  </div>
+
+  <div class="status-bar" id="statusBar"></div>
+
+  <div class="input-section">
+    <h3>➕ Add Product</h3>
+    <div class="input-row">
+      <input type="text" id="productName" placeholder="Product Name" oninput="autoFillPrice()" />
+      <input type="number" id="qty" placeholder="Qty" min="1" value="1" />
+      <input type="number" id="price" placeholder="Price (₹)" min="0" step="0.01" oninput="this.dataset.userEdited='true'" />
+      <select id="unit">
+        <option value="pcs">pcs</option>
+        <option value="L">L</option>
+        <option value="kg">kg</option>
+        <option value="g">g</option>
+        <option value="ml">ml</option>
+        <option value="packet">packet</option>
+        <option value="box">box</option>
+      </select>
+    </div>
+    <button class="btn-add" onclick="addProduct()">➕ Add to Bill</button>
+  </div>
+
+  <div class="table-section">
+    <div class="table-header">
+      <div>Product</div><div>Qty</div><div>Price</div><div>Amount</div><div></div>
+    </div>
+    <div id="productList">
+      <div class="empty-state"><div class="icon">🛒</div>No products added yet.</div>
+    </div>
+  </div>
+
+  <div class="summary">
+    <div class="summary-row"><span>Subtotal</span><span id="subtotal">₹0.00</span></div>
+    <div class="gst-row">
+      <span>GST (%)</span>
+      <input type="number" id="taxRate" value="0" min="0" max="100" oninput="updateSummary()" />
+      <span id="taxAmount" style="margin-left:auto;color:#f57c00;font-weight:600;">+₹0.00</span>
+    </div>
+    <div class="gst-row">
+      <span>Discount (%)</span>
+      <input type="number" id="discountRate" value="0" min="0" max="100" oninput="updateSummary()" />
+      <span id="discountAmount" style="margin-left:auto;color:#e53935;font-weight:600;">-₹0.00</span>
+    </div>
+    <hr class="divider" />
+    <div class="total-row"><span>TOTAL</span><span id="totalAmount">₹0.00</span></div>
+    <div style="font-size:12px;color:#aaa;margin-top:6px;text-align:right;"><span id="itemCount">0 items</span></div>
+  </div>
+
+  <div class="actions">
+    <button class="btn-save" onclick="saveBill()">💾 Save to Firebase</button>
+    <button class="btn-history" onclick="openHistory()">📋 History</button>
+    <button class="btn-print" onclick="window.print()">🖨️ Print</button>
+    <button class="btn-clear" onclick="clearAll()">🗑️</button>
+  </div>
+
+</div>
+
+<div class="modal-overlay" id="historyModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2>📋 Bill History</h2>
+      <button class="btn-close" onclick="closeHistory()">✕ Close</button>
+    </div>
+    <div id="historyList"><div class="loading">Loading bills...</div></div>
+  </div>
+</div>
+
+<!-- FIREBASE v8 CDN -->
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+
+<script>
+  firebase.initializeApp({
+    apiKey: "AIzaSyAQAY_wXDlU5twKU9DLZCh3lgfBfLAy7AQ",
+    authDomain: "kani-milk-agency-9323b.firebaseapp.com",
+    projectId: "kani-milk-agency-9323b",
+    storageBucket: "kani-milk-agency-9323b.firebasestorage.app",
+    messagingSenderId: "317392951345",
+    appId: "1:317392951345:web:cca0392469dca61491dd10",
+    measurementId: "G-NMFN9R1FDB"
+  });
+
+  var db = firebase.firestore();
+  window._products = [];
+
+  var now = new Date();
+  document.getElementById('billDate').textContent = now.toLocaleDateString('en-IN');
+  document.getElementById('billTime').textContent = now.toLocaleTimeString('en-IN', {hour:'2-digit', minute:'2-digit'});
+
+  function getNextBillNo() {
+    var counterRef = db.collection('meta').doc('billCounter');
+    return counterRef.get().then(function(snap) {
+      if (snap.exists) {
+        var next = snap.data().count + 1;
+        counterRef.update({ count: firebase.firestore.FieldValue.increment(1) });
+        return 'KMA-' + String(next).padStart(4, '0');
+      } else {
+        counterRef.set({ count: 1 });
+        return 'KMA-0001';
+      }
+    }).catch(function() { return 'KMA-' + Date.now(); });
+  }
+
+  getNextBillNo().then(function(no) {
+    window._nextBillNo = no;
+    document.getElementById('billNo').textContent = no;
+  });
+
+  function saveBill() {
+    if (window._products.length === 0) { showStatus('Add at least one product!', true); return; }
+    showStatus('Saving...', false);
+
+    var billNo = window._nextBillNo || document.getElementById('billNo').textContent;
+    var subtotal = window._products.reduce(function(s, p) { return s + p.amount; }, 0);
+    var taxRate = parseFloat(document.getElementById('taxRate').value) || 0;
+    var discountRate = parseFloat(document.getElementById('discountRate').value) || 0;
+    var discountAmt = subtotal * (discountRate / 100);
+    var taxAmt = (subtotal - discountAmt) * (taxRate / 100);
+    var total = subtotal - discountAmt + taxAmt;
+
+    db.collection('bills').add({
+      billNo: billNo,
+      customer: document.getElementById('customerName').value || 'Walk-in',
+      products: window._products,
+      subtotal: subtotal, taxRate: taxRate, taxAmt: taxAmt, discountRate: discountRate, discountAmt: discountAmt, total: total,
+      createdAt: new Date().toISOString(),
+      date: new Date().toLocaleDateString('en-IN'),
+      time: new Date().toLocaleTimeString('en-IN', {hour:'2-digit', minute:'2-digit'})
+    }).then(function() {
+      showStatus('✅ Bill ' + billNo + ' saved successfully!', false);
+      return getNextBillNo();
+    }).then(function(nextNo) {
+      window._nextBillNo = nextNo;
+      document.getElementById('billNo').textContent = nextNo;
+    }).catch(function(err) {
+      showStatus('❌ Error saving: ' + err.message, true);
+    });
+  }
+
+  function loadHistory() {
+    var historyList = document.getElementById('historyList');
+    historyList.innerHTML = '<div class="loading">⏳ Loading bills...</div>';
+    db.collection('bills').orderBy('createdAt', 'desc').get().then(function(snap) {
+      if (snap.empty) {
+        historyList.innerHTML = '<div class="loading">No bills saved yet.</div>';
+        return;
+      }
+      historyList.innerHTML = snap.docs.map(function(d) {
+        var b = d.data();
+        return '<div class="history-item"><span class="bill-total">₹' + (b.total ? b.total.toFixed(2) : '0.00') + '</span>' +
+          '<div class="bill-no">' + escapeHtml(b.billNo) + '</div>' +
+          '<div class="bill-info">👤 ' + escapeHtml(b.customer) + ' • 📅 ' + escapeHtml(b.date) + ' ' + escapeHtml(b.time) +
+          ' • 🛒 ' + (b.products ? b.products.length : 0) + ' items</div></div>';
+      }).join('');
+    }).catch(function(err) {
+      historyList.innerHTML = '<div class="loading">❌ Error: ' + err.message + '</div>';
+    });
+  }
+
+  function escapeHtml(str) {
+    if (str === undefined || str === null) return "";
+    return String(str).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;");
+  }
+
+  var PRICE_LIST = [
+    { match: "strawberry milk", price: 10 },
+    { match: "enriched toned milk", price: 59 },
+    { match: "rich toned milk", price: 67 },
+    { match: "blue toned milk", price: 59 },
+    { match: "full cream toned milk", price: 76 },
+    { match: "jersey", price: 76 },
+    { match: "cow milk", price: 76 },
+    { match: "standardized milk", price: 67 },
+    { match: "green toned curd", price: 44 },
+    { match: "toned curd", price: 44 },
+    { match: "little curd", price: 23 },
+    { match: "chocolate milk", price: 30 },
+    { match: "gold ice cream", price: 50 },
+    { match: "ice cream", price: 50 },
+    { match: "curd", price: 44 }
+  ];
+
+  function lookupPrice(nameLower) {
+    for (var i = 0; i < PRICE_LIST.length; i++) {
+      if (nameLower.indexOf(PRICE_LIST[i].match) !== -1) return PRICE_LIST[i].price;
+    }
+    return null;
+  }
+
+  function autoFillPrice() {
+    var name = document.getElementById('productName').value.trim().toLowerCase();
+    var priceField = document.getElementById('price');
+    if (priceField.dataset.userEdited) return;
+    var price = lookupPrice(name);
+    if (price !== null) priceField.value = price;
+  }
+
+  function addProduct() {
+    var name = document.getElementById('productName').value.trim();
+    var qty = parseFloat(document.getElementById('qty').value);
+    var price = parseFloat(document.getElementById('price').value);
+    var unit = document.getElementById('unit').value;
+    if (!name) { showStatus('Enter product name', true); return; }
+    if (!qty || qty <= 0) { showStatus('Enter valid quantity', true); return; }
+    if (!price || price < 0) { showStatus('Enter valid price', true); return; }
+
+    window._products.push({ id: Date.now(), name: name, qty: qty, price: price, unit: unit, amount: qty * price });
+    document.getElementById('productName').value = '';
+    document.getElementById('qty').value = '1';
+    document.getElementById('price').value = '';
+    delete document.getElementById('price').dataset.userEdited;
+    document.getElementById('productName').focus();
+    renderProducts(); updateSummary();
+    showStatus('', false);
+  }
+
+  function removeProduct(id) {
+    window._products = window._products.filter(function(p) { return p.id !== id; });
+    renderProducts(); updateSummary();
+  }
+
+  function renderProducts() {
+    var list = document.getElementById('productList');
+    if (window._products.length === 0) {
+      list.innerHTML = '<div class="empty-state"><div class="icon">🛒</div>No products added yet.</div>';
+      return;
+    }
+    list.innerHTML = window._products.map(function(p, i) {
+      return '<div class="product-row"><div class="product-name">' + (i+1) + '. ' + escapeHtml(p.name) +
+        ' <span style="font-size:11px;color:#aaa">(' + p.unit + ')</span></div><div>' + p.qty + '</div>' +
+        '<div>₹' + p.price.toFixed(2) + '</div><div class="amount">₹' + p.amount.toFixed(2) + '</div>' +
+        '<div><button class="btn-delete" onclick="removeProduct(' + p.id + ')">✕</button></div></div>';
+    }).join('');
+  }
+
+  function updateSummary() {
+    var subtotal = window._products.reduce(function(s, p) { return s + p.amount; }, 0);
+    var taxRate = parseFloat(document.getElementById('taxRate').value) || 0;
+    var discountRate = parseFloat(document.getElementById('discountRate').value) || 0;
+    var discountAmt = subtotal * (discountRate / 100);
+    var taxAmt = (subtotal - discountAmt) * (taxRate / 100);
+    var total = subtotal - discountAmt + taxAmt;
+    document.getElementById('subtotal').textContent = '₹' + subtotal.toFixed(2);
+    document.getElementById('taxAmount').textContent = '+₹' + taxAmt.toFixed(2);
+    document.getElementById('discountAmount').textContent = '-₹' + discountAmt.toFixed(2);
+    document.getElementById('totalAmount').textContent = '₹' + total.toFixed(2);
+    document.getElementById('itemCount').textContent = window._products.length + ' item(s)';
+  }
+
+  function clearAll() {
+    if (window._products.length === 0) return;
+    if (confirm('Clear all and start new bill?')) {
+      window._products = [];
+      document.getElementById('taxRate').value = 0;
+      document.getElementById('discountRate').value = 0;
+      document.getElementById('customerName').value = '';
+      renderProducts(); updateSummary();
+    }
+  }
+
+  function openHistory() {
+    document.getElementById('historyModal').style.display = 'block';
+    loadHistory();
+  }
+  function closeHistory() { document.getElementById('historyModal').style.display = 'none'; }
+
+  function showStatus(msg, isError) {
+    var bar = document.getElementById('statusBar');
+    if (!msg) { bar.style.display = 'none'; return; }
+    bar.textContent = msg;
+    bar.className = 'status-bar' + (isError ? ' error' : '');
+    bar.style.display = 'block';
+    if (!isError) setTimeout(function() { bar.style.display = 'none'; }, 4000);
+  }
+
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter' && document.activeElement.closest('.input-section')) addProduct();
+  });
+</script>
+</body>
+</html>
