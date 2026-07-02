@@ -13,8 +13,7 @@ header h1{font-size:2rem;font-weight:700;}
 header p{font-size:0.95rem;opacity:0.85;margin-top:6px;}
 h2{text-align:center;color:#087f23;font-size:1.5rem;margin:30px 0 20px;}
 .products{display:flex;justify-content:center;gap:20px;flex-wrap:wrap;padding:0 20px;}
-.card{background:white;padding:20px;width:200px;text-align:center;border-radius:16px;box-shadow:0 4px 16px rgba(0,0,0,0.1);transition:transform 0.2s, box-shadow 0.2s, border 0.2s;border:3px solid transparent;}
-.card.selected{border:3px solid #087f23;box-shadow:0 4px 20px rgba(8,127,35,0.3);}
+.card{background:white;padding:20px;width:200px;text-align:center;border-radius:16px;box-shadow:0 4px 16px rgba(0,0,0,0.1);transition:transform 0.2s;}
 .card:hover{transform:translateY(-5px);}
 .card img{width:140px;height:140px;object-fit:contain;margin-bottom:10px;}
 .card h3{font-size:0.95rem;color:#1b5e20;margin-bottom:8px;}
@@ -35,6 +34,8 @@ h2{text-align:center;color:#087f23;font-size:1.5rem;margin:30px 0 20px;}
 .order-msg.error{background:#fce4ec;color:#c62828;border:1px solid #ef9a9a;}
 footer{background:#1b5e20;color:white;text-align:center;padding:20px;margin-top:40px;position:relative;}
 footer a{color:#a5d6a7;text-decoration:none;}
+footer .ebill-link{display:inline-block;margin-top:10px;background:rgba(255,255,255,0.12);padding:8px 16px;border-radius:20px;font-size:0.85rem;font-weight:600;}
+footer .ebill-link:hover{background:rgba(255,255,255,0.22);}
 #adminDot{display:inline-block;width:10px;height:10px;margin-left:8px;opacity:0.35;cursor:pointer;user-select:none;}
 @media(max-width:600px){
   header h1{font-size:1.4rem;}
@@ -63,8 +64,6 @@ footer a{color:#a5d6a7;text-decoration:none;}
 .stat-card label{font-size:0.78rem;color:#555;}
 #logoutBtn{background:white;color:#087f23;border:1.5px solid #087f23;padding:10px 18px;border-radius:10px;font-size:0.9rem;font-weight:600;cursor:pointer;}
 #logoutBtn:hover{background:#087f23;color:white;}
-#ebillLinkBtn{background:#f57c00;color:white;border:none;padding:10px 18px;border-radius:10px;font-size:0.9rem;font-weight:600;cursor:pointer;text-decoration:none;display:inline-block;}
-#ebillLinkBtn:hover{background:#e65100;}
 .filter-bar{margin-bottom:16px;}
 .filter-bar select{padding:10px 14px;border-radius:10px;border:1.5px solid #ddd;font-size:0.9rem;background:white;}
 .orders-list{display:flex;flex-direction:column;gap:14px;}
@@ -84,28 +83,6 @@ footer a{color:#a5d6a7;text-decoration:none;}
 .order-actions select{padding:8px 10px;border-radius:8px;border:1.5px solid #ddd;font-size:0.85rem;}
 .del-btn{background:#fce4ec;color:#c62828;border:1.5px solid #ef9a9a;padding:8px 14px;border-radius:8px;font-size:0.85rem;cursor:pointer;}
 .del-btn:hover{background:#c62828;color:white;}
-
-/* ===== RECEIPT MODAL ===== */
-.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:200;padding:20px;overflow-y:auto;align-items:flex-start;justify-content:center;}
-.receipt-box{background:white;max-width:380px;width:100%;margin:30px auto;border-radius:16px;overflow:hidden;box-shadow:0 8px 30px rgba(0,0,0,0.25);}
-.receipt-head{background:linear-gradient(135deg,#087f23,#1b5e20);color:white;padding:18px 20px;text-align:center;}
-.receipt-head h2{font-size:1.1rem;}
-.receipt-head p{font-size:0.75rem;opacity:0.85;margin-top:3px;}
-.receipt-body{padding:18px 20px;font-size:0.9rem;color:#333;}
-.receipt-row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px dashed #eee;}
-.receipt-row span:first-child{color:#777;}
-.receipt-total{display:flex;justify-content:space-between;padding-top:12px;margin-top:6px;border-top:2px solid #087f23;font-size:1.05rem;font-weight:800;color:#087f23;}
-.receipt-note{font-size:0.75rem;color:#999;text-align:center;margin-top:14px;}
-.receipt-actions{display:flex;gap:10px;padding:14px 20px;background:#f7f7f7;}
-.receipt-actions button{flex:1;padding:12px;border:none;border-radius:10px;font-size:0.9rem;font-weight:700;cursor:pointer;}
-#receiptPrintBtn{background:#1a73e8;color:white;}
-#receiptCloseBtn{background:#e0e0e0;color:#333;}
-@media print{
-  body *{visibility:hidden;}
-  #receiptModal, #receiptModal *{visibility:visible;}
-  #receiptModal{position:absolute;top:0;left:0;width:100%;background:white;padding:0;}
-  .receipt-actions{display:none !important;}
-}
 </style>
 </head>
 <body>
@@ -119,38 +96,74 @@ footer a{color:#a5d6a7;text-decoration:none;}
 
 <!-- IMAGE MARQUEE -->
 <marquee behavior="scroll" direction="left" scrollamount="6" style="background:white;padding:10px 0;border-bottom:2px solid #087f23;">
-  <img src="cowmilk.jpg" alt="Jersey Gold Milk" loading="lazy" style="height:70px;margin:0 18px;vertical-align:middle;">
-  <img src="bluetonedmilk.png" alt="Blue Toned Milk" loading="lazy" style="height:70px;margin:0 18px;vertical-align:middle;">
-  <img src="tonedcurd.png" alt="Fresh Curd" loading="lazy" style="height:70px;margin:0 18px;vertical-align:middle;">
-  <img src="goldicecream.png" alt="Ice Cream" loading="lazy" style="height:70px;margin:0 18px;vertical-align:middle;">
-  <img src="fullcreamtonedmilk.jpg" alt="Full Cream Toned Milk" loading="lazy" style="height:70px;margin:0 18px;vertical-align:middle;">
-  <img src="standardizedmilk.png" alt="Standardized Milk" loading="lazy" style="height:70px;margin:0 18px;vertical-align:middle;">
-  <img src="chocolate.png" alt="Chocolate Milk" loading="lazy" style="height:70px;margin:0 18px;vertical-align:middle;">
+  <img src="cowmilk.jpg" alt="Jersey Gold Milk" style="height:70px;margin:0 18px;vertical-align:middle;">
+  <img src="bluetonedmilk.png" alt="Blue Toned Milk" style="height:70px;margin:0 18px;vertical-align:middle;">
+  <img src="tonedcurd.png" alt="Fresh Curd" style="height:70px;margin:0 18px;vertical-align:middle;">
+  <img src="goldicecream.png" alt="Ice Cream" style="height:70px;margin:0 18px;vertical-align:middle;">
+  <img src="fullcreamtonedmilk.jpg" alt="Full Cream Toned Milk" style="height:70px;margin:0 18px;vertical-align:middle;">
+  <img src="standardizedmilk.png" alt="Standardized Milk" style="height:70px;margin:0 18px;vertical-align:middle;">
+  <img src="chocolate.png" alt="Chocolate Milk" style="height:70px;margin:0 18px;vertical-align:middle;">
 </marquee>
 
 <!-- PRODUCTS -->
 <h2>Our Products</h2>
 <div class="products">
-  <div class="card" data-product="Jersey Gold Milk"><img src="cowmilk.jpg" alt="Jersey Gold Milk" loading="lazy"><h3>Jersey Gold Milk</h3><button onclick="selectProduct('Jersey Gold Milk')">Select</button></div>
-  <div class="card" data-product="Blue Toned Milk"><img src="bluetonedmilk.png" alt="Blue Toned Milk" loading="lazy"><h3>Blue Toned Milk</h3><button onclick="selectProduct('Blue Toned Milk')">Select</button></div>
-  <div class="card" data-product="Fresh Curd"><img src="tonedcurd.png" alt="Fresh Curd" loading="lazy"><h3>Fresh Curd</h3><button onclick="selectProduct('Fresh Curd')">Select</button></div>
-  <div class="card" data-product="Ice Cream"><img src="goldicecream.png" alt="Ice Cream" loading="lazy"><h3>Gold Ice Cream</h3><button onclick="selectProduct('Ice Cream')">Select</button></div>
-  <div class="card" data-product="Full Cream Toned Milk"><img src="fullcreamtonedmilk.jpg" alt="Full Cream Toned Milk" loading="lazy"><h3>Full Cream Toned Milk</h3><button onclick="selectProduct('Full Cream Toned Milk')">Select</button></div>
-  <div class="card" data-product="Standardized Milk"><img src="standardizedmilk.png" alt="Standardized Milk" loading="lazy"><h3>Standardized Milk</h3><button onclick="selectProduct('Standardized Milk')">Select</button></div>
-  <div class="card" data-product="Chocolate Milk"><img src="chocolate.png" alt="Chocolate Milk" loading="lazy"><h3>Chocolate Milk</h3><button onclick="selectProduct('Chocolate Milk')">Select</button></div>
+
+  <div class="card">
+    <img src="cowmilk.jpg" alt="Jersey Gold Milk">
+    <h3>Jersey Gold Milk</h3>
+    <button onclick="selectProduct('Jersey Gold Milk')">Select</button>
+  </div>
+
+  <div class="card">
+    <img src="bluetonedmilk.png" alt="Blue Toned Milk">
+    <h3>Blue Toned Milk</h3>
+    <button onclick="selectProduct('Blue Toned Milk')">Select</button>
+  </div>
+
+  <div class="card">
+    <img src="tonedcurd.png" alt="Fresh Curd">
+    <h3>Fresh Curd</h3>
+    <button onclick="selectProduct('Fresh Curd')">Select</button>
+  </div>
+
+  <div class="card">
+    <img src="goldicecream.png" alt="Ice Cream">
+    <h3>Gold Ice Cream</h3>
+    <button onclick="selectProduct('Ice Cream')">Select</button>
+  </div>
+
+  <div class="card">
+    <img src="fullcreamtonedmilk.jpg" alt="Full Cream Toned Milk">
+    <h3>Full Cream Toned Milk</h3>
+    <button onclick="selectProduct('Full Cream Toned Milk')">Select</button>
+  </div>
+
+  <div class="card">
+    <img src="standardizedmilk.png" alt="Standardized Milk">
+    <h3>Standardized Milk</h3>
+    <button onclick="selectProduct('Standardized Milk')">Select</button>
+  </div>
+
+  <div class="card">
+    <img src="chocolate.png" alt="Chocolate Milk">
+    <h3>Chocolate Milk</h3>
+    <button onclick="selectProduct('Chocolate Milk')">Select</button>
+  </div>
+
 </div>
 
 <!-- ORDER FORM -->
 <section class="order-section">
   <h2>Place Your Order</h2>
   <div class="order">
-    <input id="name" type="text" placeholder="உங்கள் பெயர் (Your Name)">
-    <input id="phone" type="tel" placeholder="Phone Number (10 digits)" maxlength="10">
-    <input id="product" type="text" placeholder="மேலே product select செய்யுங்கள்" readonly>
+    <input id="name"     type="text" placeholder="உங்கள் பெயர் (Your Name)">
+    <input id="phone"    type="tel"  placeholder="Phone Number (10 digits)" maxlength="10">
+    <input id="product"  type="text" placeholder="மேலே product select செய்யுங்கள்" readonly>
     <input id="quantity" type="text" placeholder="Quantity (எ.கா: 1 Litre)">
     <textarea id="address" placeholder="Delivery Address" rows="3"></textarea>
     <div id="orderMsg" class="order-msg" style="display:none;"></div>
-    <button id="orderBtn" onclick="sendOrder()" disabled>🛒 Select a product first</button>
+    <button id="orderBtn" onclick="sendOrder()">🛒 Order Now</button>
     <a id="gpayBtn" href="upi://pay?pa=muthuvelmuthuvel887@okaxis&pn=Kani%20Milk%20Agency&cu=INR&tn=Milk%20Order%20Payment">💳 Pay via GPay</a>
   </div>
 </section>
@@ -159,24 +172,10 @@ footer a{color:#a5d6a7;text-decoration:none;}
 <footer>
   <p>📞 Call us: <a href="tel:+918838416013">8838416013</a></p>
   <p>© 2025 Kani Milk Agency. All rights reserved.<span id="adminDot" onclick="openAdmin()" title=""> </span></p>
+  <a class="ebill-link" href="ebill.html">🧾 E-Billing System</a>
 </footer>
 
-<!-- Receipt Modal -->
-<div class="modal-overlay" id="receiptModal">
-  <div class="receipt-box">
-    <div class="receipt-head">
-      <h2>🥛 Kani Milk Agency</h2>
-      <p>Order Receipt</p>
-    </div>
-    <div class="receipt-body" id="receiptBody"></div>
-    <div class="receipt-actions">
-      <button id="receiptPrintBtn" onclick="window.print()">🖨️ Print</button>
-      <button id="receiptCloseBtn" onclick="closeReceipt()">Close</button>
-    </div>
-  </div>
-</div>
-
-<!-- ===== ADMIN AREA (Orders only — E-Bill is a separate linked page) ===== -->
+<!-- ===== ADMIN AREA (hidden until the footer dot is tapped) ===== -->
 <div id="adminArea">
 
   <div id="loginSection" class="login-section">
@@ -195,9 +194,8 @@ footer a{color:#a5d6a7;text-decoration:none;}
         <div class="stat-card"><span id="totalCount">0</span><label>Total Orders</label></div>
         <div class="stat-card"><span id="pendingCount">0</span><label>Pending</label></div>
       </div>
-      <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
-        <span id="roleLabel" class="badge" style="background:#1976d2;"></span>
-        <a id="ebillLinkBtn" href="ebill.html" target="_blank" rel="noopener">🧾 Open E-Bill</a>
+      <div>
+        <span id="roleLabel" class="badge" style="background:#1976d2;margin-right:10px;"></span>
         <button id="logoutBtn" onclick="adminLogout()">Logout</button>
       </div>
     </div>
@@ -219,49 +217,34 @@ footer a{color:#a5d6a7;text-decoration:none;}
 
 </div>
 
-<!-- FIREBASE v8 CDN -->
+<!-- FIREBASE v8 CDN — Neocities compatible ✅ -->
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 
 <script>
-var db = null;
-var auth = null;
-var firebaseReady = false;
+// ✅ Firebase Config
+firebase.initializeApp({
+  apiKey: "AIzaSyAQAY_wXDlU5twKU9DLZCh3lgfBfLAy7AQ",
+  authDomain: "kani-milk-agency-9323b.firebaseapp.com",
+  projectId: "kani-milk-agency-9323b",
+  storageBucket: "kani-milk-agency-9323b.firebasestorage.app",
+  messagingSenderId: "317392951345",
+  appId: "1:317392951345:web:1768ca6b7725812491dd10"
+});
 
-try {
-  firebase.initializeApp({
-    apiKey: "AIzaSyAQAY_wXDlU5twKU9DLZCh3lgfBfLAy7AQ",
-    authDomain: "kani-milk-agency-9323b.firebaseapp.com",
-    projectId: "kani-milk-agency-9323b",
-    storageBucket: "kani-milk-agency-9323b.firebasestorage.app",
-    messagingSenderId: "317392951345",
-    appId: "1:317392951345:web:1768ca6b7725812491dd10"
-  });
-  db = firebase.firestore();
-  auth = firebase.auth();
-  firebaseReady = true;
-} catch (e) {
-  console.error("Firebase failed to load (site UI will still work, but ordering/admin needs Firebase):", e);
-}
+var db = firebase.firestore();
+var auth = firebase.auth();
+
+// Username is mapped to a fake email behind the scenes so the login box
+// can just say "Username" — Firebase Auth itself still requires an
+// email-shaped identifier internally.
 var ADMIN_EMAIL_DOMAIN = "@kani-admin.local";
 
 // ===================== PUBLIC ORDER FORM =====================
 
 function selectProduct(name) {
-  console.log("selectProduct called with:", name);
   document.getElementById("product").value = name;
-  var btn = document.getElementById("orderBtn");
-  btn.disabled = false;
-  btn.textContent = "🛒 Order Now";
-
-  document.querySelectorAll('.card').forEach(function(card) {
-    var isMatch = card.dataset.product === name;
-    var img = card.querySelector('img');
-    if (img) img.style.display = isMatch ? 'block' : 'none';
-    card.classList.toggle('selected', isMatch);
-  });
-
   document.querySelector(".order-section").scrollIntoView({ behavior: "smooth" });
 }
 
@@ -274,15 +257,11 @@ function showMessage(msg, type) {
 }
 
 function sendOrder() {
-  if (!firebaseReady) {
-    showMessage("⚠️ Connection issue — please disable ad-blocker/Shields for this site and reload.", "error");
-    return;
-  }
-  var name = document.getElementById("name").value.trim();
-  var phone = document.getElementById("phone").value.trim();
-  var product = document.getElementById("product").value.trim();
+  var name     = document.getElementById("name").value.trim();
+  var phone    = document.getElementById("phone").value.trim();
+  var product  = document.getElementById("product").value.trim();
   var quantity = document.getElementById("quantity").value.trim();
-  var address = document.getElementById("address").value.trim();
+  var address  = document.getElementById("address").value.trim();
 
   if (!name || !phone || !product || !quantity || !address) {
     showMessage("⚠️ எல்லா fields-உம் fill செய்யுங்கள்!", "error");
@@ -298,71 +277,196 @@ function sendOrder() {
   btn.textContent = "Saving...";
 
   db.collection("orders").add({
-    name: name, phone: phone, product: product, quantity: quantity, address: address,
-    status: "Pending", time: firebase.firestore.FieldValue.serverTimestamp()
-  }).then(function(docRef) {
+    name:     name,
+    phone:    phone,
+    product:  product,
+    quantity: quantity,
+    address:  address,
+    status:   "Pending",
+    time:     firebase.firestore.FieldValue.serverTimestamp()
+  })
+  .then(function() {
     showMessage("✅ Order வெற்றிகரமாக save ஆச்சு!", "success");
 
-    showReceipt(docRef.id, name, phone, product, quantity, address);
-
-    document.getElementById("name").value = "";
-    document.getElementById("phone").value = "";
-    document.getElementById("product").value = "";
+    document.getElementById("name").value     = "";
+    document.getElementById("phone").value    = "";
+    document.getElementById("product").value  = "";
     document.getElementById("quantity").value = "";
-    document.getElementById("address").value = "";
-    btn.disabled = true;
-    btn.textContent = "🛒 Select a product first";
+    document.getElementById("address").value  = "";
 
-    var msg = "🥛 *Kani Milk Agency Order*\n\n👤 பெயர்: " + name + "\n📞 Phone: " + phone +
-      "\n🛒 Product: " + product + "\n📦 Quantity: " + quantity + "\n📍 Address: " + address + "\n⏳ Status: Pending";
+    var msg =
+      "🥛 *Kani Milk Agency Order*\n\n" +
+      "👤 பெயர்: " + name +
+      "\n📞 Phone: " + phone +
+      "\n🛒 Product: " + product +
+      "\n📦 Quantity: " + quantity +
+      "\n📍 Address: " + address +
+      "\n⏳ Status: Pending";
 
     setTimeout(function() {
-      window.open("https://wa.me/918838416013?text=" + encodeURIComponent(msg), "_blank");
+      window.open(
+        "https://wa.me/918838416013?text=" + encodeURIComponent(msg),
+        "_blank"
+      );
     }, 1500);
-  }).catch(function(error) {
+  })
+  .catch(function(error) {
     showMessage("❌ Error: " + error.message, "error");
     console.error(error);
+  })
+  .finally(function() {
     btn.disabled = false;
     btn.textContent = "🛒 Order Now";
   });
 }
 
-function showReceipt(orderId, name, phone, product, quantity, address) {
-  var receiptNo = "ORD-" + orderId.slice(-6).toUpperCase();
-  var now = new Date();
-  var dateStr = now.toLocaleDateString('en-IN');
-  var timeStr = now.toLocaleTimeString('en-IN', {hour:'2-digit', minute:'2-digit'});
+// ===================== ADMIN AREA =====================
 
-  // Jersey product price list (per 1L / standard pack unless noted)
-  var PRODUCT_PRICES = {
-    "Jersey Gold Milk": 76,
-    "Blue Toned Milk": 59,
-    "Fresh Curd": 44,
-    "Ice Cream": 50,
-    "Full Cream Toned Milk": 76,
-    "Standardized Milk": 67,
-    "Chocolate Milk": 30
-  };
-  var unitPrice = (product in PRODUCT_PRICES) ? PRODUCT_PRICES[product] : null;
-  var qtyNumMatch = quantity.match(/[\d.]+/);
-  var qtyNum = qtyNumMatch ? parseFloat(qtyNumMatch[0]) : null;
+var allOrders = [];
+var unsubscribeOrders = null;
+var currentRole = null; // "owner" or "developer"
+var STATUSES = ["Pending","Confirmed","Out for Delivery","Delivered","Cancelled"];
 
-  var totalHtml = "";
-  if (unitPrice !== null && qtyNum !== null) {
-    var total = unitPrice * qtyNum;
-    totalHtml =
-      '<div class="receipt-row"><span>Unit Price</span><span>₹' + unitPrice.toFixed(2) + '</span></div>' +
-      '<div class="receipt-total"><span>Estimated Total</span><span>₹' + total.toFixed(2) + '</span></div>' +
-      '<p class="receipt-note">Final price will be confirmed at delivery.</p>';
+function openAdmin() {
+  document.getElementById("adminArea").style.display = "block";
+  document.getElementById("adminArea").scrollIntoView({ behavior: "smooth" });
+}
+
+auth.onAuthStateChanged(function(user) {
+  if (user) {
+    currentRole = (user.email === "developer" + ADMIN_EMAIL_DOMAIN) ? "developer" : "owner";
+    var roleLabel = document.getElementById("roleLabel");
+    roleLabel.textContent = (currentRole === "owner") ? "Owner" : "Developer (view only)";
+    roleLabel.style.background = (currentRole === "owner") ? "#1976d2" : "#7b1fa2";
+
+    document.getElementById("loginSection").style.display = "none";
+    document.getElementById("dashboardSection").style.display = "block";
+    listenForOrders();
   } else {
-    totalHtml = '<p class="receipt-note">Price will be confirmed when your order is processed.</p>';
+    currentRole = null;
+    document.getElementById("dashboardSection").style.display = "none";
+    if (unsubscribeOrders) { unsubscribeOrders(); unsubscribeOrders = null; }
+    allOrders = [];
+  }
+});
+
+function showMsg(elId, text, type) {
+  var el = document.getElementById(elId);
+  el.textContent = text;
+  el.className = "msg " + type;
+  el.style.display = "block";
+}
+
+function adminLogin() {
+  var username = document.getElementById("loginUsername").value.trim().toLowerCase();
+  var password = document.getElementById("loginPassword").value;
+  if (!username || !password) {
+    showMsg("loginMsg", "⚠️ Enter username and password.", "error");
+    return;
+  }
+  var btn = document.getElementById("loginBtn");
+  btn.disabled = true;
+  btn.textContent = "Logging in...";
+  auth.signInWithEmailAndPassword(username + ADMIN_EMAIL_DOMAIN, password)
+    .catch(function(err) {
+      showMsg("loginMsg", "❌ [" + err.code + "] " + err.message, "error");
+    })
+    .finally(function() {
+      btn.disabled = false;
+      btn.textContent = "Login";
+    });
+}
+
+function adminLogout() {
+  auth.signOut();
+  document.getElementById("loginSection").style.display = "flex";
+  document.getElementById("loginUsername").value = "";
+  document.getElementById("loginPassword").value = "";
+}
+
+function listenForOrders() {
+  if (unsubscribeOrders) unsubscribeOrders();
+  unsubscribeOrders = db.collection("orders").orderBy("time", "desc")
+    .onSnapshot(function(snapshot) {
+      allOrders = snapshot.docs.map(function(doc) {
+        var data = doc.data();
+        data.id = doc.id;
+        return data;
+      });
+      renderOrders();
+    }, function(err) {
+      showMsg("dashMsg", "❌ Could not load orders: " + err.message, "error");
+    });
+}
+
+function statusSlug(status) {
+  return (status || "Pending").toLowerCase().replace(/\s+/g, "");
+}
+
+function escapeHtml(str) {
+  if (str === undefined || str === null) return "";
+  return String(str)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+function renderOrders() {
+  var filter = document.getElementById("statusFilter").value;
+  var list = allOrders.filter(function(o) {
+    return filter === "all" || (o.status || "Pending") === filter;
+  });
+
+  document.getElementById("totalCount").textContent = allOrders.length;
+  document.getElementById("pendingCount").textContent =
+    allOrders.filter(function(o) { return (o.status || "Pending") === "Pending"; }).length;
+
+  var container = document.getElementById("ordersList");
+  if (list.length === 0) {
+    container.innerHTML = '<p class="empty">No orders found.</p>';
+    return;
   }
 
-  document.getElementById("receiptBody").innerHTML =
-    '<div class="receipt-row"><span>Receipt No</span><span>' + receiptNo + '</span></div>' +
-    '<div class="receipt-row"><span>Date</span><span>' + dateStr + ' ' + timeStr + '</span></div>' +
-    '<div class="receipt-row"><span>Name</span><span>' + escapeHtmlPublic(name) + '</span></div>' +
-    '<div class="receipt-row"><span>Phone</span><span>' + escapeHtmlPublic(phone) + '</span></div>' +
-    '<div class="receipt-row"><span>Product</span><span>' + escapeHtmlPublic(product) + '</span></div>' +
-    '<div class="receipt-row"><span>Quantity</span><span>' + escapeHtmlPublic(quantity) + '</span></div>' +
-    '<div class="receipt-row"><span>Address</span><span style="text-align:right;max-width:60%;">' + escapeHtmlPublic(address) + '</span></d
+  container.innerHTML = list.map(function(o) {
+    var status = o.status || "Pending";
+    var timeStr = (o.time && o.time.toDate) ? o.time.toDate().toLocaleString() : "—";
+    var options = STATUSES.map(function(s) {
+      return '<option value="' + s + '"' + (s === status ? " selected" : "") + '>' + s + '</option>';
+    }).join("");
+
+    var actionsHtml = (currentRole === "owner")
+      ? '<div class="order-actions">' +
+          '<select onchange="updateStatus(\'' + o.id + '\', this.value)">' + options + '</select>' +
+          '<button class="del-btn" onclick="deleteOrder(\'' + o.id + '\')">Delete</button>' +
+        '</div>'
+      : '';
+
+    return '' +
+      '<div class="order-card">' +
+        '<div class="order-card-head">' +
+          '<strong>' + escapeHtml(o.name) + '</strong>' +
+          '<span class="badge badge-' + statusSlug(status) + '">' + escapeHtml(status) + '</span>' +
+        '</div>' +
+        '<p>📞 ' + escapeHtml(o.phone) + '</p>' +
+        '<p>🛒 ' + escapeHtml(o.product) + ' — ' + escapeHtml(o.quantity) + '</p>' +
+        '<p>📍 ' + escapeHtml(o.address) + '</p>' +
+        '<p class="time">🕒 ' + timeStr + '</p>' +
+        actionsHtml +
+      '</div>';
+  }).join("");
+}
+
+function updateStatus(id, status) {
+  if (currentRole !== "owner") { return; }
+  db.collection("orders").doc(id).update({ status: status })
+    .catch(function(err) {
+      showMsg("dashMsg", "❌ Update failed: " + err.message, "error");
+    });
+}
+
+function deleteOrder(id) {
+  if (currentRole !== "owner") { return; }
+  if (!confirm("Delete this order permanently?")) return;
+  db.colle
