@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -120,7 +120,6 @@ footer a{color:#a5d6a7;text-decoration:none;}
 <marquee behavior="scroll" direction="left" scrollamount="6" style="background:white;padding:10px 0;border-bottom:2px solid #087f23;">
   <img src="cowmilk.jpg" alt="Jersey Gold Milk" loading="lazy" style="height:70px;margin:0 18px;vertical-align:middle;">
   <img src="bluetonedmilk.png" alt="Blue Toned Milk" loading="lazy" style="height:70px;margin:0 18px;vertical-align:middle;">
-  <img src="tonedcurd.png" alt="Fresh Curd" loading="lazy" style="height:70px;margin:0 18px;vertical-align:middle;">
   <img src="goldicecream.png" alt="Ice Cream" loading="lazy" style="height:70px;margin:0 18px;vertical-align:middle;">
   <img src="fullcreamtonedmilk.jpg" alt="Full Cream Toned Milk" loading="lazy" style="height:70px;margin:0 18px;vertical-align:middle;">
   <img src="standardizedmilk.png" alt="Standardized Milk" loading="lazy" style="height:70px;margin:0 18px;vertical-align:middle;">
@@ -130,13 +129,13 @@ footer a{color:#a5d6a7;text-decoration:none;}
 <!-- PRODUCTS -->
 <h2>Our Products</h2>
 <div class="products">
-  <div class="card"><img src="cowmilk.jpg" alt="Jersey Gold Milk" loading="lazy"><h3>Jersey Gold Milk</h3><button onclick="selectProduct('Jersey Gold Milk')">Select</button></div>
-  <div class="card"><img src="bluetonedmilk.png" alt="Blue Toned Milk" loading="lazy"><h3>Blue Toned Milk</h3><button onclick="selectProduct('Blue Toned Milk')">Select</button></div>
-  <div class="card"><img src="tonedcurd.png" alt="Fresh Curd" loading="lazy"><h3>Fresh Curd</h3><button onclick="selectProduct('Fresh Curd')">Select</button></div>
-  <div class="card"><img src="goldicecream.png" alt="Ice Cream" loading="lazy"><h3>Gold Ice Cream</h3><button onclick="selectProduct('Ice Cream')">Select</button></div>
-  <div class="card"><img src="fullcreamtonedmilk.jpg" alt="Full Cream Toned Milk" loading="lazy"><h3>Full Cream Toned Milk</h3><button onclick="selectProduct('Full Cream Toned Milk')">Select</button></div>
-  <div class="card"><img src="standardizedmilk.png" alt="Standardized Milk" loading="lazy"><h3>Standardized Milk</h3><button onclick="selectProduct('Standardized Milk')">Select</button></div>
-  <div class="card"><img src="chocolate.png" alt="Chocolate Milk" loading="lazy"><h3>Chocolate Milk</h3><button onclick="selectProduct('Chocolate Milk')">Select</button></div>
+  <div class="card" data-product="Jersey Gold Milk"><img src="cowmilk.jpg" alt="Jersey Gold Milk" loading="lazy"><h3>Jersey Gold Milk</h3><button onclick="selectProduct('Jersey Gold Milk')">Select</button></div>
+  <div class="card" data-product="Blue Toned Milk"><img src="bluetonedmilk.png" alt="Blue Toned Milk" loading="lazy"><h3>Blue Toned Milk</h3><button onclick="selectProduct('Blue Toned Milk')">Select</button></div>
+  <div class="card" data-product="Fresh Curd"><img src="tonedcurd.png" alt="Fresh Curd" loading="lazy"><h3>Fresh Curd</h3><button onclick="selectProduct('Fresh Curd')">Select</button></div>
+  <div class="card" data-product="Ice Cream"><img src="goldicecream.png" alt="Ice Cream" loading="lazy"><h3>Gold Ice Cream</h3><button onclick="selectProduct('Ice Cream')">Select</button></div>
+  <div class="card" data-product="Full Cream Toned Milk"><img src="fullcreamtonedmilk.jpg" alt="Full Cream Toned Milk" loading="lazy"><h3>Full Cream Toned Milk</h3><button onclick="selectProduct('Full Cream Toned Milk')">Select</button></div>
+  <div class="card" data-product="Standardized Milk"><img src="standardizedmilk.png" alt="Standardized Milk" loading="lazy"><h3>Standardized Milk</h3><button onclick="selectProduct('Standardized Milk')">Select</button></div>
+  <div class="card" data-product="Chocolate Milk"><img src="chocolate.png" alt="Chocolate Milk" loading="lazy"><h3>Chocolate Milk</h3><button onclick="selectProduct('Chocolate Milk')">Select</button></div>
 </div>
 
 <!-- ORDER FORM -->
@@ -244,6 +243,13 @@ function selectProduct(name) {
   var btn = document.getElementById("orderBtn");
   btn.disabled = false;
   btn.textContent = "🛒 Order Now";
+
+  document.querySelectorAll('.card').forEach(function(card) {
+    var img = card.querySelector('img');
+    if (!img) return;
+    img.style.display = (card.dataset.product === name) ? 'block' : 'none';
+  });
+
   document.querySelector(".order-section").scrollIntoView({ behavior: "smooth" });
 }
 
@@ -367,11 +373,4 @@ var currentRole = null;
 var STATUSES = ["Pending","Confirmed","Out for Delivery","Delivered","Cancelled"];
 
 function openAdmin() {
-  document.getElementById("adminArea").style.display = "block";
-  document.getElementById("adminArea").scrollIntoView({ behavior: "smooth" });
-}
-
-auth.onAuthStateChanged(function(user) {
-  if (user) {
-    currentRole = (user.email === "developer" + ADMIN_EMAIL_DOMAIN) ? "developer" : "owner";
-    var roleLabel = docu
+  document.g
