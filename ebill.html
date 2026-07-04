@@ -11,28 +11,44 @@ header{background:linear-gradient(135deg,#087f23,#1b5e20);color:white;text-align
 header h1{font-size:1.6rem;font-weight:700;}
 header p{font-size:0.9rem;opacity:0.85;margin-top:6px;}
 .search-section{max-width:480px;margin:0 auto;padding:24px 20px;}
-.search-card{background:white;padding:22px;border-radius:16px;box-shadow:0 4px 16px rgba(0,0,0,0.08);display:flex;gap:10px;flex-wrap:wrap;}
-.search-card input{flex:1;min-width:180px;padding:12px 14px;border:1.5px solid #ddd;border-radius:10px;font-size:0.95rem;}
-.search-card input:focus{outline:none;border-color:#087f23;}
+.search-card{background:white;padding:22px;border-radius:16px;box-shadow:0 4px 16px rgba(0,0,0,0.08);display:flex;flex-direction:column;gap:12px;}
+.search-row{display:flex;gap:10px;flex-wrap:wrap;}
+.search-row input{flex:1;min-width:150px;padding:12px 14px;border:1.5px solid #ddd;border-radius:10px;font-size:0.95rem;font-family:inherit;}
+.search-row input:focus{outline:none;border-color:#087f23;}
+.date-row{display:flex;gap:10px;flex-wrap:wrap;}
+.date-field{flex:1;min-width:130px;}
+.date-field label{display:block;font-size:0.75rem;color:#666;margin-bottom:4px;}
+.date-field input{width:100%;padding:10px 12px;border:1.5px solid #ddd;border-radius:10px;font-size:0.88rem;font-family:inherit;}
+.date-field input:focus{outline:none;border-color:#087f23;}
 .search-card button{background:#087f23;color:white;border:none;padding:12px 20px;border-radius:10px;font-size:0.95rem;font-weight:600;cursor:pointer;}
 .search-card button:hover{background:#1b5e20;}
-.msg{max-width:480px;margin:0 auto 16px;padding:12px 16px;border-radius:10px;font-size:0.9rem;text-align:center;}
+.msg{max-width:480px;margin:0 auto 16px;padding:12px 16px;border-radius:10px;font-size:0.9rem;text-align:center;display:flex;align-items:center;justify-content:center;gap:10px;}
 .msg.error{background:#fce4ec;color:#c62828;border:1px solid #ef9a9a;}
 .msg.info{background:#e3f2fd;color:#1565c0;border:1px solid #90caf9;}
+.spinner{width:16px;height:16px;border:2.5px solid #90caf9;border-top-color:#1565c0;border-radius:50%;animation:spin 0.7s linear infinite;flex-shrink:0;}
+@keyframes spin{to{transform:rotate(360deg);}}
 .results{max-width:600px;margin:0 auto;padding:0 20px 60px;}
-.summary{background:white;border-radius:16px;padding:18px 22px;box-shadow:0 2px 12px rgba(0,0,0,0.07);margin-bottom:18px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;}
+.summary{background:white;border-radius:16px;padding:18px 22px;box-shadow:0 2px 12px rgba(0,0,0,0.07);margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;}
 .summary div span{display:block;font-size:1.5rem;font-weight:700;color:#087f23;}
 .summary div label{font-size:0.78rem;color:#555;}
+.consolidated-bar{max-width:600px;margin:0 auto 18px;display:flex;gap:10px;flex-wrap:wrap;}
+.consolidated-bar button{flex:1;min-width:160px;background:#087f23;color:white;border:none;padding:12px 16px;border-radius:10px;font-size:0.88rem;font-weight:600;cursor:pointer;}
+.consolidated-bar button:hover{background:#1b5e20;}
+.consolidated-bar button.secondary{background:white;color:#087f23;border:1.5px solid #087f23;}
+.consolidated-bar button.secondary:hover{background:#e8f5e9;}
 .bill-card{background:white;border-radius:16px;padding:18px 20px;box-shadow:0 2px 12px rgba(0,0,0,0.07);margin-bottom:14px;}
 .bill-card .row{display:flex;justify-content:space-between;font-size:0.9rem;color:#333;padding:4px 0;border-bottom:1px solid #f2f2f2;}
 .bill-card .row:last-of-type{border-bottom:none;}
 .bill-card .amount{font-weight:700;color:#087f23;}
 .bill-card .time{color:#888;font-size:0.78rem;margin-top:6px;}
-.print-btn{margin-top:10px;background:#e8f5e9;color:#087f23;border:1.5px solid #a5d6a7;padding:8px 14px;border-radius:8px;font-size:0.85rem;cursor:pointer;}
+.btn-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;}
+.print-btn{background:#e8f5e9;color:#087f23;border:1.5px solid #a5d6a7;padding:8px 14px;border-radius:8px;font-size:0.85rem;cursor:pointer;}
 .print-btn:hover{background:#087f23;color:white;}
+.pdf-btn{background:#fff3e0;color:#e65100;border:1.5px solid #ffcc80;padding:8px 14px;border-radius:8px;font-size:0.85rem;cursor:pointer;}
+.pdf-btn:hover{background:#e65100;color:white;}
 .empty{text-align:center;color:#777;padding:40px 0;}
 @media(max-width:600px){
-  .search-card{flex-direction:column;}
+  .search-row{flex-direction:column;}
 }
 </style>
 </head>
@@ -45,8 +61,20 @@ header p{font-size:0.9rem;opacity:0.85;margin-top:6px;}
 
 <section class="search-section">
   <div class="search-card">
-    <input id="searchPhone" type="tel" placeholder="Enter phone number" maxlength="10">
-    <button onclick="lookupBills()">Search</button>
+    <div class="search-row">
+      <input id="searchPhone" type="tel" placeholder="Enter phone number" maxlength="10">
+      <button onclick="lookupBills()">Search</button>
+    </div>
+    <div class="date-row">
+      <div class="date-field">
+        <label>From (optional)</label>
+        <input id="fromDate" type="date">
+      </div>
+      <div class="date-field">
+        <label>To (optional)</label>
+        <input id="toDate" type="date">
+      </div>
+    </div>
   </div>
 </section>
 
@@ -57,6 +85,10 @@ header p{font-size:0.9rem;opacity:0.85;margin-top:6px;}
     <div><span id="billCount">0</span><label>Orders Found</label></div>
     <div><span id="billTotal">₹0</span><label>Total Amount</label></div>
   </div>
+  <div id="consolidatedBar" class="consolidated-bar" style="display:none;">
+    <button onclick="printConsolidatedBill()">🧾 Print Consolidated Bill</button>
+    <button class="secondary" onclick="downloadConsolidatedPdf()">⬇️ Download Consolidated PDF</button>
+  </div>
   <div id="billsList"></div>
 </section>
 
@@ -64,6 +96,7 @@ header p{font-size:0.9rem;opacity:0.85;margin-top:6px;}
      This page is standalone: no link to/from index.html anywhere. -->
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
 firebase.initializeApp({
   apiKey: "AIzaSyAQAY_wXDlU5twKU9DLZCh3lgfBfLAy7AQ",
@@ -84,6 +117,8 @@ var PRICE_MAP = {
   "Ice Cream":              { price: 50, unit: "unit" },
   "Full Cream Toned Milk":  { price: 76, unit: "L" }
 };
+
+var currentOrders = []; // last search results, used by consolidated bill/PDF
 
 function parseQuantityValue(qtyStr) {
   if (!qtyStr) return 0;
@@ -110,15 +145,24 @@ function escapeHtml(str) {
     .replace(/"/g, "&quot;").replace(/'/g, "&#039;");
 }
 
-function showMsg(text, type) {
+function showMsg(text, type, withSpinner) {
   var el = document.getElementById("lookupMsg");
-  el.textContent = text;
+  el.innerHTML = (withSpinner ? '<span class="spinner"></span>' : '') + '<span>' + escapeHtml(text) + '</span>';
   el.className = "msg " + type;
-  el.style.display = "block";
+  el.style.display = "flex";
 }
 
 function hideMsg() {
   document.getElementById("lookupMsg").style.display = "none";
+}
+
+// Enter key triggers search from the phone field
+document.getElementById("searchPhone").addEventListener("keydown", function(e) {
+  if (e.key === "Enter") lookupBills();
+});
+
+function orderTime(o) {
+  return (o.time && o.time.toDate) ? o.time.toDate() : null;
 }
 
 function lookupBills() {
@@ -126,17 +170,34 @@ function lookupBills() {
   if (!/^\d{10}$/.test(phone)) {
     showMsg("⚠️ Enter a valid 10 digit phone number.", "error");
     document.getElementById("summaryBox").style.display = "none";
+    document.getElementById("consolidatedBar").style.display = "none";
     document.getElementById("billsList").innerHTML = "";
     return;
   }
   hideMsg();
-  showMsg("🔎 Searching...", "info");
+  showMsg("Searching...", "info", true);
 
   db.collection("orders").where("phone", "==", phone).orderBy("time", "desc").get()
     .then(function(snapshot) {
       var orders = snapshot.docs.map(function(doc) {
         var d = doc.data(); d.id = doc.id; return d;
       });
+
+      // Optional date range filter (client-side, applied after fetch)
+      var fromVal = document.getElementById("fromDate").value;
+      var toVal = document.getElementById("toDate").value;
+      if (fromVal || toVal) {
+        var fromDate = fromVal ? new Date(fromVal + "T00:00:00") : null;
+        var toDate = toVal ? new Date(toVal + "T23:59:59") : null;
+        orders = orders.filter(function(o) {
+          var t = orderTime(o);
+          if (!t) return false;
+          if (fromDate && t < fromDate) return false;
+          if (toDate && t > toDate) return false;
+          return true;
+        });
+      }
+
       renderBills(orders);
     })
     .catch(function(err) {
@@ -145,10 +206,15 @@ function lookupBills() {
 }
 
 function renderBills(orders) {
+  currentOrders = orders;
+
   if (orders.length === 0) {
     hideMsg();
     document.getElementById("summaryBox").style.display = "none";
-    document.getElementById("billsList").innerHTML = '<p class="empty">No orders found for this number.</p>';
+    document.getElementById("consolidatedBar").style.display = "none";
+    document.getElementById("billsList").innerHTML = '<p class="empty">No orders found for this number' +
+      (document.getElementById("fromDate").value || document.getElementById("toDate").value ? " in the selected date range." : ".") +
+      '</p>';
     return;
   }
   hideMsg();
@@ -168,7 +234,10 @@ function renderBills(orders) {
         '<div class="row"><span>Status</span><span>' + escapeHtml(o.status || "Pending") + '</span></div>' +
         '<div class="row"><span>Amount</span><span class="amount">₹' + amount.toFixed(2) + '</span></div>' +
         '<div class="time">' + timeStr + ' &middot; Order #' + o.id.slice(-6).toUpperCase() + '</div>' +
-        '<button class="print-btn" onclick="printBill(' + JSON.stringify(o).replace(/"/g, "&quot;") + ')">🖨️ Print This Bill</button>' +
+        '<div class="btn-row">' +
+          '<button class="print-btn" onclick="printBill(' + JSON.stringify(o).replace(/"/g, "&quot;") + ')">🖨️ Print</button>' +
+          '<button class="pdf-btn" onclick="downloadBillPdf(' + JSON.stringify(o).replace(/"/g, "&quot;") + ')">⬇️ PDF</button>' +
+        '</div>' +
       '</div>'
     );
   }).join("");
@@ -177,17 +246,24 @@ function renderBills(orders) {
   document.getElementById("billCount").textContent = orders.length;
   document.getElementById("billTotal").textContent = "₹" + total.toFixed(2);
   document.getElementById("summaryBox").style.display = "flex";
+  document.getElementById("consolidatedBar").style.display = orders.length > 1 ? "flex" : "none";
 }
 
 function printBill(order) {
+  var w = window.open("", "_blank");
+  if (!w) { alert("Please allow pop-ups to view the bill."); return; }
+  w.document.write(billWindowHtml(order));
+  w.document.close();
+}
+
+function billWindowHtml(order) {
   var amount = calculateOrderAmount(order);
   var timeStr = (order.time && order.time.seconds)
     ? new Date(order.time.seconds * 1000).toLocaleString()
     : "—";
   var rate = PRICE_MAP[order.product];
 
-  var w = window.open("", "_blank");
-  w.document.write(
+  return (
     '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Bill</title><style>' +
     'body{font-family:Arial,sans-serif;max-width:420px;margin:20px auto;color:#222;}' +
     'h2{color:#087f23;text-align:center;margin-bottom:4px;}' +
@@ -215,9 +291,142 @@ function printBill(order) {
     '<button onclick="window.print()" style="display:block;margin:20px auto;background:#087f23;color:white;border:none;padding:12px 24px;border-radius:10px;font-size:0.95rem;cursor:pointer;">🖨️ Print</button>' +
     '</body></html>'
   );
+}
+
+// ---------- PDF generation (jsPDF) ----------
+function downloadBillPdf(order) {
+  var amount = calculateOrderAmount(order);
+  var timeStr = (order.time && order.time.seconds)
+    ? new Date(order.time.seconds * 1000).toLocaleString()
+    : "—";
+  var rate = PRICE_MAP[order.product];
+
+  var jsPDFCtor = window.jspdf.jsPDF;
+  var doc = new jsPDFCtor({ unit: "pt", format: "a5" });
+  var y = 40;
+
+  doc.setFontSize(16); doc.setTextColor(8,127,35);
+  doc.text("Kani Milk Agency", 30, y); y += 20;
+  doc.setFontSize(10); doc.setTextColor(100);
+  doc.text("Order Receipt #" + (order.id || "").slice(-6).toUpperCase(), 30, y); y += 24;
+
+  doc.setFontSize(11); doc.setTextColor(30);
+  var rows = [
+    ["Date", timeStr],
+    ["Customer", order.name || ""],
+    ["Phone", order.phone || ""],
+    ["Address", order.address || ""],
+    ["Product", order.product || ""],
+    ["Quantity", String(order.quantity || "")]
+  ];
+  if (rate) rows.push(["Rate", "Rs " + rate.price + " / " + rate.unit]);
+
+  rows.forEach(function(r) {
+    doc.setTextColor(100); doc.text(r[0] + ":", 30, y);
+    doc.setTextColor(30); doc.text(String(r[1]), 110, y, { maxWidth: 220 });
+    y += 20;
+  });
+
+  y += 10;
+  doc.setDrawColor(8,127,35); doc.line(30, y, 280, y); y += 20;
+  doc.setFontSize(14); doc.setTextColor(8,127,35);
+  doc.text("Total: Rs " + amount.toFixed(2), 30, y);
+
+  y += 40;
+  doc.setFontSize(9); doc.setTextColor(140);
+  doc.text("Thank you for choosing Kani Milk Agency!", 30, y);
+
+  doc.save("KaniMilk_Bill_" + (order.id || "order").slice(-6) + ".pdf");
+}
+
+function printConsolidatedBill() {
+  if (currentOrders.length === 0) return;
+  var w = window.open("", "_blank");
+  if (!w) { alert("Please allow pop-ups to view the bill."); return; }
+  w.document.write(consolidatedHtml());
   w.document.close();
+}
+
+function consolidatedHtml() {
+  var total = 0;
+  var rowsHtml = currentOrders.map(function(o) {
+    var amount = calculateOrderAmount(o);
+    total += amount;
+    var timeStr = (o.time && o.time.toDate) ? o.time.toDate().toLocaleDateString() : "—";
+    return '<tr>' +
+      '<td>' + escapeHtml(timeStr) + '</td>' +
+      '<td>' + escapeHtml(o.product) + '</td>' +
+      '<td>' + escapeHtml(o.quantity) + '</td>' +
+      '<td style="text-align:right;">₹' + amount.toFixed(2) + '</td>' +
+    '</tr>';
+  }).join("");
+
+  var first = currentOrders[0];
+
+  return (
+    '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Consolidated Bill</title><style>' +
+    'body{font-family:Arial,sans-serif;max-width:520px;margin:20px auto;color:#222;}' +
+    'h2{color:#087f23;text-align:center;margin-bottom:4px;}' +
+    '.sub{text-align:center;color:#666;font-size:0.85rem;margin-bottom:16px;}' +
+    'table{width:100%;border-collapse:collapse;margin-bottom:14px;}' +
+    'th,td{padding:8px 6px;font-size:0.88rem;border-bottom:1px solid #eee;text-align:left;}' +
+    'th{background:#e8f5e9;color:#087f23;font-size:0.78rem;text-transform:uppercase;}' +
+    '.total{font-size:1.2rem;font-weight:700;color:#087f23;border-top:2px solid #087f23;padding-top:10px;text-align:right;}' +
+    '.foot{text-align:center;color:#888;font-size:0.8rem;margin-top:20px;}' +
+    '@media print{button{display:none;}}' +
+    '</style></head><body>' +
+    '<h2>🥛 Kani Milk Agency</h2>' +
+    '<p class="sub">Consolidated Bill &middot; ' + escapeHtml(first.name) + ' &middot; ' + escapeHtml(first.phone) + '</p>' +
+    '<table><thead><tr><th>Date</th><th>Product</th><th>Qty</th><th style="text-align:right;">Amount</th></tr></thead>' +
+    '<tbody>' + rowsHtml + '</tbody></table>' +
+    '<p class="total">Grand Total: ₹' + total.toFixed(2) + '</p>' +
+    '<p class="foot">Thank you for choosing Kani Milk Agency!</p>' +
+    '<button onclick="window.print()" style="display:block;margin:20px auto;background:#087f23;color:white;border:none;padding:12px 24px;border-radius:10px;font-size:0.95rem;cursor:pointer;">🖨️ Print</button>' +
+    '</body></html>'
+  );
+}
+
+function downloadConsolidatedPdf() {
+  if (currentOrders.length === 0) return;
+  var jsPDFCtor = window.jspdf.jsPDF;
+  var doc = new jsPDFCtor({ unit: "pt", format: "a4" });
+  var y = 50;
+
+  var first = currentOrders[0];
+  doc.setFontSize(18); doc.setTextColor(8,127,35);
+  doc.text("Kani Milk Agency", 40, y); y += 22;
+  doc.setFontSize(11); doc.setTextColor(90);
+  doc.text("Consolidated Bill - " + (first.name || "") + " (" + (first.phone || "") + ")", 40, y); y += 30;
+
+  doc.setFontSize(10); doc.setTextColor(8,127,35);
+  doc.text("Date", 40, y);
+  doc.text("Product", 140, y);
+  doc.text("Qty", 320, y);
+  doc.text("Amount", 460, y);
+  y += 8;
+  doc.setDrawColor(8,127,35); doc.line(40, y, 555, y); y += 16;
+
+  var total = 0;
+  doc.setTextColor(30);
+  currentOrders.forEach(function(o) {
+    var amount = calculateOrderAmount(o);
+    total += amount;
+    var timeStr = (o.time && o.time.toDate) ? o.time.toDate().toLocaleDateString() : "—";
+    doc.text(String(timeStr), 40, y);
+    doc.text(String(o.product || ""), 140, y, { maxWidth: 170 });
+    doc.text(String(o.quantity || ""), 320, y);
+    doc.text("Rs " + amount.toFixed(2), 460, y);
+    y += 20;
+    if (y > 760) { doc.addPage(); y = 50; }
+  });
+
+  y += 10;
+  doc.setDrawColor(8,127,35); doc.line(40, y, 555, y); y += 24;
+  doc.setFontSize(14); doc.setTextColor(8,127,35);
+  doc.text("Grand Total: Rs " + total.toFixed(2), 40, y);
+
+  doc.save("KaniMilk_ConsolidatedBill_" + (first.phone || "customer") + ".pdf");
 }
 </script>
 </body>
-  </html>
-  
+</html>
