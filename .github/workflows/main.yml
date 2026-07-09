@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Kani Milk Agency</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Segoe UI',Arial,sans-serif;background:#f0faf0;}
+header{background:linear-gradient(135deg,#087f23,#1b5e20);color:white;text-align:center;padding:30px 20px;}
+header img{width:90px;height:90px;border-radius:50%;object-fit:cover;border:3px solid rgba(255,255,255,0.4);margin-bottom:10px;}
+header h1{font-size:2rem;font-weight:700;}
+header p{font-size:0.95rem;opacity:0.85;margin-top:6px;}
+h2{text-align:center;color:#087f23;font-size:1.5rem;margin:30px 0 20px;}
+.products{display:flex;justify-content:center;gap:20px;flex-wrap:wrap;padding:0 20px;}
+.card{background:white;padding:20px;width:200px;text-align:center;border-radius:16px;box-shadow:0 4px 16px rgba(0,0,0,0.1);transition:transform 0.2s;}
+.card:hover{transform:translateY(-5px);}
+.card img{width:140px;height:140px;object-fit:contain;margin-bottom:10px;}
+.card h3{font-size:0.95rem;color:#1b5e20;margin-bottom:8px;}
+.card button{background:#087f23;color:white;border:none;padding:10px 20px;border-radius:20px;cursor:pointer;font-size:0.9rem;}
+.card button:hover{background:#1b5e20;}
+.order-section{padding:30px 20px;}
+.order{background:white;max-width:400px;margin:0 auto;padding:28px 24px;border-radius:20px;box-shadow:0 4px 20px rgba(0,0,0,0.1);display:flex;flex-direction:column;gap:12px;}
+.order input,.order textarea{width:100%;padding:12px 14px;border:1.5px solid #ddd;border-radius:10px;font-size:0.95rem;font-family:inherit;resize:vertical;}
+.order input:focus,.order textarea:focus{outline:none;border-color:#087f23;}
+.order input[readonly]{background:#f5f5f5;}
+#orderBtn{background:#087f23;color:white;border:none;padding:14px;border-radius:12px;font-size:1rem;font-weight:600;cursor:pointer;}
+#orderBtn:hover{background:#1b5e20;}
+#orderBtn:disabled{opacity:0.6;cursor:not-allowed;}
+#gpayBtn{display:block;text-align:center;background:#1a73e8;color:white;border:none;padding:14px;border-radius:12px;font-size:1rem;font-weight:600;text-decoration:none;}
+#gpayBtn:hover{background:#1558b0;}
+.order-msg{padding:12px;border-radius:10px;font-size:0.9rem;text-align:center;}
+.order-msg.success{background:#e8f5e9;color:#2e7d32;border:1px solid #a5d6a7;}
+.order-msg.error{background:#fce4ec;color:#c62828;border:1px solid #ef9a9a;}
+footer{background:#1b5e20;color:white;text-align:center;padding:20px;margin-top:40px;position:relative;}
+footer a{color:#a5d6a7;text-decoration:none;}
+#adminDot{display:inline-block;width:10px;height:10px;margin-left:8px;opacity:0.35;cursor:pointer;user-select:none;}
+@media(max-width:600px){
+  header h1{font-size:1.4rem;}
+  .products{flex-direction:column;align-items:center;}
+  .card{width:90%;}
+}
+
+/* ===== ADMIN (hidden by default) ===== */
+#adminArea{display:none;background:#f0faf0;border-top:6px solid #087f23;}
+.login-section{display:flex;justify-content:center;padding:60px 20px;}
+.login-card{background:white;max-width:360px;width:100%;padding:32px 28px;border-radius:20px;box-shadow:0 4px 20px rgba(0,0,0,0.1);display:flex;flex-direction:column;gap:14px;}
+.login-card h2{color:#087f23;text-align:center;margin-bottom:6px;}
+.login-card input{width:100%;padding:12px 14px;border:1.5px solid #ddd;border-radius:10px;font-size:0.95rem;font-family:inherit;}
+.login-card input:focus{outline:none;border-color:#087f23;}
+#loginBtn{background:#087f23;color:white;border:none;padding:14px;border-radius:12px;font-size:1rem;font-weight:600;cursor:pointer;}
+#loginBtn:hover{background:#1b5e20;}
+#loginBtn:disabled{opacity:0.6;cursor:not-allowed;}
+.msg{padding:12px;border-radius:10px;font-size:0.88rem;text-align:center;}
+.msg.success{background:#e8f5e9;color:#2e7d32;border:1px solid #a5d6a7;}
+.msg.error{background:#fce4ec;color:#c62828;border:1px solid #ef9a9a;}
+.dashboard-section{max-width:900px;margin:0 auto;padding:24px 16px 60px;}
+.dash-top{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px;margin-bottom:20px;}
+.stats{display:flex;gap:12px;flex-wrap:wrap;}
+.stat-card{background:white;border-radius:14px;padding:14px 22px;text-align:center;box-shadow:0 2px 10px rgba(0,0,0,0.07);}
+.stat-card span{display:block;font-size:1.6rem;font-weight:700;color:#087f23;}
+.stat-card label{font-size:0.78rem;color:#555;}
+#logoutBtn{background:white;color:#087f23;border:1.5px solid #087f23;padding:10px 18px;border-radius:10px;font-size:0.9rem;font-weight:600;cursor:pointer;}
+#logoutBtn:hover{background:#087f23;color:white;}
+.filter-bar{margin-bottom:16px;}
+.filter-bar select{padding:10px 14px;border-radius:10px;border:1.5px solid #ddd;font-size:0.9rem;background:white;}
+.orders-list{display:flex;flex-direction:column;gap:14px;}
+.empty{text-align:center;color:#777;padding:40px 0;}
+.order-card{background:white;border-radius:16px;padding:18px 20px;box-shadow:0 2px 12px rgba(0,0,0,0.07);}
+.order-card-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;flex-wrap:wrap;gap:6px;}
+.order-card-head strong{color:#1b5e20;font-size:1.05rem;}
+.badge{font-size:0.75rem;font-weight:700;padding:4px 10px;border-radius:20px;color:white;}
+.badge-pending{background:#f9a825;}
+.badge-confirmed{background:#1976d2;}
+.badge-outfordelivery{background:#7b1fa2;}
+.badge-delivered{background:#2e7d32;}
+.badge-cancelled{background:#c62828;}
+.order-card p{font-size:0.9rem;color:#333;margin-bottom:4px;}
+.order-card .time{color:#888;font-size:0.78rem;}
+.order-actions{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap;}
+.order-actions select{padding:8px 10px;border-radius:8px;border:1.5px solid #ddd;font-size:0.85rem;}
+.del-btn{background:#fce4ec;color:#c62828;border:1.5px solid #ef9a9a;padding:8px 14px;border-radius:8px;font-size:0.85rem;cursor:pointer;}
+.del-btn:hover{background:#c62828;color:white;}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <img src="logo.png" alt="Kani Milk Logo">
+  <h1>Kani Milk Agency</h1>
+  <p>Fresh Milk • Daily Delivery • Pure Quality</p>
+</header>
+
+<!-- IMAGE MARQUEE -->
+<marquee behavior="scroll" direction="left" scrollamount="6" style="background:white;padding:10px 0;border-bottom:2px solid #087f23;">
+  <img src="cowmilk.jpg" alt="Jersey Gold Milk" style="height:70px;margin:0 18px;vertical-align:middle;">
+  <img src="bluetonedmilk.png" alt="Blue Toned Milk" style="height:70px;margin:0 18px;vertical-align:middle;">
+  <img src="tonedcurd.png" alt="Fresh Curd" style="height:70px;margin:0 18px;vertical-align:middle;">
+  <img src="goldicecream.png" alt="Ice Cream" style="height:70px;margin:0 18px;vertical-align:middle;">
+  <img src="fullcreamtonedmilk.jpg" alt="Full Cream Toned Milk" style="height:70px;margin:0 18px;vertical-align:middle;">
+  <img src="standardizedmilk.png" alt="Standardized Milk" style="height:70px;margin:0 18px;vertical-align:middle;">
+  <img src="chocolate.png" alt="Chocolate Milk" style="height:70px;margin:0 18px;vertical-align:middle;">
+</marquee>
+
+<!-- PRODUCTS -->
+<h2>Our Products</h2>
+<div class="products">
+
+  <div class="card">
+    <img src="cowmilk.jpg" alt="Jersey Gold Milk">
+    <h3>Jersey Gold Milk</h3>
+    <button onclick="selectProduct('Jersey Gold Milk')">Select</button>
+  </div>
+
+  <div class="card">
+    <img src="bluetonedmilk.png" alt="Blue Toned Milk">
+    <h3>Blue Toned Milk</h3>
+    <button onclick="selectProduct('Blue Toned Milk')">Select</button>
+  </div>
+
+  <div class="card">
+    <img src="tonedcurd.png" alt="Fresh Curd">
+    <h3>Fresh Curd</h3>
+    <button onclick="selectProduct('Fresh Curd')">Select</button>
+  </div>
+
+  <div class="card">
+    <img src="goldicecream.png" alt="Ice Cream">
+    <h3>Gold Ice Cream</h3>
+    <button onclick="selectProduct('Ice Cream')">Select</button>
+  </div>
+
+  <div class="card">
+    <img src="fullcreamtonedmilk.jpg" alt="Full Cream Toned Milk">
+    <h3>Full Cream Toned Milk</h3>
+    <button onclick="selectProduct('Full Cream Toned Milk')">Select</button>
+  </div>
+
+  <div class="card">
+    <img src="standardizedmilk.png" alt="Standardized Milk">
+    <h3>Standardized Milk</h3>
+    <button onclick="selectProduct('Standardized Milk')">Select</button>
+  </div>
+
+  <div class="card">
+    <img src="chocolate.png" alt="Chocolate Milk">
+    <h3>Chocolate Milk</h3>
+    <button onclick="selectProduct('Chocolate Milk')">Select</button>
+  </div>
+
+</div>
+
+<!-- ORDER FORM -->
+<section class="order-section">
+  <h2>Place Your Order</h2>
+  <div class="order">
+    <input id="name"     type="text" placeholder="உங்கள் பெயர் (Your Name)">
+    <input id="phone"    type="tel"  placeholder="Phone Number (10 digits)" maxlength="10">
+    <input id="product"  type="text" placeholder="மேலே product select செய்யுங்கள்" readonly>
+    <input id="quantity" type="text" placeholder="Quantity (எ.கா: 1 Litre)">
+    <textarea id="address" placeholder="Delivery Address" rows="3"></textarea>
+    <div id="orderMsg" class="order-msg" style="display:none;"></div>
+    <button id="orderBtn" onclick="sendOrder()">🛒 Order Now</button>
+    <a id="gpayBtn" href="upi://pay?pa=muthuvelmuthuvel887@okaxis&pn=Kani%20Milk%20Agency&cu=INR&tn=Milk%20Order%20Payment">💳 Pay via GPay</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>📞 Call us: <a href="tel:+918838416013">8838416013</a></p>
+  <p>© 2025 Kani Milk Agency. All rights reserved.<span id="adminDot" onclick="openAdmin()" title=""> </span></p>
+</footer>
+
+<!-- ===== ADMIN AREA (hidden until the footer dot is tapped) ===== -->
+<div id="adminArea">
+
+  <div id="loginSection" class="login-section">
+    <div class="login-card">
+      <h2>Admin Login</h2>
+      <input id="loginUsername" type="text" placeholder="Username (owner or developer)" autocomplete="username">
+      <input id="loginPassword" type="password" placeholder="Password" autocomplete="current-password">
+      <div id="loginMsg" class="msg" style="display:none;"></div>
+      <button id="loginBtn" onclick="adminLogin()">Login</button>
+    </div>
+  </div>
+
+  <section id="dashboardSection" class="dashboard-section" style="display:none;">
+    <div class="dash-top">
+      <div class="stats">
+        <div class="stat-card"><span id="totalCount">0</span><label>Total Orders</label></div>
+        <div class="stat-card"><span id="pendingCount">0</span><label>Pending</label></div>
+      </div>
+      <div>
+        <span id="roleLabel" class="badge" style="background:#1976d2;margin-right:10px;"></span>
+        <button id="logoutBtn" onclick="adminLogout()">Logout</button>
+      </div>
+    </div>
+
+    <div class="filter-bar">
+      <select id="statusFilter" onchange="renderOrders()">
+        <option value="all">All Statuses</option>
+        <option value="Pending">Pending</option>
+        <option value="Confirmed">Confirmed</option>
+        <option value="Out for Delivery">Out for Delivery</option>
+        <option value="Delivered">Delivered</option>
+        <option value="Cancelled">Cancelled</option>
+      </select>
+    </div>
+
+    <div id="dashMsg" class="msg" style="display:none;margin-bottom:14px;"></div>
+    <div id="ordersList" class="orders-list"></div>
+  </section>
+
+</div>
+
+<!-- FIREBASE v8 CDN — Neocities compatible ✅ -->
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+
+<script>
+// ✅ Firebase Config
+firebase.initializeApp({
+  apiKey: "AIzaSyAQAY_wXDlU5twKU9DLZCh3lgfBfLAy7AQ",
+  authDomain: "kani-milk-agency-9323b.firebaseapp.com",
+  projectId: "kani-milk-agency-9323b",
+  storageBucket: "kani-milk-agency-9323b.firebasestorage.app",
+  messagingSenderId: "317392951345",
+  appId: "1:317392951345:web:1768ca6b7725812491dd10"
+});
+
+var db = firebase.firestore();
+var auth = firebase.auth();
+
+// Username is mapped to a fake email behind the scenes so the login box
+// can just say "Username" — Firebase Auth itself still requires an
+// email-shaped identifier internally.
+var ADMIN_EMAIL_DOMAIN = "@kani-admin.local";
+
+// ===================== PUBLIC ORDER FORM =====================
+
+function selectProduct(name) {
+  document.getElementById("product").value = name;
+  document.querySelector(".order-section").scrollIntoView({ behavior: "smooth" });
+}
+
+function showMessage(msg, type) {
+  var el = document.getElementById("orderMsg");
+  el.textContent = msg;
+  el.className = "order-msg " + type;
+  el.style.display = "block";
+  setTimeout(function(){ el.style.display = "none"; }, 5000);
+}
+
+function sendOrder() {
+  var name     = document.getElementById("name").value.trim();
+  var phone    = document.getElementById("phone").value.trim();
+  var product  = document.getElementById("product").value.trim();
+  var quantity = document.getElementById("quantity").value.trim();
+  var address  = document.getElementById("address").value.trim();
+
+  if (!name || !phone || !product || !quantity || !address) {
+    showMessage("⚠️ எல்லா fields-உம் fill செய்யுங்கள்!", "error");
+    return;
+  }
+  if (!/^\d{10}$/.test(phone)) {
+    showMessage("⚠️ 10 digit phone number போடுங்கள்!", "error");
+    return;
+  }
+
+  var btn = document.getElementById("orderBtn");
+  btn.disabled = true;
+  btn.textContent = "Saving...";
+
+  db.collection("orders").add({
+    name:     name,
+    phone:    phone,
+    product:  product,
+    quantity: quantity,
+    address:  address,
+    status:   "Pending",
+    time:     firebase.firestore.FieldValue.serverTimestamp()
+  })
+  .then(function() {
+    showMessage("✅ Order வெற்றிகரமாக save ஆச்சு!", "success");
+
+    document.getElementById("name").value     = "";
+    document.getElementById("phone").value    = "";
+    document.getElementById("product").value  = "";
+    document.getElementById("quantity").value = "";
+    document.getElementById("address").value  = "";
+
+    var msg =
+      "🥛 *Kani Milk Agency Order*\n\n" +
+      "👤 பெயர்: " + name +
+      "\n📞 Phone: " + phone +
+      "\n🛒 Product: " + product +
+      "\n📦 Quantity: " + quantity +
+      "\n📍 Address: " + address +
+      "\n⏳ Status: Pending";
+
+    setTimeout(function() {
+      window.open(
+        "https://wa.me/918838416013?text=" + encodeURIComponent(msg),
+        "_blank"
+      );
+    }, 1500);
+  })
+  .catch(function(error) {
+    showMessage("❌ Error: " + error.message, "error");
+    console.error(error);
+  })
+  .finally(function() {
+    btn.disabled = false;
+    btn.textContent = "🛒 Order Now";
+  });
+}
+
+// ===================== ADMIN AREA =====================
+
+var allOrders = [];
+var unsubscribeOrders = null;
+var currentRole = null; // "owner" or "developer"
+var STATUSES = ["Pending","Confirmed","Out for Delivery","Delivered","Cancelled"];
+
+function openAdmin() {
+  document.getElementById("adminArea").style.display = "block";
+  document.getElementById("adminArea").scrollIntoView({ behavior: "smooth" });
+}
+
+auth.onAuthStateChanged(function(user) {
+  if (user) {
+    currentRole = (user.email === "developer" + ADMIN_EMAIL_DOMAIN) ? "developer" : "owner";
+    var roleLabel = document.getElementById("roleLabel");
+    roleLabel.textContent = (currentRole === "owner") ? "Owner" : "Developer (view only)";
+    roleLabel.style.background = (currentRole === "owner") ? "#1976d2" : "#7b1fa2";
+
+    document.getElementById("loginSection").style.display = "none";
+    document.getElementById("dashboardSection").style.display = "block";
+    listenForOrders();
+  } else {
+    currentRole = null;
+    document.getElementById("dashboardSection").style.display = "none";
+    if (unsubscribeOrders) { unsubscribeOrders(); unsubscribeOrders = null; }
+    allOrders = [];
+  }
+});
+
+function showMsg(elId, text, type) {
+  var el = document.getElementById(elId);
+  el.textContent = text;
+  el.className = "msg " + type;
+  el.style.display = "block";
+}
+
+function adminLogin() {
+  var username = document.getElementById("loginUsername").value.trim().toLowerCase();
+  var password = document.getElementById("loginPassword").value;
+  if (!username || !password) {
+    showMsg("loginMsg", "⚠️ Enter username and password.", "error");
+    return;
+  }
+  var btn = document.getElementById("loginBtn");
+  btn.disabled = true;
+  btn.textContent = "Logging in...";
+  auth.signInWithEmailAndPassword(username + ADMIN_EMAIL_DOMAIN, password)
+    .catch(function(err) {
+      showMsg("loginMsg", "❌ [" + err.code + "] " + err.message, "error");
+    })
+    .finally(function() {
+      btn.disabled = false;
+      btn.textContent = "Login";
+    });
+}
+
+function adminLogout() {
+  auth.signOut();
+  document.getElementById("loginSection").style.display = "flex";
+  document.getElementById("loginUsername").value = "";
+  document.getElementById("loginPassword").value = "";
+}
+
+function listenForOrders() {
+  if (unsubscribeOrders) unsubscribeOrders();
+  unsubscribeOrders = db.collection("orders").orderBy("time", "desc")
+    .onSnapshot(function(snapshot) {
+      allOrders = snapshot.docs.map(function(doc) {
+        var data = doc.data();
+        data.id = doc.id;
+        return data;
+      });
+      renderOrders();
+    }, function(err) {
+      showMsg("dashMsg", "❌ Could not load orders: " + err.message, "error");
+    });
+}
+
+function statusSlug(status) {
+  return (status || "Pending").toLowerCase().replace(/\s+/g, "");
+}
+
+function escapeHtml(str) {
+  if (str === undefined || str === null) return "";
+  return String(str)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+function renderOrders() {
+  var filter = document.getElementById("statusFilter").value;
+  var list = allOrders.filter(function(o) {
+    return filter === "all" || (o.status || "Pending") === filter;
+  });
+
+  document.getElementById("totalCount").textContent = allOrders.length;
+  document.getElementById("pendingCount").textContent =
+    allOrders.filter(function(o) { return (o.status || "Pending") === "Pending"; }).length;
+
+  var container = document.getElementById("ordersList");
+  if (list.length === 0) {
+    container.innerHTML = '<p class="empty">No orders found.</p>';
+    return;
+  }
+
+  container.innerHTML = list.map(function(o) {
+    var status = o.status || "Pending";
+    var timeStr = (o.time && o.time.toDate) ? o.time.toDate().toLocaleString() : "—";
+    var options = STATUSES.map(function(s) {
+      return '<option value="' + s + '"' + (s === status ? " selected" : "") + '>' + s + '</option>';
+    }).join("");
+
+    var actionsHtml = (currentRole === "owner")
+      ? '<div class="order-actions">' +
+          '<select onchange="updateStatus(\'' + o.id + '\', this.value)">' + options + '</select>' +
+          '<button class="del-btn" onclick="deleteOrder(\'' + o.id + '\')">Delete</button>' +
+        '</div>'
+      : '';
+
+    return '' +
+      '<div class="order-card">' +
+        '<div class="order-card-head">' +
+          '<strong>' + escapeHtml(o.name) + '</strong>' +
+          '<span class="badge badge-' + statusSlug(status) + '">' + escapeHtml(status) + '</span>' +
+        '</div>' +
+        '<p>📞 ' + escapeHtml(o.phone) + '</p>' +
+        '<p>🛒 ' + escapeHtml(o.product) + ' — ' + escapeHtml(o.quantity) + '</p>' +
+        '<p>📍 ' + escapeHtml(o.address) + '</p>' +
+        '<p class="time">🕒 ' + timeStr + '</p>' +
+        actionsHtml +
+      '</div>';
+  }).join("");
+}
+
+function updateStatus(id, status) {
+  if (currentRole !== "owner") { return; }
+  db.collection("orders").doc(id).update({ status: status })
+    .catch(function(err) {
+      showMsg("dashMsg", "❌ Update failed: " + err.message, "error");
+    });
+}
+
+function deleteOrder(id) {
+  if (currentRole !== "owner") { return; }
+  if (!confirm("Delete this order permanently?")) return;
+  db.collection("orders").doc(id).delete()
+    .catch(function(err) {
+      showMsg("dashMsg", "❌ Delete failed: " + err.message, "error");
+    });
+}
+</script>
+
+</body>
+  </html>
