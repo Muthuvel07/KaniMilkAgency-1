@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Add Authorized User — Campus Security</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0b1f4d; --bg: #f4f6fb; --card: #ffffff; --border: #e3e8f0;
+    --text: #1a2233; --text-muted: #6b7688; --green: #16a34a; --red: #dc2626;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); padding: 24px; }
+  .wrap { max-width: 460px; margin: 0 auto; }
+  h1 { font-size: 1.3rem; margin-bottom: 4px; color: var(--navy); }
+  .sub { color: var(--text-muted); font-size: 0.85rem; margin-bottom: 20px; }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 22px; }
+  label { display: block; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.03em; color: var(--text-muted); margin-bottom: 6px; margin-top: 14px; }
+  label:first-of-type { margin-top: 0; }
+  input, select { width: 100%; padding: 10px 12px; border-radius: 8px; border: 1px solid var(--border); font-size: 0.9rem; }
+  .photo-preview { width: 100%; aspect-ratio: 1; border-radius: 8px; border: 1px dashed var(--border); margin-top: 8px; display: flex; align-items: center; justify-content: center; overflow: hidden; background: #fafbfd; color: var(--text-muted); font-size: 0.8rem; }
+  .photo-preview img { width: 100%; height: 100%; object-fit: cover; }
+  button { width: 100%; margin-top: 18px; background: var(--navy); border: none; color: #fff; font-weight: 600; padding: 12px; border-radius: 8px; font-size: 0.9rem; cursor: pointer; }
+  #statusMsg { margin-top: 12px; font-size: 0.85rem; text-align: center; }
+  #statusMsg.success { color: var(--green); }
+  #statusMsg.error { color: var(--red); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Add Authorized User</h1>
+  <p class="sub">Upload a clear front-facing photo for face recognition</p>
+
+  <div class="card">
+    <label>Student / Staff ID</label>
+    <input type="text" id="uId" placeholder="e.g. 21CSE101">
+    <label>Full Name</label>
+    <input type="text" id="uName" placeholder="e.g. Muthuvel">
+    <label>Department</label>
+    <input type="text" id="uDept" placeholder="e.g. CSE">
+
+    <label>Photos (3–5 recommended, different angles)</label>
+    <input type="file" id="uPhoto" accept="image/*" multiple>
+    <div class="photo-preview" id="photoPreview">No photos selected</div>
+    <div style="font-size:0.75rem; color:var(--text-muted); margin-top:6px;">
+      Tip: straight-on, slight left, slight right, and one in different lighting works best.
+    </div>
+
+    <button id="submitBtn">Add User</button>
+    <div id="statusMsg"></div>
+  </div>
+</div>
+
+<script>
+  // ---- Point this to your Raspberry Pi's Flask server ----
+  const FLASK_BASE_URL = "http://192.168.1.50:5000"; // <-- replace with your Pi's local IP
+
+  const photoInput = document.getElementById('uPhoto');
+  const preview = document.getElementById('photoPreview');
+
+  photoInput.addEventListener('change', () => {
+    const files = photoInput.files;
+    if (files.length > 0) {
+      preview.style.display = 'grid';
+      preview.style.gridTemplateColumns = 'repeat(auto-fill, minmax(70px, 1fr))';
+      preview.style.gap = '6px';
+      preview.style.aspectRatio = 'auto';
+      preview.style.padding = '8px';
+      preview.innerHTML = Array.from(files).map(f =>
+        `<img src="${URL.createObjectURL(f)}" style="width:100%; aspect-ratio:1; object-fit:cover; border-radius:6px;">`
+      ).join('');
+    }
+  });
+
+  document.getElementById('submitBtn').addEventListener('click', async () => {
+    const id = document.getElementById('uId').value.trim();
+    const name = document.getElementById('uName').value.trim();
+    const dept = document.getElementById('uDept').value.trim();
+    const files = photoInput.files;
+    const statusMsg = document.getElementById('statusMsg');
+
+    if (!id || !name || files.length === 0) {
+      statusMsg.className = 'error';
+      statusMsg.textContent = 'Please fill in ID, name, and select at least one photo.';
+      return;
+    }
+    if (files.length < 3) {
+      statusMsg.className = 'error';
+      statusMsg.textContent = 'For reliable recognition, please upload at least 3 photos.';
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('id', id);
+    formData.append('name', name);
+    formData.append('department', dept);
+    for (let i = 0; i < files.length; i++) {
+      formData.append('photos', files[i]);
+    }
+
+    statusMsg.className = '';
+    statusMsg.textContent = 'Uploading...';
+
+    try {
+      const res = await fetch(FLASK_BASE_URL + '/api/add-user', {
+        method: 'POST',
+        body: formData
+      });
+      const result = await res.json();
+
+      if (res.ok) {
+        statusMsg.className = 'success';
+        statusMsg.textContent = `${name} added with ${files.length} photos. Face encoding will refresh shortly.`;
+      } else {
+        statusMsg.className = 'error';
+        statusMsg.textContent = result.error || 'Upload failed.';
+      }
+    } catch (err) {
+      statusMsg.className = 'error';
+      statusMsg.textContent = 'Could not reach the Raspberry Pi server. Check it\'s running and the IP is correct.';
+    }
+  });
+</script>
+</body>
+</html>
