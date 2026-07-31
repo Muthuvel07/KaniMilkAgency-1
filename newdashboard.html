@@ -68,7 +68,26 @@
 
   /* Reports */
   .report-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; padding: 18px; }
-  @media (max-width: 900px) { .report-grid { grid-template-columns: 1fr; } .sidebar { display: none; } .main { max-width: 100%; } }
+
+  /* ---------- Mobile bottom nav ---------- */
+  .bottom-nav { display: none; }
+  @media (max-width: 900px) {
+    .report-grid { grid-template-columns: 1fr; }
+    .sidebar { display: none; }
+    .main { max-width: 100%; padding-bottom: 76px; }
+    .bottom-nav {
+      display: flex; position: fixed; bottom: 0; left: 0; right: 0;
+      background: var(--navy); z-index: 50; border-top: 1px solid rgba(255,255,255,0.1);
+      overflow-x: auto;
+    }
+    .bottom-nav .nav-item {
+      flex: 1 0 auto; min-width: 76px; flex-direction: column; gap: 3px;
+      align-items: center; padding: 9px 6px; font-size: 0.65rem;
+      border-left: none !important; text-align: center;
+    }
+    .bottom-nav .nav-item .nav-icon { font-size: 1.05rem; }
+    .bottom-nav .nav-item.active { background: var(--navy-2); border-top: 2px solid #4f7fff; color: #fff; }
+  }
   canvas { max-width: 100%; }
 
   /* Profile / logout */
@@ -203,6 +222,14 @@
   </div>
 </div>
 
+<div class="bottom-nav">
+  <div class="nav-item active" data-view="dashboard"><span class="nav-icon">🏠</span>Home</div>
+  <div class="nav-item" data-view="users"><span class="nav-icon">👥</span>Users</div>
+  <div class="nav-item" data-view="attendance"><span class="nav-icon">📋</span>Attend.</div>
+  <div class="nav-item" data-view="alerts"><span class="nav-icon">🔔</span>Alerts</div>
+  <div class="nav-item" data-view="reports"><span class="nav-icon">📊</span>Reports</div>
+</div>
+
 <div class="lightbox" id="lightbox" onclick="this.classList.remove('open')">
   <img id="lightboxImg" src="" alt="Enlarged capture">
 </div>
@@ -227,8 +254,7 @@
     document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
     document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
     document.getElementById('view-' + viewName).classList.add('active');
-    const navItem = document.querySelector(`.nav-item[data-view="${viewName}"]`);
-    if (navItem) navItem.classList.add('active');
+    document.querySelectorAll(`.nav-item[data-view="${viewName}"]`).forEach(n => n.classList.add('active'));
   }
 
   function tickUpdated() {
@@ -389,32 +415,6 @@
     for (let i = 6; i >= 0; i--) {
       const d = new Date(today);
       d.setDate(d.getDate() - i);
-      const key = String(d.getDate()).padStart(2, '0') + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + d.getFullYear();
-      last7[key] = 0;
-    }
-    allAttendance.forEach(r => { if (r.date in last7) last7[r.date]++; });
+      const key = String(d.getDate()).padStart(2, '0') + '-' + String(d.getMonth() + 1).padStart(2,
 
-    new Chart(document.getElementById('attendanceChart'), {
-      type: 'bar',
-      data: {
-        labels: Object.keys(last7),
-        datasets: [{ label: 'Check-ins', data: Object.values(last7), backgroundColor: '#2563eb' }]
-      },
-      options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
-    });
-
-    const todayStr = String(today.getDate()).padStart(2, '0') + '-' + String(today.getMonth() + 1).padStart(2, '0') + '-' + today.getFullYear();
-    const authorizedToday = allAttendance.filter(r => r.date === todayStr).length;
-    const unauthorizedToday = allUnauthorized.filter(r => r.date === todayStr).length;
-
-    new Chart(document.getElementById('ratioChart'), {
-      type: 'doughnut',
-      data: {
-        labels: ['Authorized', 'Unauthorized'],
-        datasets: [{ data: [authorizedToday, unauthorizedToday], backgroundColor: ['#16a34a', '#dc2626'] }]
-      }
-    });
-  }
-
-  // Build reports once initial data has loaded (slight delay to let Firebase populate)
-  setTimeout(buildReports, 150
+                
