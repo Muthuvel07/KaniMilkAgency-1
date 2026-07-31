@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Campus Security Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0b1f4d; --navy-2: #12285e; --bg: #f4f6fb; --card: #ffffff;
+    --border: #e3e8f0; --text: #1a2233; --text-muted: #6b7688;
+    --green: #16a34a; --green-bg: #dcfce7; --red: #dc2626; --red-bg: #fee2e2;
+    --blue: #2563eb; --amber: #d97706; --amber-bg: #fef3c7;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); }
+  .layout { display: flex; min-height: 100vh; }
+
+  .sidebar { width: 220px; background: var(--navy); color: #cdd6ee; padding: 20px 0; flex-shrink: 0; position: sticky; top: 0; height: 100vh; }
+  .sidebar .brand { padding: 0 20px 20px; font-weight: 700; font-size: 1.05rem; color: #fff; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 12px; }
+  .nav-item { display: flex; align-items: center; gap: 10px; padding: 11px 20px; font-size: 0.88rem; cursor: pointer; color: #b7c2e0; transition: background 0.15s; }
+  .nav-item:hover, .nav-item.active { background: var(--navy-2); color: #fff; border-left: 3px solid #4f7fff; }
+  .nav-icon { width: 16px; text-align: center; }
+
+  .main { flex: 1; padding: 22px 26px; max-width: calc(100vw - 220px); }
+  .view { display: none; }
+  .view.active { display: block; }
+
+  .topbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+  .topbar h1 { font-size: 1.3rem; }
+  .topbar .updated { font-size: 0.78rem; color: var(--text-muted); }
+
+  .stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 14px; margin-bottom: 22px; }
+  .stat-card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 16px 18px; }
+  .stat-card .label { font-size: 0.78rem; color: var(--text-muted); margin-bottom: 6px; }
+  .stat-card .num { font-size: 1.8rem; font-weight: 700; }
+  .stat-card.authorized .num { color: var(--green); }
+  .stat-card.unauthorized .num { color: var(--red); }
+  .stat-card.alerts .num { color: var(--amber); }
+
+  .panel { background: var(--card); border: 1px solid var(--border); border-radius: 10px; margin-bottom: 20px; overflow: hidden; }
+  .panel-header { display: flex; justify-content: space-between; align-items: center; padding: 14px 18px; border-bottom: 1px solid var(--border); flex-wrap: wrap; gap: 10px; }
+  .panel-header h2 { font-size: 1rem; }
+  .view-all { font-size: 0.8rem; color: var(--blue); cursor: pointer; }
+
+  .filter-row { display: flex; gap: 8px; flex-wrap: wrap; }
+  .filter-row input, .filter-row select { padding: 7px 10px; border-radius: 6px; border: 1px solid var(--border); font-size: 0.8rem; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+  th { text-align: left; padding: 10px 18px; color: var(--text-muted); font-weight: 600; font-size: 0.75rem; text-transform: uppercase; background: #fafbfd; position: sticky; top: 0; }
+  td { padding: 10px 18px; border-top: 1px solid var(--border); }
+  .table-scroll { max-height: 480px; overflow-y: auto; }
+  .status-pill { font-size: 0.72rem; padding: 3px 10px; border-radius: 12px; font-weight: 600; }
+  .status-pill.authorized { background: var(--green-bg); color: var(--green); }
+  .status-pill.unauthorized { background: var(--red-bg); color: var(--red); }
+  .log-img { width: 40px; height: 40px; border-radius: 6px; object-fit: cover; background: #eee; cursor: pointer; }
+  .empty-row td { text-align: center; color: var(--text-muted); padding: 20px; }
+
+  /* Users cards */
+  .users-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 14px; padding: 18px; }
+  .user-card { border: 1px solid var(--border); border-radius: 10px; padding: 14px; text-align: center; }
+  .user-avatar { width: 56px; height: 56px; border-radius: 50%; background: var(--navy); color: #fff; display: flex; align-items: center; justify-content: center; margin: 0 auto 10px; font-weight: 700; font-size: 1.1rem; }
+  .user-card .u-name { font-weight: 600; font-size: 0.9rem; }
+  .user-card .u-meta { font-size: 0.75rem; color: var(--text-muted); margin-top: 2px; }
+  .user-card .u-photos { font-size: 0.7rem; color: var(--blue); margin-top: 6px; }
+  .add-user-btn { background: var(--navy); color: #fff; border: none; padding: 9px 16px; border-radius: 8px; font-size: 0.82rem; cursor: pointer; }
+
+  /* Reports */
+  .report-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; padding: 18px; }
+  @media (max-width: 900px) { .report-grid { grid-template-columns: 1fr; } .sidebar { display: none; } .main { max-width: 100%; } }
+  canvas { max-width: 100%; }
+
+  /* Profile / logout */
+  .placeholder-panel { padding: 40px; text-align: center; color: var(--text-muted); }
+
+  .lightbox { position: fixed; inset: 0; background: rgba(0,0,0,0.85); display: none; align-items: center; justify-content: center; z-index: 200; }
+  .lightbox.open { display: flex; }
+  .lightbox img { max-width: 90%; max-height: 85vh; border-radius: 8px; }
+</style>
+</head>
+<body>
+<div class="layout">
+
+  <div class="sidebar">
+    <div class="brand">🛡 Campus Security</div>
+    <div class="nav-item active" data-view="dashboard"><span class="nav-icon">🏠</span>Dashboard</div>
+    <div class="nav-item" data-view="users"><span class="nav-icon">👥</span>Users</div>
+    <div class="nav-item" data-view="attendance"><span class="nav-icon">📋</span>Attendance</div>
+    <div class="nav-item" data-view="alerts"><span class="nav-icon">🔔</span>Alerts</div>
+    <div class="nav-item" data-view="reports"><span class="nav-icon">📊</span>Reports</div>
+    <div class="nav-item" data-view="profile"><span class="nav-icon">👤</span>Profile</div>
+    <div class="nav-item" data-view="logout"><span class="nav-icon">🚪</span>Logout</div>
+  </div>
+
+  <div class="main">
+
+    <!-- ===== DASHBOARD VIEW ===== -->
+    <div class="view active" id="view-dashboard">
+      <div class="topbar"><h1>Dashboard</h1><span class="updated mono" id="lastUpdated">Live</span></div>
+      <div class="stats-row">
+        <div class="stat-card"><div class="label">Total Students</div><div class="num" id="statTotal">--</div></div>
+        <div class="stat-card authorized"><div class="label">Authorized Today</div><div class="num" id="statAuthorized">--</div></div>
+        <div class="stat-card unauthorized"><div class="label">Unauthorized Today</div><div class="num" id="statUnauthorized">--</div></div>
+        <div class="stat-card alerts"><div class="label">Alerts Today</div><div class="num" id="statAlerts">--</div></div>
+      </div>
+      <div class="panel">
+        <div class="panel-header"><h2>Recent Attendance</h2><span class="view-all" data-goto="attendance">View All</span></div>
+        <div class="table-scroll">
+          <table><thead><tr><th>ID</th><th>Name</th><th>Department</th><th>Time</th><th>Date</th><th>Status</th></tr></thead>
+          <tbody id="dashAttendanceBody"><tr class="empty-row"><td colspan="6">Waiting for data...</td></tr></tbody></table>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-header"><h2>Recent Unauthorized Detections</h2><span class="view-all" data-goto="alerts">View All</span></div>
+        <div class="table-scroll">
+          <table><thead><tr><th>Image</th><th>Name</th><th>Time</th><th>Date</th></tr></thead>
+          <tbody id="dashUnauthorizedBody"><tr class="empty-row"><td colspan="4">Waiting for data...</td></tr></tbody></table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== USERS VIEW ===== -->
+    <div class="view" id="view-users">
+      <div class="topbar"><h1>Users</h1><button class="add-user-btn" onclick="window.open('add-authorized-user.html','_blank')">+ Add User</button></div>
+      <div class="panel">
+        <div class="panel-header">
+          <h2>Registered Users</h2>
+          <div class="filter-row"><input type="text" id="userSearch" placeholder="Search name or ID..."></div>
+        </div>
+        <div class="users-grid" id="usersGrid"><p style="grid-column:1/-1; color:var(--text-muted); text-align:center;">Loading users...</p></div>
+      </div>
+    </div>
+
+    <!-- ===== ATTENDANCE VIEW ===== -->
+    <div class="view" id="view-attendance">
+      <div class="topbar"><h1>Attendance</h1></div>
+      <div class="panel">
+        <div class="panel-header">
+          <h2>Full Attendance History</h2>
+          <div class="filter-row">
+            <input type="text" id="attSearch" placeholder="Search name or ID...">
+            <input type="date" id="attDateFilter">
+          </div>
+        </div>
+        <div class="table-scroll">
+          <table><thead><tr><th>ID</th><th>Name</th><th>Department</th><th>Time</th><th>Date</th><th>Status</th></tr></thead>
+          <tbody id="fullAttendanceBody"><tr class="empty-row"><td colspan="6">Waiting for data...</td></tr></tbody></table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== ALERTS VIEW ===== -->
+    <div class="view" id="view-alerts">
+      <div class="topbar"><h1>Alerts</h1></div>
+      <div class="panel">
+        <div class="panel-header">
+          <h2>Full Alert History</h2>
+          <div class="filter-row"><input type="date" id="alertDateFilter"></div>
+        </div>
+        <div class="table-scroll">
+          <table><thead><tr><th>Image</th><th>Message</th><th>Time</th><th>Date</th></tr></thead>
+          <tbody id="fullAlertsBody"><tr class="empty-row"><td colspan="4">Waiting for data...</td></tr></tbody></table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== REPORTS VIEW ===== -->
+    <div class="view" id="view-reports">
+      <div class="topbar"><h1>Reports</h1></div>
+      <div class="panel">
+        <div class="report-grid">
+          <div>
+            <h2 style="font-size:0.9rem; margin-bottom:10px;">Attendance — Last 7 Days</h2>
+            <canvas id="attendanceChart"></canvas>
+          </div>
+          <div>
+            <h2 style="font-size:0.9rem; margin-bottom:10px;">Authorized vs Unauthorized (Today)</h2>
+            <canvas id="ratioChart"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== PROFILE VIEW ===== -->
+    <div class="view" id="view-profile">
+      <div class="topbar"><h1>Profile</h1></div>
+      <div class="panel"><div class="placeholder-panel">
+        User accounts and authentication aren't set up yet.<br>
+        This page is a placeholder until a login system is added.
+      </div></div>
+    </div>
+
+    <!-- ===== LOGOUT VIEW ===== -->
+    <div class="view" id="view-logout">
+      <div class="topbar"><h1>Logout</h1></div>
+      <div class="panel"><div class="placeholder-panel">
+        No authentication is configured, so there's no active session to log out of.<br>
+        Add Firebase Authentication if you need login-protected access.
+      </div></div>
+    </div>
+
+  </div>
+</div>
+
+<div class="lightbox" id="lightbox" onclick="this.classList.remove('open')">
+  <img id="lightboxImg" src="" alt="Enlarged capture">
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+<script src="firebase-config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+<script>
+  const PI_IMAGE_BASE_URL = "http://192.168.1.50:5000"; // <-- replace with your Pi's actual local IP
+
+  // ---------------- Navigation ----------------
+  document.querySelectorAll('.nav-item').forEach(item => {
+    item.addEventListener('click', () => showView(item.dataset.view));
+  });
+  document.querySelectorAll('[data-goto]').forEach(el => {
+    el.addEventListener('click', () => showView(el.dataset.goto));
+  });
+
+  function showView(viewName) {
+    document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    document.getElementById('view-' + viewName).classList.add('active');
+    const navItem = document.querySelector(`.nav-item[data-view="${viewName}"]`);
+    if (navItem) navItem.classList.add('active');
+  }
+
+  function tickUpdated() {
+    const el = document.getElementById('lastUpdated');
+    if (el) el.textContent = new Date().toLocaleTimeString();
+  }
+  setInterval(tickUpdated, 1000);
+  tickUpdated();
+
+  function imgUrl(path) {
+    return path ? PI_IMAGE_BASE_URL + '/' + path : '';
+  }
+
+  function openLightbox(src) {
+    document.getElementById('lightboxImg').src = src;
+    document.getElementById('lightbox').classList.add('open');
+  }
+
+  // ---------------- Stats ----------------
+  db.ref('/Stats').on('value', (snap) => {
+    const s = snap.val() || {};
+    document.getElementById('statTotal').textContent = s.totalStudents ?? '--';
+    document.getElementById('statAuthorized').textContent = s.authorizedToday ?? '--';
+    document.getElementById('statUnauthorized').textContent = s.unauthorizedToday ?? '--';
+    document.getElementById('statAlerts').textContent = s.alertsToday ?? '--';
+  });
+
+  // ---------------- Attendance (dashboard preview + full page) ----------------
+  let allAttendance = [];
+  db.ref('/Attendance').on('value', (snap) => {
+    const data = snap.val() || {};
+    allAttendance = Object.values(data).sort((a, b) => (b.time || '').localeCompare(a.time || ''));
+    renderAttendanceTable('dashAttendanceBody', allAttendance.slice(0, 8));
+    renderFullAttendance();
+  });
+
+  function renderAttendanceTable(bodyId, rows) {
+    const body = document.getElementById(bodyId);
+    if (rows.length === 0) {
+      body.innerHTML = '<tr class="empty-row"><td colspan="6">No attendance records yet.</td></tr>';
+      return;
+    }
+    body.innerHTML = rows.map(r => `
+      <tr>
+        <td>${r.id || '--'}</td><td>${r.name || 'Unknown'}</td><td>${r.department || '--'}</td>
+        <td>${r.time || '--'}</td><td>${r.date || '--'}</td>
+        <td><span class="status-pill authorized">Authorized</span></td>
+      </tr>
+    `).join('');
+  }
+
+  function renderFullAttendance() {
+    const search = (document.getElementById('attSearch').value || '').toLowerCase();
+    const dateFilter = document.getElementById('attDateFilter').value;
+    let rows = allAttendance;
+    if (search) rows = rows.filter(r => (r.name || '').toLowerCase().includes(search) || (r.id || '').toLowerCase().includes(search));
+    if (dateFilter) {
+      const [y, m, d] = dateFilter.split('-');
+      const formatted = `${d}-${m}-${y}`;
+      rows = rows.filter(r => r.date === formatted);
+    }
+    renderAttendanceTable('fullAttendanceBody', rows);
+  }
+  document.getElementById('attSearch').addEventListener('input', renderFullAttendance);
+  document.getElementById('attDateFilter').addEventListener('change', renderFullAttendance);
+
+  // ---------------- Unauthorized / Alerts ----------------
+  let allUnauthorized = [];
+  db.ref('/Unauthorized').on('value', (snap) => {
+    const data = snap.val() || {};
+    allUnauthorized = Object.values(data).sort((a, b) => (b.time || '').localeCompare(a.time || ''));
+    renderUnauthorizedTable('dashUnauthorizedBody', allUnauthorized.slice(0, 6));
+  });
+
+  function renderUnauthorizedTable(bodyId, rows) {
+    const body = document.getElementById(bodyId);
+    if (rows.length === 0) {
+      body.innerHTML = '<tr class="empty-row"><td colspan="4">No unauthorized detections yet.</td></tr>';
+      return;
+    }
+    body.innerHTML = rows.map(r => `
+      <tr>
+        <td><img class="log-img" src="${imgUrl(r.imagePath)}" onclick="openLightbox('${imgUrl(r.imagePath)}')" onerror="this.style.display='none'"></td>
+        <td>${r.name || 'Unknown'}</td><td>${r.time || '--'}</td><td>${r.date || '--'}</td>
+      </tr>
+    `).join('');
+  }
+
+  let allAlerts = [];
+  db.ref('/Alerts').on('value', (snap) => {
+    const data = snap.val() || {};
+    allAlerts = Object.values(data).sort((a, b) => (b.time || '').localeCompare(a.time || ''));
+    renderFullAlerts();
+  });
+
+  function renderFullAlerts() {
+    const dateFilter = document.getElementById('alertDateFilter').value;
+    let rows = allAlerts;
+    if (dateFilter) {
+      const [y, m, d] = dateFilter.split('-');
+      const formatted = `${d}-${m}-${y}`;
+      rows = rows.filter(r => r.date === formatted);
+    }
+    const body = document.getElementById('fullAlertsBody');
+    if (rows.length === 0) {
+      body.innerHTML = '<tr class="empty-row"><td colspan="4">No alerts logged yet.</td></tr>';
+      return;
+    }
+    body.innerHTML = rows.map(r => `
+      <tr>
+        <td><img class="log-img" src="${imgUrl(r.imagePath)}" onclick="openLightbox('${imgUrl(r.imagePath)}')" onerror="this.style.display='none'"></td>
+        <td>${r.message || '--'}</td><td>${r.time || '--'}</td><td>${r.date || '--'}</td>
+      </tr>
+    `).join('');
+  }
+  document.getElementById('alertDateFilter').addEventListener('change', renderFullAlerts);
+
+  // ---------------- Users ----------------
+  let allUsers = {};
+  db.ref('/Users').on('value', (snap) => {
+    allUsers = snap.val() || {};
+    renderUsers();
+  });
+
+  function renderUsers() {
+    const search = (document.getElementById('userSearch').value || '').toLowerCase();
+    const grid = document.getElementById('usersGrid');
+    const ids = Object.keys(allUsers).filter(id => {
+      const u = allUsers[id];
+      return !search || (u.name || '').toLowerCase().includes(search) || id.toLowerCase().includes(search);
+    });
+
+    if (ids.length === 0) {
+      grid.innerHTML = '<p style="grid-column:1/-1; color:var(--text-muted); text-align:center;">No users found.</p>';
+      return;
+    }
+
+    grid.innerHTML = ids.map(id => {
+      const u = allUsers[id];
+      const initials = (u.name || '?').split(' ').map(w => w[0]).join('').substring(0, 2).toUpperCase();
+      return `
+        <div class="user-card">
+          <div class="user-avatar">${initials}</div>
+          <div class="u-name">${u.name || 'Unknown'}</div>
+          <div class="u-meta">${id} · ${u.department || '--'}</div>
+          <div class="u-photos">${u.photoCount || 0} reference photo(s)</div>
+        </div>
+      `;
+    }).join('');
+  }
+  document.getElementById('userSearch').addEventListener('input', renderUsers);
+
+  // ---------------- Reports ----------------
+  function buildReports() {
+    // Attendance last 7 days (count per date)
+    const last7 = {};
+    const today = new Date();
+    for (let i = 6; i >= 0; i--) {
+      const d = new Date(today);
+      d.setDate(d.getDate() - i);
+      const key = String(d.getDate()).padStart(2, '0') + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + d.getFullYear();
+      last7[key] = 0;
+    }
+    allAttendance.forEach(r => { if (r.date in last7) last7[r.date]++; });
+
+    new Chart(document.getElementById('attendanceChart'), {
+      type: 'bar',
+      data: {
+        labels: Object.keys(last7),
+        datasets: [{ label: 'Check-ins', data: Object.values(last7), backgroundColor: '#2563eb' }]
+      },
+      options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
+    });
+
+    const todayStr = String(today.getDate()).padStart(2, '0') + '-' + String(today.getMonth() + 1).padStart(2, '0') + '-' + today.getFullYear();
+    const authorizedToday = allAttendance.filter(r => r.date === todayStr).length;
+    const unauthorizedToday = allUnauthorized.filter(r => r.date === todayStr).length;
+
+    new Chart(document.getElementById('ratioChart'), {
+      type: 'doughnut',
+      data: {
+        labels: ['Authorized', 'Unauthorized'],
+        datasets: [{ data: [authorizedToday, unauthorizedToday], backgroundColor: ['#16a34a', '#dc2626'] }]
+      }
+    });
+  }
+
+  // Build reports once initial data has loaded (slight delay to let Firebase populate)
+  setTimeout(buildReports, 150
