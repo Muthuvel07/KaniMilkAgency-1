@@ -3,386 +3,377 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Watch Console — Smart Security System</title>
+<title>Watch Console Pro — Smart Security System</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #0a0e12;
-    --panel: #12181f;
-    --grid-line: rgba(255,255,255,0.035);
-    --border: rgba(255,255,255,0.09);
-    --text: #e6edf0;
-    --text-muted: #6b7785;
+    --bg: #090d11;
+    --panel: #10161d;
+    --panel-2: #141b23;
+    --grid-line: rgba(255,255,255,0.03);
+    --border: rgba(255,255,255,0.08);
+    --border-soft: rgba(255,255,255,0.05);
+    --text: #eef2f4;
+    --text-muted: #6f7d8a;
+    --text-dim: #4a5561;
     --amber: #ffb020;
+    --amber-dim: rgba(255,176,32,0.12);
     --teal: #45d6c4;
-    --danger-glow: rgba(255,176,32,0.35);
+    --teal-dim: rgba(69,214,196,0.12);
+    --red: #ef5a6f;
   }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
   @media (prefers-reduced-motion: reduce) {
     * { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
   }
+  html { scroll-behavior: smooth; }
   body {
     background-color: var(--bg);
     background-image:
       linear-gradient(var(--grid-line) 1px, transparent 1px),
       linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
-    background-size: 28px 28px;
+    background-size: 26px 26px;
     color: var(--text);
     font-family: 'Inter', sans-serif;
     min-height: 100vh;
-    padding: 18px;
+    padding: 14px 14px 40px;
+    -webkit-font-smoothing: antialiased;
   }
   .mono { font-family: 'JetBrains Mono', monospace; }
+  .wrap { max-width: 1080px; margin: 0 auto; display: flex; flex-direction: column; gap: 12px; }
+
+  /* ---------- Skeleton loader ---------- */
+  .skeleton {
+    background: linear-gradient(90deg, var(--panel-2) 25%, #1a222b 37%, var(--panel-2) 63%);
+    background-size: 400% 100%;
+    animation: shimmer 1.4s ease infinite;
+    border-radius: 4px;
+  }
+  @keyframes shimmer { 0% { background-position: 100% 50%; } 100% { background-position: 0 50%; } }
 
   /* ---------- Header ---------- */
-  .console-header {
-    max-width: 1100px;
-    margin: 0 auto 16px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 12px;
+  .header {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 12px; flex-wrap: wrap;
     padding: 14px 18px;
     background: var(--panel);
     border: 1px solid var(--border);
-    border-radius: 4px;
+    border-radius: 10px;
   }
-  .brand { display: flex; align-items: center; gap: 14px; }
-  .radar {
-    width: 34px; height: 34px;
-    border-radius: 50%;
-    border: 1px solid rgba(69,214,196,0.35);
-    position: relative;
-    overflow: hidden;
-    flex-shrink: 0;
-  }
+  .brand { display: flex; align-items: center; gap: 13px; }
+  .radar { width: 32px; height: 32px; border-radius: 50%; border: 1px solid rgba(69,214,196,0.3); position: relative; overflow: hidden; flex-shrink: 0; }
   .radar::before {
-    content: "";
-    position: absolute;
-    inset: 0;
+    content: ""; position: absolute; inset: 0;
     background: conic-gradient(from 0deg, transparent 0deg, transparent 260deg, var(--teal) 300deg, transparent 300deg);
-    animation: sweep 2.4s linear infinite;
+    animation: sweep 2.2s linear infinite;
   }
-  .radar::after {
-    content: "";
-    position: absolute;
-    inset: 40%;
-    background: var(--teal);
-    border-radius: 50%;
-    box-shadow: 0 0 8px var(--teal);
-  }
+  .radar::after { content: ""; position: absolute; inset: 42%; background: var(--teal); border-radius: 50%; box-shadow: 0 0 8px var(--teal); }
   @keyframes sweep { to { transform: rotate(360deg); } }
-  .brand-text .title {
-    font-size: 0.95rem;
-    font-weight: 700;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-  }
-  .brand-text .subtitle {
-    font-size: 0.72rem;
-    color: var(--text-muted);
-    letter-spacing: 0.03em;
-  }
-  .header-right { display: flex; align-items: center; gap: 18px; font-size: 0.78rem; }
-  .clock { color: var(--teal); font-weight: 500; }
-  .arm-pill {
-    padding: 4px 12px;
-    border-radius: 3px;
-    font-size: 0.7rem;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    border: 1px solid var(--teal);
-    color: var(--teal);
-  }
-  .arm-pill.disarmed { border-color: var(--text-muted); color: var(--text-muted); }
-  .arm-pill.alert { border-color: var(--amber); color: var(--amber); }
+  .brand-text .title { font-size: 0.92rem; font-weight: 700; letter-spacing: 0.03em; text-transform: uppercase; }
+  .brand-text .subtitle { font-size: 0.7rem; color: var(--text-muted); }
 
-  /* ---------- Alert strip ---------- */
-  .alert-strip {
-    max-width: 1100px;
-    margin: 0 auto 16px;
-    padding: 10px 18px;
-    border-radius: 4px;
-    font-size: 0.85rem;
-    font-weight: 500;
-    background: rgba(69,214,196,0.06);
-    border: 1px solid rgba(69,214,196,0.25);
-    color: var(--teal);
-    transition: all 0.25s ease;
+  .header-right { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .conn-chip {
+    display: flex; align-items: center; gap: 6px;
+    font-size: 0.68rem; padding: 4px 10px; border-radius: 20px;
+    border: 1px solid var(--border); color: var(--text-muted);
   }
-  .alert-strip.active {
-    background: rgba(255,176,32,0.08);
-    border-color: var(--amber);
-    color: var(--amber);
-    animation: throb 1.1s ease-in-out infinite;
+  .conn-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--text-dim); }
+  .conn-chip.online { color: var(--teal); border-color: rgba(69,214,196,0.3); }
+  .conn-chip.online .conn-dot { background: var(--teal); box-shadow: 0 0 6px var(--teal); animation: pulse-dot 2s ease infinite; }
+  .conn-chip.offline { color: var(--red); border-color: rgba(239,90,111,0.3); }
+  .conn-chip.offline .conn-dot { background: var(--red); }
+  @keyframes pulse-dot { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
+  .clock { color: var(--teal); font-weight: 500; font-size: 0.8rem; }
+  .arm-pill { padding: 5px 13px; border-radius: 20px; font-size: 0.68rem; letter-spacing: 0.05em; text-transform: uppercase; border: 1px solid var(--teal); color: var(--teal); font-weight: 600; }
+  .arm-pill.disarmed { border-color: var(--text-dim); color: var(--text-muted); }
+  .arm-pill.alert { border-color: var(--amber); color: var(--amber); animation: pulse-dot 1s ease infinite; }
+
+  /* ---------- Status hero ---------- */
+  .hero {
+    display: flex; align-items: center; gap: 16px;
+    padding: 18px 20px;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    transition: border-color 0.3s, background 0.3s;
   }
-  @keyframes throb {
-    0%, 100% { box-shadow: 0 0 0 0 var(--danger-glow); }
-    50% { box-shadow: 0 0 0 6px transparent; }
-  }
+  .hero.alert { border-color: rgba(255,176,32,0.4); background: linear-gradient(135deg, rgba(255,176,32,0.06), var(--panel)); }
+  .ring { width: 56px; height: 56px; border-radius: 50%; flex-shrink: 0; position: relative; display: flex; align-items: center; justify-content: center; }
+  .ring svg { position: absolute; inset: 0; transform: rotate(-90deg); }
+  .ring .pct { font-size: 0.72rem; font-weight: 700; }
+  .hero-text .headline { font-size: 1rem; font-weight: 600; }
+  .hero-text .sub { font-size: 0.75rem; color: var(--text-muted); margin-top: 3px; }
 
   /* ---------- Main grid ---------- */
-  .main-grid {
-    max-width: 1100px;
-    margin: 0 auto;
-    display: grid;
-    grid-template-columns: 1.1fr 0.9fr;
-    gap: 16px;
-  }
-  @media (max-width: 760px) {
-    .main-grid { grid-template-columns: 1fr; }
-  }
+  .main-grid { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 12px; }
+  @media (max-width: 760px) { .main-grid { grid-template-columns: 1fr; } }
 
-  .panel {
-    background: var(--panel);
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    padding: 16px;
-  }
-  .panel-label {
-    font-size: 0.68rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--text-muted);
-    margin-bottom: 12px;
-    display: flex;
-    justify-content: space-between;
-  }
+  .panel { background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: 16px; }
+  .panel-label { font-size: 0.66rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
 
-  /* Viewfinder framed snapshot */
   .viewfinder {
-    position: relative;
-    border-radius: 2px;
-    overflow: hidden;
-    background: #000;
-    aspect-ratio: 4/3;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    position: relative; border-radius: 8px; overflow: hidden; background: #000;
+    aspect-ratio: 4/3; display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
   }
-  .viewfinder img { width: 100%; height: 100%; object-fit: cover; display: block; }
-  .viewfinder .placeholder { color: var(--text-muted); font-size: 0.8rem; }
-  .corner {
-    position: absolute;
-    width: 20px; height: 20px;
-    border-color: var(--teal);
-    border-style: solid;
-    border-width: 0;
-  }
-  .corner.tl { top: 6px; left: 6px; border-top-width: 2px; border-left-width: 2px; }
-  .corner.tr { top: 6px; right: 6px; border-top-width: 2px; border-right-width: 2px; }
-  .corner.bl { bottom: 6px; left: 6px; border-bottom-width: 2px; border-left-width: 2px; }
-  .corner.br { bottom: 6px; right: 6px; border-bottom-width: 2px; border-right-width: 2px; }
-  .rec-tag {
-    position: absolute; top: 8px; left: 32px;
-    font-size: 0.65rem; color: var(--amber);
-    display: flex; align-items: center; gap: 5px;
-  }
-  .rec-dot {
-    width: 6px; height: 6px; border-radius: 50%; background: var(--amber);
-    animation: blink 1s step-start infinite;
-  }
+  .viewfinder img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.4s ease; }
+  .viewfinder:active img { transform: scale(0.98); }
+  .viewfinder .placeholder { color: var(--text-dim); font-size: 0.78rem; text-align: center; padding: 20px; }
+  .corner { position: absolute; width: 18px; height: 18px; border-color: var(--teal); border-style: solid; border-width: 0; }
+  .corner.tl { top: 8px; left: 8px; border-top-width: 2px; border-left-width: 2px; border-radius: 4px 0 0 0; }
+  .corner.tr { top: 8px; right: 8px; border-top-width: 2px; border-right-width: 2px; border-radius: 0 4px 0 0; }
+  .corner.bl { bottom: 8px; left: 8px; border-bottom-width: 2px; border-left-width: 2px; border-radius: 0 0 0 4px; }
+  .corner.br { bottom: 8px; right: 8px; border-bottom-width: 2px; border-right-width: 2px; border-radius: 0 0 4px 0; }
+  .rec-tag { position: absolute; top: 10px; left: 30px; font-size: 0.64rem; color: var(--amber); display: flex; align-items: center; gap: 5px; }
+  .rec-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--amber); animation: blink 1s step-start infinite; }
   @keyframes blink { 50% { opacity: 0; } }
-  .timestamp-tag {
-    position: absolute; bottom: 8px; right: 32px;
-    font-size: 0.65rem; color: #c7d0d4;
-  }
+  .timestamp-tag { position: absolute; bottom: 10px; right: 30px; font-size: 0.64rem; color: #b8c2c7; background: rgba(0,0,0,0.4); padding: 2px 8px; border-radius: 10px; }
+  .expand-hint { position: absolute; bottom: 10px; left: 30px; font-size: 0.6rem; color: rgba(255,255,255,0.5); }
 
-  .telemetry-row {
-    display: flex; gap: 10px; margin-top: 12px; flex-wrap: wrap;
+  .telemetry-row { display: flex; gap: 9px; margin-top: 12px; flex-wrap: wrap; }
+  .telemetry-item { flex: 1; min-width: 95px; border: 1px solid var(--border-soft); border-radius: 6px; padding: 9px 11px; background: var(--panel-2); }
+  .telemetry-item .k { color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em; font-size: 0.62rem; }
+  .telemetry-item .v { margin-top: 4px; font-size: 0.86rem; display: flex; align-items: center; gap: 6px; }
+  .mini-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--text-dim); }
+  .mini-dot.on { background: var(--amber); box-shadow: 0 0 6px var(--amber); }
+
+  .actions { display: flex; gap: 9px; margin-top: 14px; }
+  button {
+    flex: 1; background: var(--panel-2); border: 1px solid var(--border); color: var(--text);
+    padding: 11px 12px; border-radius: 8px; font-size: 0.78rem; font-family: 'JetBrains Mono', monospace;
+    cursor: pointer; transition: border-color 0.2s, transform 0.1s, background 0.2s;
   }
-  .telemetry-item {
-    flex: 1; min-width: 100px;
-    border: 1px solid var(--border);
-    border-radius: 3px;
-    padding: 8px 10px;
-    font-size: 0.72rem;
-  }
-  .telemetry-item .k { color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; font-size: 0.64rem; }
-  .telemetry-item .v { margin-top: 3px; font-size: 0.85rem; }
-  .v.on { color: var(--amber); }
-  .v.off { color: var(--text-muted); }
+  button:active { transform: scale(0.97); }
+  button:hover { border-color: var(--teal); }
+  button.danger:hover { border-color: var(--amber); }
 
   /* Detection log */
-  .log-list { max-height: 420px; overflow-y: auto; }
+  .log-list { max-height: 380px; overflow-y: auto; }
   .log-entry {
-    display: grid;
-    grid-template-columns: 52px 1fr auto;
-    align-items: center;
-    gap: 10px;
-    padding: 8px 4px;
-    border-bottom: 1px dashed var(--border);
-    font-size: 0.8rem;
+    display: grid; grid-template-columns: 46px 1fr auto; align-items: center; gap: 10px;
+    padding: 9px 4px; border-bottom: 1px solid var(--border-soft); font-size: 0.8rem;
+    animation: fadeIn 0.3s ease;
   }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
   .log-entry:last-child { border-bottom: none; }
-  .log-entry .time { color: var(--text-muted); font-size: 0.72rem; }
-  .log-entry .status-tag {
-    font-size: 0.65rem;
-    padding: 2px 8px;
-    border-radius: 2px;
-    letter-spacing: 0.03em;
-  }
-  .status-tag.unknown { background: rgba(255,176,32,0.12); color: var(--amber); }
-  .status-tag.recognized { background: rgba(69,214,196,0.12); color: var(--teal); }
-  .empty-note { color: var(--text-muted); font-size: 0.8rem; padding: 16px 0; text-align: center; }
+  .log-entry .time { color: var(--text-muted); font-size: 0.7rem; }
+  .status-tag { font-size: 0.63rem; padding: 3px 9px; border-radius: 10px; letter-spacing: 0.02em; font-weight: 500; }
+  .status-tag.unknown { background: var(--amber-dim); color: var(--amber); }
+  .status-tag.recognized { background: var(--teal-dim); color: var(--teal); }
+  .empty-note { color: var(--text-dim); font-size: 0.78rem; padding: 24px 0; text-align: center; }
+  .empty-note .icon { font-size: 1.4rem; display: block; margin-bottom: 6px; opacity: 0.5; }
 
-  /* Stats strip */
-  .stats-strip {
-    max-width: 1100px; margin: 16px auto 0;
-    display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;
-  }
-  .stat-box {
-    background: var(--panel);
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    padding: 14px 16px;
-    text-align: center;
-  }
-  .stat-box .num { font-size: 1.6rem; font-weight: 700; color: var(--teal); }
+  /* Stats */
+  .stats-strip { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  .stat-box { background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: 14px 12px; text-align: center; }
+  .stat-box .num { font-size: 1.5rem; font-weight: 700; color: var(--teal); font-family: 'JetBrains Mono', monospace; }
   .stat-box .num.warn { color: var(--amber); }
-  .stat-box .lbl { font-size: 0.68rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; margin-top: 4px; }
+  .stat-box .lbl { font-size: 0.64rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em; margin-top: 4px; }
 
-  .actions { display: flex; gap: 10px; margin-top: 14px; }
-  button {
-    flex: 1;
-    background: transparent;
-    border: 1px solid var(--border);
-    color: var(--text);
-    padding: 9px 12px;
-    border-radius: 3px;
-    font-size: 0.78rem;
-    font-family: 'JetBrains Mono', monospace;
-    cursor: pointer;
-    transition: border-color 0.2s, color 0.2s;
+  footer.conn-note { font-size: 0.68rem; color: var(--text-dim); text-align: center; padding-top: 4px; }
+
+  /* ---------- Toast ---------- */
+  .toast-container { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); z-index: 100; display: flex; flex-direction: column; gap: 8px; align-items: center; }
+  .toast {
+    background: var(--panel-2); border: 1px solid var(--border); color: var(--text);
+    padding: 10px 18px; border-radius: 20px; font-size: 0.78rem;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+    animation: toastIn 0.25s ease, toastOut 0.25s ease 2.2s forwards;
   }
-  button:hover { border-color: var(--teal); color: var(--teal); }
-  button.danger:hover { border-color: var(--amber); color: var(--amber); }
+  @keyframes toastIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes toastOut { to { opacity: 0; transform: translateY(-6px); } }
+
+  /* ---------- Lightbox ---------- */
+  .lightbox {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.88); display: none;
+    align-items: center; justify-content: center; z-index: 200; padding: 20px;
+    animation: fadeIn 0.2s ease;
+  }
+  .lightbox.open { display: flex; }
+  .lightbox img { max-width: 100%; max-height: 85vh; border-radius: 8px; }
+  .lightbox-close { position: absolute; top: 20px; right: 20px; color: #fff; font-size: 1.6rem; background: none; border: none; width: auto; }
 </style>
 </head>
 <body>
 
-<div class="console-header">
-  <div class="brand">
-    <div class="radar"></div>
-    <div class="brand-text">
-      <div class="title">Watch Console</div>
-      <div class="subtitle">Smart Security System — live feed</div>
-    </div>
-  </div>
-  <div class="header-right">
-    <span class="clock mono" id="clock">--:--:--</span>
-    <span class="arm-pill mono" id="armPill">ARMED</span>
-  </div>
-</div>
+<div class="wrap">
 
-<div class="alert-strip mono" id="alertStrip">SYSTEM NOMINAL — no motion detected</div>
-
-<div class="main-grid">
-  <div class="panel">
-    <div class="panel-label"><span>Live Capture</span><span id="camLabel">CAM 01</span></div>
-    <div class="viewfinder">
-      <img id="snapshotImg" src="" style="display:none;" alt="Latest snapshot">
-      <span class="placeholder" id="camPlaceholder">Awaiting first capture...</span>
-      <div class="corner tl"></div><div class="corner tr"></div>
-      <div class="corner bl"></div><div class="corner br"></div>
-      <div class="rec-tag"><span class="rec-dot"></span>REC</div>
-      <div class="timestamp-tag mono" id="camTimestamp"></div>
-    </div>
-    <div class="telemetry-row">
-      <div class="telemetry-item">
-        <div class="k">Motion</div>
-        <div class="v mono" id="tPir">OFF</div>
-      </div>
-      <div class="telemetry-item">
-        <div class="k">Buzzer</div>
-        <div class="v mono" id="tBuzzer">OFF</div>
-      </div>
-      <div class="telemetry-item">
-        <div class="k">Last Event</div>
-        <div class="v mono" id="tLast" style="font-size:0.72rem;">--</div>
+  <div class="header">
+    <div class="brand">
+      <div class="radar"></div>
+      <div class="brand-text">
+        <div class="title">Watch Console</div>
+        <div class="subtitle">Smart Security System</div>
       </div>
     </div>
-    <div class="actions">
-      <button id="testBtn">Test buzzer</button>
-      <button class="danger" id="armBtn">Arm / Disarm</button>
+    <div class="header-right">
+      <span class="conn-chip offline mono" id="connChip"><span class="conn-dot"></span>connecting</span>
+      <span class="clock mono" id="clock">--:--:--</span>
+      <span class="arm-pill mono" id="armPill">ARMED</span>
     </div>
   </div>
 
-  <div class="panel">
-    <div class="panel-label"><span>Detection Log</span><span id="logCount">0 entries</span></div>
-    <div class="log-list" id="logList">
-      <div class="empty-note">No detections logged yet.</div>
+  <div class="hero" id="heroPanel">
+    <div class="ring">
+      <svg width="56" height="56">
+        <circle cx="28" cy="28" r="24" stroke="var(--border)" stroke-width="4" fill="none"/>
+        <circle id="ringProgress" cx="28" cy="28" r="24" stroke="var(--teal)" stroke-width="4" fill="none"
+          stroke-dasharray="151" stroke-dashoffset="0" stroke-linecap="round"/>
+      </svg>
+      <span class="pct mono" id="ringPct">--</span>
+    </div>
+    <div class="hero-text">
+      <div class="headline" id="heroHeadline">Connecting to device...</div>
+      <div class="sub" id="heroSub">Waiting for first status update</div>
     </div>
   </div>
+
+  <div class="main-grid">
+    <div class="panel">
+      <div class="panel-label"><span>Live Capture</span><span>CAM 01</span></div>
+      <div class="viewfinder" id="viewfinder">
+        <img id="snapshotImg" src="" style="display:none;" alt="Latest snapshot">
+        <span class="placeholder" id="camPlaceholder">Awaiting first capture...</span>
+        <div class="corner tl"></div><div class="corner tr"></div>
+        <div class="corner bl"></div><div class="corner br"></div>
+        <div class="rec-tag"><span class="rec-dot"></span>REC</div>
+        <div class="timestamp-tag mono" id="camTimestamp" style="display:none;"></div>
+        <div class="expand-hint mono" id="expandHint" style="display:none;">tap to expand</div>
+      </div>
+      <div class="telemetry-row">
+        <div class="telemetry-item">
+          <div class="k">Motion</div>
+          <div class="v mono"><span class="mini-dot" id="dotPir"></span><span id="tPir">OFF</span></div>
+        </div>
+        <div class="telemetry-item">
+          <div class="k">Buzzer</div>
+          <div class="v mono"><span class="mini-dot" id="dotBuzzer"></span><span id="tBuzzer">OFF</span></div>
+        </div>
+        <div class="telemetry-item">
+          <div class="k">Last Event</div>
+          <div class="v mono" id="tLast" style="font-size:0.72rem;">--</div>
+        </div>
+      </div>
+      <div class="actions">
+        <button id="testBtn">Test buzzer</button>
+        <button class="danger" id="armBtn">Arm / Disarm</button>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-label"><span>Detection Log</span><span id="logCount">0 entries</span></div>
+      <div class="log-list" id="logList">
+        <div class="empty-note"><span class="icon">◎</span>No detections logged yet</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="stats-strip">
+    <div class="stat-box"><div class="num" id="statToday">0</div><div class="lbl">Today</div></div>
+    <div class="stat-box"><div class="num warn" id="statUnknown">0</div><div class="lbl">Unknown faces</div></div>
+    <div class="stat-box"><div class="num" id="statWeek">0</div><div class="lbl">This week</div></div>
+  </div>
+
+  <footer class="conn-note mono">security-system-18c37 · Realtime Database</footer>
 </div>
 
-<div class="stats-strip">
-  <div class="stat-box"><div class="num" id="statToday">0</div><div class="lbl">Today</div></div>
-  <div class="stat-box"><div class="num warn" id="statUnknown">0</div><div class="lbl">Unknown faces</div></div>
-  <div class="stat-box"><div class="num" id="statWeek">0</div><div class="lbl">This week</div></div>
+<div class="toast-container" id="toastContainer"></div>
+
+<div class="lightbox" id="lightbox">
+  <button class="lightbox-close" id="lightboxClose">&times;</button>
+  <img id="lightboxImg" src="" alt="Snapshot enlarged">
 </div>
 
+<!-- Firebase compat SDK (must load before firebase-config.js) -->
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+<script src="firebase-config.js"></script>
 
 <script>
-  // ---- Firebase config: match your project's SDK values ----
-  const firebaseConfig = {
-    apiKey: "YOUR_API_KEY",
-    authDomain: "your-project.firebaseapp.com",
-    databaseURL: "https://your-project-default-rtdb.firebaseio.com",
-    projectId: "your-project",
-    storageBucket: "your-project.appspot.com",
-  };
-  firebase.initializeApp(firebaseConfig);
-  const db = firebase.database();
+  const ringCircumference = 2 * Math.PI * 24;
 
-  // ---- Live clock ----
   function tickClock() {
     document.getElementById('clock').textContent = new Date().toLocaleTimeString();
   }
   setInterval(tickClock, 1000);
   tickClock();
 
-  // ---- Live status listener: /security/... ----
-  db.ref('/security').on('value', (snap) => {
-    const d = snap.val() || {};
-    const alertStrip = document.getElementById('alertStrip');
-    const armPill = document.getElementById('armPill');
+  function showToast(msg) {
+    const container = document.getElementById('toastContainer');
+    const toast = document.createElement('div');
+    toast.className = 'toast mono';
+    toast.textContent = msg;
+    container.appendChild(toast);
+    setTimeout(() => toast.remove(), 2500);
+  }
 
-    setTel('tPir', d.pir);
-    setTel('tBuzzer', d.buzzer);
-    document.getElementById('tLast').textContent = d.lastTrigger || '--';
+  function setRing(pct, danger) {
+    const ring = document.getElementById('ringProgress');
+    const offset = ringCircumference - (pct / 100) * ringCircumference;
+    ring.style.stroke = danger ? 'var(--amber)' : 'var(--teal)';
+    ring.style.strokeDashoffset = offset;
+    document.getElementById('ringPct').textContent = pct + '%';
+    document.getElementById('ringPct').style.color = danger ? 'var(--amber)' : 'var(--teal)';
+  }
 
-    if (d.pir) {
-      alertStrip.textContent = 'MOTION DETECTED — reviewing capture';
-      alertStrip.classList.add('active');
-      armPill.textContent = 'ALERT';
-      armPill.className = 'arm-pill mono alert';
+  let firstUpdateReceived = false;
+
+  db.ref('.info/connected').on('value', (snap) => {
+    const chip = document.getElementById('connChip');
+    if (snap.val() === true) {
+      chip.className = 'conn-chip online mono';
+      chip.innerHTML = '<span class="conn-dot"></span>live';
     } else {
-      alertStrip.textContent = 'SYSTEM NOMINAL — no motion detected';
-      alertStrip.classList.remove('active');
-      armPill.textContent = d.armed === false ? 'DISARMED' : 'ARMED';
-      armPill.className = 'arm-pill mono' + (d.armed === false ? ' disarmed' : '');
-    }
-
-    if (d.snapshotUrl) {
-      document.getElementById('snapshotImg').src = d.snapshotUrl;
-      document.getElementById('snapshotImg').style.display = 'block';
-      document.getElementById('camPlaceholder').style.display = 'none';
-      document.getElementById('camTimestamp').textContent = new Date().toLocaleTimeString();
+      chip.className = 'conn-chip offline mono';
+      chip.innerHTML = '<span class="conn-dot"></span>offline';
     }
   });
 
-  function setTel(id, value) {
-    const el = document.getElementById(id);
-    el.textContent = value ? 'ON' : 'OFF';
-    el.className = 'v mono ' + (value ? 'on' : 'off');
+  db.ref('/security').on('value', (snap) => {
+    const d = snap.val() || {};
+    firstUpdateReceived = true;
+
+    const heroPanel = document.getElementById('heroPanel');
+    const armPill = document.getElementById('armPill');
+
+    setTel('tPir', 'dotPir', d.pir);
+    setTel('tBuzzer', 'dotBuzzer', d.buzzer);
+    document.getElementById('tLast').textContent = d.lastTrigger || '--';
+
+    if (d.pir) {
+      document.getElementById('heroHeadline').textContent = 'Motion Detected';
+      document.getElementById('heroSub').textContent = 'Reviewing latest capture from Cam 01';
+      heroPanel.classList.add('alert');
+      armPill.textContent = 'ALERT';
+      armPill.className = 'arm-pill mono alert';
+      setRing(100, true);
+    } else {
+      document.getElementById('heroHeadline').textContent = 'System Nominal';
+      document.getElementById('heroSub').textContent = d.armed === false ? 'Monitoring paused — system disarmed' : 'All sensors reporting normally';
+      heroPanel.classList.remove('alert');
+      armPill.textContent = d.armed === false ? 'DISARMED' : 'ARMED';
+      armPill.className = 'arm-pill mono' + (d.armed === false ? ' disarmed' : '');
+      setRing(d.armed === false ? 20 : 100, false);
+    }
+
+    if (d.snapshotUrl) {
+      const img = document.getElementById('snapshotImg');
+      img.src = d.snapshotUrl;
+      img.style.display = 'block';
+      document.getElementById('camPlaceholder').style.display = 'none';
+      document.getElementById('camTimestamp').style.display = 'block';
+      document.getElementById('camTimestamp').textContent = new Date().toLocaleTimeString();
+      document.getElementById('expandHint').style.display = 'block';
+    }
+  });
+
+  function setTel(textId, dotId, value) {
+    document.getElementById(textId).textContent = value ? 'ON' : 'OFF';
+    document.getElementById(dotId).className = 'mini-dot' + (value ? ' on' : '');
   }
 
-  // ---- Detection log: /events/... ----
   db.ref('/events').limitToLast(30).on('value', (snap) => {
     const events = snap.val() || {};
     const ids = Object.keys(events).sort((a, b) => (events[b].timestamp || 0) - (events[a].timestamp || 0));
@@ -390,7 +381,7 @@
     document.getElementById('logCount').textContent = ids.length + ' entries';
 
     if (ids.length === 0) {
-      logList.innerHTML = '<div class="empty-note">No detections logged yet.</div>';
+      logList.innerHTML = '<div class="empty-note"><span class="icon">◎</span>No detections logged yet</div>';
     } else {
       logList.innerHTML = '';
       ids.forEach(id => {
@@ -409,30 +400,10 @@
       });
     }
 
-    // Stats
     const todayStart = new Date().setHours(0,0,0,0);
     const weekStart = todayStart - 6 * 86400000;
     let today = 0, week = 0, unknown = 0;
     Object.values(events).forEach(ev => {
       const t = ev.timestamp || 0;
       if (t >= todayStart) today++;
-      if (t >= weekStart) week++;
-      if (ev.status !== 'recognized' && t >= todayStart) unknown++;
-    });
-    document.getElementById('statToday').textContent = today;
-    document.getElementById('statWeek').textContent = week;
-    document.getElementById('statUnknown').textContent = unknown;
-  });
-
-  // ---- Actions ----
-  document.getElementById('testBtn').addEventListener('click', () => {
-    db.ref('/security/command').set({ action: 'test_buzzer', ts: Date.now() });
-  });
-  document.getElementById('armBtn').addEventListener('click', () => {
-    db.ref('/security/armed').once('value', (snap) => {
-      db.ref('/security/armed').set(!snap.val());
-    });
-  });
-</script>
-</body>
-</html>
+      i
