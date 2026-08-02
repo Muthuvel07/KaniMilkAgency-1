@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pending Review — Mini Campus Security</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0b1f4d; --bg: #f4f6fb; --card: #ffffff; --border: #e3e8f0;
+    --text: #1a2233; --text-muted: #6b7688; --green: #16a34a; --red: #dc2626;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); padding: 18px; }
+  .wrap { max-width: 640px; margin: 0 auto; }
+  h1 { font-size: 1.25rem; color: var(--navy); margin-bottom: 4px; }
+  .sub { font-size: 0.82rem; color: var(--text-muted); margin-bottom: 18px; }
+
+  .card {
+    background: var(--card); border: 1px solid var(--border); border-radius: 12px;
+    padding: 14px; margin-bottom: 14px; display: flex; gap: 14px; align-items: center;
+  }
+  .card img { width: 90px; height: 90px; border-radius: 8px; object-fit: cover; background: #eee; flex-shrink: 0; }
+  .card .info { flex: 1; }
+  .card .time { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 8px; }
+  .card .name-input {
+    width: 100%; padding: 7px 10px; border-radius: 6px; border: 1px solid var(--border);
+    font-size: 0.82rem; margin-bottom: 8px;
+  }
+  .btn-row { display: flex; gap: 8px; }
+  .btn { flex: 1; padding: 8px; border-radius: 6px; border: none; font-size: 0.8rem; font-weight: 600; cursor: pointer; }
+  .btn.approve { background: #dcfce7; color: var(--green); }
+  .btn.reject { background: #fee2e2; color: var(--red); }
+  .empty-note { color: var(--text-muted); text-align: center; padding: 40px 0; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Pending Review</h1>
+  <p class="sub">Manually confirm each capture — no Raspberry Pi or auto face-matching involved</p>
+  <div id="pendingList"><div class="empty-note">Loading...</div></div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+<script src="firebase-config.js"></script>
+
+<script>
+  db.ref('/pending_review').on('value', (snap) => {
+    const data = snap.val() || {};
+    const list = document.getElementById('pendingList');
+    const ids = Object.keys(data).sort((a, b) => b - a);
+
+    if (ids.length === 0) {
+      list.innerHTML = '<div class="empty-note">No pending captures right now.</div>';
+      return;
+    }
+
+    list.innerHTML = ids.map(id => {
+      const item = data[id];
+      const imgSrc = item.image ? 'data:image/jpeg;base64,' + item.image : '';
+      const time = item.timestamp ? new Date(item.timestamp).toLocaleTimeString() : '--';
+      return `
+        <div class="card">
+          <img src="${imgSrc}" alt="capture">
+          <div class="info">
+            <div class="time">Captured at ${time}</div>
+            <input type="text" class="name-input" id="name-${id}" placeholder="Name if authorized...">
+            <div class="btn-row">
+              <button class="btn approve" onclick="approve('${id}')">Authorize</button>
+              <button class="btn reject" onclick="reject('${id}')">Reject</button>
+            </div>
+          </div>
+        </div>
+      `;
+    }).join('');
+  });
+
+  function approve(id) {
+    const name = document.getElementById('name-' + id).value.trim() || 'Unknown';
+    const now = new Date();
+
+    db.ref('/Attendance').push({
+      id: id,
+      name: name,
+      time: now.toLocaleTimeString(),
+      date: now.toLocaleDateString(),
+      status: 'Authorized'
+    });
+
+    db.ref('/pending_review/' + id).remove();
+  }
+
+  function reject(id) {
+    const now = new Date();
+
+    db.ref('/pending_review/' + id).once('value', (snap) => {
+      const item = snap.val();
+      db.ref('/Unauthorized').push({
+        name: 'Unknown',
+        time: now.toLocaleTimeString(),
+        date: now.toLocaleDateString(),
+        imageBase64: item.image || ''
+      });
+      db.ref('/pending_review/' + id).remove();
+    });
+  }
+</script>
+</body>
+</html>
