@@ -91,15 +91,37 @@
     const file = fileInput.files[0];
     if (!file) return;
 
+    statusMsg.className = 'status working';
+    statusMsg.textContent = 'Processing photo...';
+
     const reader = new FileReader();
     reader.onload = (e) => {
-      const fullDataUrl = e.target.result;               // e.g. "data:image/jpeg;base64,AAAA..."
-      base64Data = fullDataUrl.split(',')[1];             // strip the prefix, keep only the Base64 text
+      const img = new Image();
+      img.onload = () => {
+        // Resize down to max 400px wide — keeps Base64 small and upload fast,
+        // matching the small frame size the ESP32-CAM will use (QVGA).
+        const maxWidth = 400;
+        const scale = Math.min(1, maxWidth / img.width);
+        const canvas = document.createElement('canvas');
+        canvas.width = img.width * scale;
+        canvas.height = img.height * scale;
 
-      previewImg.src = fullDataUrl;
-      previewImg.style.display = 'block';
-      uploadBtn.disabled = false;
-      statusMsg.textContent = '';
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+        // Compress as JPEG at 70% quality — keeps file size small
+        const resizedDataUrl = canvas.toDataURL('image/jpeg', 0.7);
+        base64Data = resizedDataUrl.split(',')[1];
+
+        previewImg.src = resizedDataUrl;
+        previewImg.style.display = 'block';
+        uploadBtn.disabled = false;
+
+        const sizeKB = Math.round((base64Data.length * 0.75) / 1024);
+        statusMsg.className = 'status';
+        statusMsg.textContent = `Ready — resized to ${canvas.width}x${canvas.height}, ~${sizeKB} KB`;
+      };
+      img.src = e.target.result;
     };
     reader.readAsDataURL(file);
   });
@@ -113,15 +135,23 @@
 
     const path = '/pending_review/' + Date.now();
 
+    const timeoutId = setTimeout(() => {
+      statusMsg.className = 'status error';
+      statusMsg.textContent = 'Timed out after 15s — check your internet or Firebase rules.';
+      uploadBtn.disabled = false;
+    }, 15000);
+
     db.ref(path).set({
       image: base64Data,
       timestamp: Date.now(),
       status: 'pending'
     }).then(() => {
+      clearTimeout(timeoutId);
       statusMsg.className = 'status success';
       statusMsg.textContent = 'Uploaded! Check pending-review.html now.';
       uploadBtn.disabled = false;
     }).catch((err) => {
+      clearTimeout(timeoutId);
       statusMsg.className = 'status error';
       statusMsg.textContent = 'Failed: ' + err.message;
       uploadBtn.disabled = false;
