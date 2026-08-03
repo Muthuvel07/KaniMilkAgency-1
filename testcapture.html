@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Test Capture — Simulates ESP32-CAM</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0b1f4d; --bg: #f4f6fb; --card: #ffffff; --border: #e3e8f0;
+    --text: #1a2233; --text-muted: #6b7688; --green: #16a34a; --red: #dc2626;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); padding: 20px; }
+  .wrap { max-width: 420px; margin: 0 auto; }
+  h1 { font-size: 1.2rem; color: var(--navy); margin-bottom: 4px; }
+  .sub { font-size: 0.82rem; color: var(--text-muted); margin-bottom: 18px; }
+
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 18px; }
+
+  .capture-zone {
+    border: 2px dashed var(--border); border-radius: 10px; padding: 30px 16px;
+    text-align: center; cursor: pointer; margin-bottom: 14px;
+  }
+  .capture-zone input { display: none; }
+  .capture-zone .icon { font-size: 2rem; margin-bottom: 8px; }
+  .capture-zone p { font-size: 0.85rem; color: var(--text-muted); }
+
+  .preview { width: 100%; border-radius: 10px; margin-bottom: 14px; display: none; }
+
+  button {
+    width: 100%; padding: 12px; border-radius: 8px; border: none;
+    font-weight: 600; font-size: 0.9rem; cursor: pointer;
+  }
+  #uploadBtn { background: var(--navy); color: #fff; margin-bottom: 10px; }
+  #uploadBtn:disabled { opacity: 0.5; }
+
+  .status { text-align: center; font-size: 0.85rem; margin-top: 10px; }
+  .status.success { color: var(--green); }
+  .status.error { color: var(--red); }
+  .status.working { color: var(--text-muted); }
+
+  .info-box {
+    background: #eff6ff; border: 1px solid #93c5fd; border-radius: 8px;
+    padding: 10px 12px; font-size: 0.78rem; color: #1e40af; margin-top: 16px;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Test Capture Tool</h1>
+  <p class="sub">Simulates what your ESP32-CAM will do — takes a photo, converts it, sends it to Firebase</p>
+
+  <div class="card">
+    <div class="capture-zone" id="captureZone">
+      <div class="icon">📷</div>
+      <p>Tap to take a photo</p>
+      <input type="file" id="fileInput" accept="image/*" capture="environment">
+    </div>
+
+    <img id="previewImg" class="preview" alt="preview">
+
+    <button id="uploadBtn" disabled>Send to Firebase (pending_review)</button>
+    <div class="status" id="statusMsg"></div>
+  </div>
+
+  <div class="info-box">
+    This writes directly to <strong>/pending_review/</strong> in Firebase — exactly where your real
+    ESP32-CAM will write to. Once uploaded, open <strong>pending-review.html</strong> to see it appear
+    and practice the Authorize/Reject flow.
+  </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+<script src="firebase-config.js"></script>
+
+<script>
+  const captureZone = document.getElementById('captureZone');
+  const fileInput = document.getElementById('fileInput');
+  const previewImg = document.getElementById('previewImg');
+  const uploadBtn = document.getElementById('uploadBtn');
+  const statusMsg = document.getElementById('statusMsg');
+
+  let base64Data = null;
+
+  captureZone.addEventListener('click', () => fileInput.click());
+
+  fileInput.addEventListener('change', () => {
+    const file = fileInput.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const fullDataUrl = e.target.result;               // e.g. "data:image/jpeg;base64,AAAA..."
+      base64Data = fullDataUrl.split(',')[1];             // strip the prefix, keep only the Base64 text
+
+      previewImg.src = fullDataUrl;
+      previewImg.style.display = 'block';
+      uploadBtn.disabled = false;
+      statusMsg.textContent = '';
+    };
+    reader.readAsDataURL(file);
+  });
+
+  uploadBtn.addEventListener('click', () => {
+    if (!base64Data) return;
+
+    uploadBtn.disabled = true;
+    statusMsg.className = 'status working';
+    statusMsg.textContent = 'Uploading...';
+
+    const path = '/pending_review/' + Date.now();
+
+    db.ref(path).set({
+      image: base64Data,
+      timestamp: Date.now(),
+      status: 'pending'
+    }).then(() => {
+      statusMsg.className = 'status success';
+      statusMsg.textContent = 'Uploaded! Check pending-review.html now.';
+      uploadBtn.disabled = false;
+    }).catch((err) => {
+      statusMsg.className = 'status error';
+      statusMsg.textContent = 'Failed: ' + err.message;
+      uploadBtn.disabled = false;
+    });
+  });
+</script>
+</body>
+  </html>
+  
