@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Aetherport: Sky-Isle Merchant Guild</title>
+  <style>
+    :root {
+      --brass: #d4a373;
+      --copper: #b87333;
+      --dark-sky: #131b2e;
+      --panel-bg: #1c2541;
+      --text: #fefae0;
+      --accent: #00f0ff;
+      --danger: #ff4757;
+      --success: #2ed573;
+    }
+
+    * {
+      box-sizing: border-box;
+      user-select: none;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      margin: 0;
+      padding: 20px;
+      background: linear-gradient(135deg, #0b132b, #1c2541);
+      color: var(--text);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    h1 {
+      margin: 0 0 10px 0;
+      color: var(--brass);
+      text-shadow: 0 0 10px rgba(212, 163, 115, 0.4);
+      font-size: 1.8rem;
+    }
+
+    .dashboard {
+      display: flex;
+      gap: 20px;
+      width: 100%;
+      max-width: 950px;
+      background: rgba(28, 37, 65, 0.8);
+      border: 2px solid var(--copper);
+      border-radius: 8px;
+      padding: 15px;
+      margin-bottom: 15px;
+      justify-content: space-around;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+    }
+
+    .stat-item {
+      text-align: center;
+    }
+
+    .stat-label {
+      font-size: 0.8rem;
+      color: #8da9c4;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .stat-value {
+      font-size: 1.3rem;
+      font-weight: bold;
+      color: var(--accent);
+      margin-top: 4px;
+    }
+
+    .main-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 15px;
+      width: 100%;
+      max-width: 950px;
+    }
+
+    .panel {
+      background: rgba(28, 37, 65, 0.9);
+      border: 1px solid #3a506b;
+      border-radius: 8px;
+      padding: 15px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    }
+
+    .panel-title {
+      font-size: 1.1rem;
+      font-weight: bold;
+      border-bottom: 1px solid var(--copper);
+      padding-bottom: 5px;
+      margin-bottom: 12px;
+      color: var(--brass);
+      display: flex;
+      justify-content: space-between;
+    }
+
+    /* Island Selection */
+    .islands-container {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+
+    .island-btn {
+      flex: 1;
+      padding: 10px;
+      background: #0b132b;
+      border: 1px solid #3a506b;
+      color: var(--text);
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-align: center;
+    }
+
+    .island-btn:hover {
+      border-color: var(--brass);
+    }
+
+    .island-btn.active {
+      background: var(--copper);
+      border-color: var(--brass);
+      color: #000;
+      font-weight: bold;
+    }
+
+    /* Market Tables */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 5px;
+    }
+
+    th, td {
+      padding: 8px;
+      text-align: left;
+      font-size: 0.9rem;
+    }
+
+    th {
+      color: #8da9c4;
+      font-weight: normal;
+      border-bottom: 1px solid #3a506b;
+    }
+
+    td button {
+      background: #3a506b;
+      color: white;
+      border: none;
+      padding: 4px 8px;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-right: 4px;
+      font-size: 0.8rem;
+    }
+
+    td button:hover {
+      background: var(--brass);
+      color: black;
+    }
+
+    /* Side Panel Components */
+    .task-card, .upgrade-card {
+      background: #0b132b;
+      border: 1px solid #3a506b;
+      border-radius: 6px;
+      padding: 10px;
+      margin-bottom: 10px;
+    }
+
+    .task-title {
+      font-weight: bold;
+      color: var(--accent);
+      font-size: 0.95rem;
+    }
+
+    .task-desc {
+      font-size: 0.8rem;
+      color: #cbd5e1;
+      margin: 4px 0 8px 0;
+    }
+
+    .action-btn {
+      width: 100%;
+      padding: 8px;
+      background: var(--brass);
+      color: black;
+      font-weight: bold;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .action-btn:hover {
+      background: #fefae0;
+    }
+
+    .log-box {
+      grid-column: span 2;
+      background: #070d1e;
+      border: 1px solid #3a506b;
+      border-radius: 6px;
+      padding: 10px;
+      height: 110px;
+      overflow-y: auto;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 0.85rem;
+    }
+
+    .log-entry {
+      margin-bottom: 4px;
+    }
+
+    .log-entry.success { color: var(--success); }
+    .log-entry.danger { color: var(--danger); }
+    .log-entry.info { color: var(--accent); }
+  </style>
+</head>
+<body>
+
+  <h1>⚡ Aetherport: Sky-Isle Merchant Guild ⚡</h1>
+
+  <div class="dashboard">
+    <div class="stat-item">
+      <div class="stat-label">Aether Guilders</div>
+      <div class="stat-value" id="cash-val">500 ₳</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-label">Airship Fleet Hull</div>
+      <div class="stat-value" id="hull-val">100%</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-label">Cargo Capacity</div>
+      <div class="stat-value" id="cargo-val">0 / 20</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-label">Current Port</div>
+      <div class="stat-value" id="port-val" style="color:var(--brass)">High Spire</div>
+    </div>
+  </div>
+
+  <div class="main-grid">
+    <div class="panel">
+      <div class="panel-title">
+        <span>Sky-Chart Navigation</span>
+        <span style="font-size:0.8rem; font-weight:normal; color:#8da9c4;">Fuel Cost: 10 ₳/jump</span>
+      </div>
+      
+      <div class="islands-container" id="island-buttons"></div>
+
+      <div class="panel-title">Local Commodities Exchange</div>
+      <table>
+        <thead>
+          <tr>
+            <th>Commodity</th>
+            <th>Market Price</th>
+            <th>In Cargo</th>
+            <th>Trade Actions</th>
+          </tr>
+        </thead>
+        <tbody id="market-body"></tbody>
+      </table>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title">Guild Tasks & Contracts</div>
+      <div id="quest-container"></div>
+
+      <div class="panel-title" style="margin-top: 15px;">Fleet Upgrades</div>
+      <div id="upgrade-container"></div>
+    </div>
+
+    <div class="log-box" id="activity-log"></div>
+  </div>
+
+  <script>
+    // Game State
+    const state = {
+      cash: 500,
+      hull: 100,
+      cargoCapacity: 20,
+      currentLocation: 0,
+      cargo: { silk: 0, aether: 0, stormWater: 0 },
+      cargoLimits: { silk: 1, aether: 2, stormWater: 1 } // Unit sizes
+    };
+
+    const islands = [
+      { id: 0, name: "High Spire", desc: "Capital of commerce", prices: { silk: 25, aether: 90, stormWater: 40 } },
+      { id: 1, name: "Cloud Garden", desc: "Agricultural paradise", prices: { silk: 12, aether: 110, stormWater: 20 } },
+      { id: 2, name: "Smelter Haven", desc: "Industrial foundry", prices: { silk: 40, aether: 65, stormWater: 55 } }
+    ];
+
+    const commodities = [
+      { id: "silk", name: "Cloud-Silk", size: 1 },
+      { id: "aether", name: "Aether Crystal", size: 2 },
+      { id: "stormWater", name: "Charged Storm-Water", size: 1 }
+    ];
+
+    const tasks = [
+      {
+        id: "expedition",
+        name: "Eye of the Storm",
+        desc: "Brave the vortex to gather raw lightning.",
+        risk: 0.3,
+        reward: 400,
+        hullDmg: 25
+      },
+      {
+        id: "corsair",
+        name: "Pirate Safe Passage",
+        desc: "Bribe corsairs to secure regional shipping routes.",
+        cost: 150,
+        rewardCash: 350
+      }
+    ];
+
+    const upgrades = [
+      { id: "hold", name: "Expanded Cargo Hold", cost: 300, purchased: false, effect: () => { state.cargoCapacity += 15; } },
+      { id: "hull", name: "Reinforced Brass Armor", cost: 250, purchased: false, effect: () => { state.hull = Math.min(100, state.hull + 40); } }
+    ];
+
+    function log(msg, type = "info") {
+      const logBox = document.getElementById("activity-log");
+      const entry = document.createElement("div");
+      entry.className = `log-entry ${type}`;
+      entry.innerText = `[${new Date().toLocaleTimeString()}] ${msg}`;
+      logBox.prepend(entry);
+    }
+
+    function getCurrentUsedCargo() {
+      return (state.cargo.silk * state.cargoLimits.silk) +
+             (state.cargo.aether * state.cargoLimits.aether) +
+             (state.cargo.stormWater * state.cargoLimits.stormWater);
+    }
+
+    function updateUI() {
+      // Top stats
+      document.getElementById("cash-val").innerText = `${state.cash} ₳`;
+      document.getElementById("hull-val").innerText = `${state.hull}%`;
+      document.getElementById("cargo-val").innerText = `${getCurrentUsedCargo()} / ${state.cargoCapacity}`;
+      document.getElementById("port-val").innerText = islands[state.currentLocation].name;
+
+      // Render Islands Navigation
+      const islandBtns = document.getElementById("island-buttons");
+      islandBtns.innerHTML = "";
+      islands.forEach((island, idx) => {
+        const btn = document.createElement("button");
+        btn.className = `island-btn ${state.currentLocation === idx ? "active" : ""}`;
+        btn.innerHTML = `<strong>${island.name}</strong><br><small>${island.desc}</small>`;
+        btn.onclick = () => travelTo(idx);
+        islandBtns.appendChild(btn);
+      });
+
+      // Render Market
+      const marketBody = document.getElementById("market-body");
+      marketBody.innerHTML = "";
+      const currentIsland = islands[state.currentLocation];
+
+      commodities.forEach(item => {
+        const price = currentIsland.prices[item.id];
+        const count = state.cargo[item.id];
+        const row = document.createElement("tr");
+
+        row.innerHTML = `
+          <td><strong>${item.name}</strong> <small>(${item.size} Cap)</small></td>
+          <td>${price} ₳</td>
+          <td>${count}</td>
+          <td>
+            <button onclick="buyItem('${item.id}', ${price}, ${item.size})">Buy</button>
+            <button onclick="sellItem('${item.id}', ${price})">Sell</button>
+          </td>
+        `;
+        marketBody.appendChild(row);
+      });
+
+      // Render Upgrades
+      const upgContainer = document.getElementById("upgrade-container");
+      upgContainer.innerHTML = "";
+      upgrades.forEach(upg => {
+        if (!upg.purchased) {
+          const div = document.createElement("div");
+          div.className = "upgrade-card";
+          div.innerHTML = `
+            <div style="font-size:0.9rem; font-weight:bold;">${upg.name}</div>
+            <div style="font-size:0.8rem; color:#8da9c4; margin-bottom:5px;">Cost: ${upg.cost} ₳</div>
+            <button class="action-btn" onclick="buyUpgrade('${upg.id}')">Purchase</button>
+          `;
+          upgContainer.appendChild(div);
+        }
+      });
+
+      // Render Quests
+      const qContainer = document.getElementById("quest-container");
+      qContainer.innerHTML = "";
+      tasks.forEach(task => {
+        const div = document.createElement("div");
+        div.className = "task-card";
+        div.innerHTML = `
+          <div class="task-title">${task.name}</div>
+          <div class="task-desc">${task.desc}</div>
+          <button class="action-btn" onclick="runTask('${task.id}')">Launch Operation</button>
+        `;
+        qContainer.appendChild(div);
+      });
+    }
+
+    window.travelTo = function(targetIndex) {
+      if (state.currentLocation === targetIndex) return;
+      if (state.cash < 10) {
+        log("Not enough Aether Guilders for fuel!", "danger");
+        return;
+      }
+      state.cash -= 10;
+      state.currentLocation = targetIndex;
+      log(`Steering airship to ${islands[targetIndex].name}. Traversed the cloud lanes.`, "info");
+      
+      // Random price fluctuation on travel
+      islands.forEach(isl => {
+        Object.keys(isl.prices).forEach(key => {
+          const delta = Math.floor((Math.random() * 11) - 5);
+          isl.prices[key] = Math.max(10, isl.prices[key] + delta);
+        });
+      });
+
+      updateUI();
+    };
+
+    window.buyItem = function(id, price, size) {
+      if (state.cash < price) {
+        log("Insufficient funds to buy commodity.", "danger");
+        return;
+      }
+      if (getCurrentUsedCargo() + size > state.cargoCapacity) {
+        log("Cargo hold is full! Upgrade your capacity or sell cargo.", "danger");
+        return;
+      }
+      state.cash -= price;
+      state.cargo[id]++;
+      log(`Purchased 1x ${id} for ${price} ₳.`, "success");
+      updateUI();
+    };
+
+    window.sellItem = function(id, price) {
+      if (state.cargo[id] <= 0) {
+        log(`No cargo of this type to sell!`, "danger");
+        return;
+      }
+      state.cargo[id]--;
+      state.cash += price;
+      log(`Sold 1x ${id} for ${price} ₳.`, "success");
+      updateUI();
+    };
+
+    window.buyUpgrade = function(id) {
+      const upg = upgrades.find(u => u.id === id);
+      if (upg && state.cash >= upg.cost) {
+        state.cash -= upg.cost;
+        upg.purchased = true;
+        upg.effect();
+        log(`Equipped upgrade: ${upg.name}!`, "success");
+        updateUI();
+      } else {
+        log("Cannot afford this fleet upgrade.", "danger");
+      }
+    };
+
+    window.runTask = function(id) {
+      const task = tasks.find(t => t.id === id);
+      if (id === "expedition") {
+        if (state.hull <= 30) {
+          log("Hull integrity critical! Repair before attempting storm expeditions.", "danger");
+          return;
+        }
+        if (Math.random() < task.risk) {
+          state.hull = Math.max(0, state.hull - task.hullDmg);
+          log(`Storm winds struck your ship! Lost ${task.hullDmg}% hull integrity.`, "danger");
+        } else {
+          state.cash += task.reward;
+          log(`Expedition success! Extracted charged aether worth ${task.reward} ₳.`, "success");
+        }
+      } else if (id === "corsair") {
+        if (state.cash < task.cost) {
+          log("Not enough funds to negotiate passage.", "danger");
+          return;
+        }
+        state.cash = state.cash - task.cost + task.rewardCash;
+        log(`Bribed Corsair captains. Recovered trade routes nets +${task.rewardCash - task.cost} ₳ net profit.`, "success");
+      }
+      updateUI();
+    };
+
+    // Initialize Game
+    log("Airship docked at High Spire. Engine warm, ready for trade.", "info");
+    updateUI();
+  </script>
+</body>
+</html>
