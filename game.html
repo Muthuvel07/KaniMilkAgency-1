@@ -2,502 +2,690 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Aetherport: Sky-Isle Merchant Guild</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Business Empire: Grand Fleet & World Conglomerate</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
-      --brass: #d4a373;
-      --copper: #b87333;
-      --dark-sky: #131b2e;
-      --panel-bg: #1c2541;
-      --text: #fefae0;
-      --accent: #00f0ff;
-      --danger: #ff4757;
-      --success: #2ed573;
+      --bg: #030712;
+      --surface-1: rgba(17, 24, 39, 0.88);
+      --surface-2: rgba(31, 41, 55, 0.95);
+      --border: rgba(255, 255, 255, 0.08);
+      --border-glow: rgba(245, 158, 11, 0.45);
+      --gold: #f59e0b;
+      --gold-gradient: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+      --emerald: #10b981;
+      --purple: #a855f7;
+      --pink: #ec4899;
+      --rose: #ef4444;
+      --text-main: #f9fafb;
+      --text-muted: #9ca3af;
+      --text-light: #e5e7eb;
     }
 
     * {
       box-sizing: border-box;
-      user-select: none;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+      font-family: 'Plus Jakarta Sans', sans-serif;
     }
 
     body {
-      margin: 0;
-      padding: 20px;
-      background: linear-gradient(135deg, #0b132b, #1c2541);
-      color: var(--text);
+      background-color: var(--bg);
+      background-image: 
+        radial-gradient(at 0% 0%, rgba(245, 158, 11, 0.12) 0px, transparent 45%),
+        radial-gradient(at 100% 100%, rgba(236, 72, 153, 0.1) 0px, transparent 45%),
+        radial-gradient(at 50% 50%, rgba(16, 185, 129, 0.05) 0px, transparent 65%);
+      color: var(--text-main);
+      display: flex;
+      justify-content: center;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    .app-frame {
+      width: 100%;
+      max-width: 480px;
+      min-height: 100vh;
+      background: rgba(8, 12, 22, 0.96);
+      backdrop-filter: blur(30px);
+      border-left: 1px solid var(--border);
+      border-right: 1px solid var(--border);
       display: flex;
       flex-direction: column;
-      align-items: center;
-      min-height: 100vh;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 0 60px rgba(0,0,0,0.9);
     }
 
-    h1 {
-      margin: 0 0 10px 0;
-      color: var(--brass);
-      text-shadow: 0 0 10px rgba(212, 163, 115, 0.4);
-      font-size: 1.8rem;
-    }
-
-    .dashboard {
+    /* Toast */
+    .toast {
+      position: fixed;
+      top: 18px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-120px);
+      background: linear-gradient(135deg, rgba(31, 41, 55, 0.98), rgba(17, 24, 39, 0.98));
+      border: 1px solid var(--gold);
+      padding: 10px 20px;
+      border-radius: 30px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--gold);
+      box-shadow: 0 10px 30px rgba(245, 158, 11, 0.3);
+      z-index: 100;
+      transition: transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
       display: flex;
-      gap: 20px;
+      align-items: center;
+      gap: 8px;
+      pointer-events: none;
+    }
+    .toast.show { transform: translateX(-50%) translateY(0); }
+
+    /* Modal Viewer */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(10px);
+      z-index: 200;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal-overlay.active { display: flex; }
+
+    .modal-card {
+      background: var(--surface-2);
+      border: 1px solid var(--border-glow);
+      border-radius: 20px;
       width: 100%;
-      max-width: 950px;
-      background: rgba(28, 37, 65, 0.8);
-      border: 2px solid var(--copper);
+      max-width: 400px;
+      overflow: hidden;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8);
+    }
+
+    .modal-img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      background: #0f172a;
+    }
+
+    .modal-body { padding: 18px; }
+    .modal-title { font-size: 1.1rem; font-weight: 800; color: #fff; margin-bottom: 4px; }
+    .modal-desc { font-size: 0.8rem; color: var(--text-muted); line-height: 1.4; margin-bottom: 14px; }
+
+    .modal-specs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .spec-box {
+      background: rgba(0, 0, 0, 0.3);
+      padding: 8px 12px;
       border-radius: 8px;
-      padding: 15px;
-      margin-bottom: 15px;
-      justify-content: space-around;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+      border: 1px solid var(--border);
     }
 
-    .stat-item {
-      text-align: center;
-    }
+    .spec-label { font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase; }
+    .spec-value { font-size: 0.85rem; font-weight: 700; color: var(--gold); }
 
-    .stat-label {
+    .btn-close {
+      width: 100%;
+      padding: 10px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: #fff;
+      font-weight: 700;
       font-size: 0.8rem;
-      color: #8da9c4;
-      text-transform: uppercase;
-      letter-spacing: 1px;
+      cursor: pointer;
     }
 
-    .stat-value {
-      font-size: 1.3rem;
-      font-weight: bold;
-      color: var(--accent);
+    /* Header */
+    .header {
+      padding: 16px 20px 12px;
+      background: linear-gradient(180deg, rgba(17, 24, 39, 0.98) 0%, rgba(8, 12, 22, 0.92) 100%);
+      border-bottom: 1px solid var(--border);
+      text-align: center;
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      backdrop-filter: blur(20px);
+    }
+
+    .level-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(245, 158, 11, 0.15);
+      border: 1px solid rgba(245, 158, 11, 0.4);
+      padding: 4px 14px;
+      border-radius: 20px;
+      font-size: 0.7rem;
+      font-weight: 800;
+      color: var(--gold);
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    .networth-title {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      font-weight: 600;
+    }
+
+    .balance-value {
+      font-size: 2.1rem;
+      font-weight: 800;
+      color: var(--text-main);
+      margin: 2px 0 4px;
+      background: linear-gradient(180deg, #ffffff 40%, #e2e8f0 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: -0.5px;
+    }
+
+    .status-row {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
       margin-top: 4px;
     }
 
-    .main-grid {
-      display: grid;
-      grid-template-columns: 2fr 1fr;
-      gap: 15px;
-      width: 100%;
-      max-width: 950px;
+    .income-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--emerald);
+      background: rgba(16, 185, 129, 0.12);
+      padding: 3px 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(16, 185, 129, 0.25);
     }
 
-    .panel {
-      background: rgba(28, 37, 65, 0.9);
-      border: 1px solid #3a506b;
-      border-radius: 8px;
-      padding: 15px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    .buff-pill {
+      display: none;
+      align-items: center;
+      gap: 4px;
+      font-size: 0.76rem;
+      font-weight: 700;
+      color: var(--pink);
+      background: rgba(236, 72, 153, 0.15);
+      padding: 3px 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(236, 72, 153, 0.4);
     }
 
-    .panel-title {
-      font-size: 1.1rem;
-      font-weight: bold;
-      border-bottom: 1px solid var(--copper);
-      padding-bottom: 5px;
-      margin-bottom: 12px;
-      color: var(--brass);
+    /* Content Area */
+    .content-area {
+      flex: 1;
+      padding: 16px;
+      overflow-y: auto;
+      padding-bottom: 100px;
+    }
+
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    /* Tap Zone */
+    .tap-zone {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 14px 0 10px;
+      position: relative;
+    }
+
+    .tap-orb {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background: linear-gradient(145deg, #1e293b, #0f172a);
+      border: 2px solid rgba(245, 158, 11, 0.5);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 12px 35px rgba(0,0,0,0.7), inset 0 0 25px rgba(245, 158, 11, 0.2);
+      position: relative;
+      touch-action: manipulation;
+    }
+
+    .tap-orb:active { transform: scale(0.92); }
+    .tap-orb-icon { font-size: 2rem; margin-bottom: 2px; }
+    .tap-orb-text { font-size: 0.85rem; font-weight: 800; color: var(--gold); }
+
+    .click-particle {
+      position: absolute;
+      color: var(--gold);
+      font-weight: 800;
+      font-size: 1.2rem;
+      pointer-events: none;
+      animation: floatUpParticle 0.75s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
+      z-index: 100;
+      text-shadow: 0 0 12px rgba(245, 158, 11, 0.7);
+    }
+
+    @keyframes floatUpParticle {
+      0% { opacity: 1; transform: translate(0, 0) scale(1); }
+      100% { opacity: 0; transform: translate(var(--dx), -70px) scale(1.3); }
+    }
+
+    /* Folders */
+    .folder-card {
+      background: var(--surface-1);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      margin-bottom: 10px;
+      overflow: hidden;
+    }
+
+    .folder-header {
+      padding: 13px 15px;
       display: flex;
       justify-content: space-between;
-    }
-
-    /* Island Selection */
-    .islands-container {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 15px;
-    }
-
-    .island-btn {
-      flex: 1;
-      padding: 10px;
-      background: #0b132b;
-      border: 1px solid #3a506b;
-      color: var(--text);
-      border-radius: 6px;
+      align-items: center;
       cursor: pointer;
-      transition: all 0.2s ease;
-      text-align: center;
+      background: rgba(255,255,255,0.02);
+      user-select: none;
     }
 
-    .island-btn:hover {
-      border-color: var(--brass);
-    }
+    .folder-header:hover { background: rgba(255,255,255,0.05); }
 
-    .island-btn.active {
-      background: var(--copper);
-      border-color: var(--brass);
-      color: #000;
-      font-weight: bold;
-    }
-
-    /* Market Tables */
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 5px;
-    }
-
-    th, td {
-      padding: 8px;
-      text-align: left;
-      font-size: 0.9rem;
-    }
-
-    th {
-      color: #8da9c4;
-      font-weight: normal;
-      border-bottom: 1px solid #3a506b;
-    }
-
-    td button {
-      background: #3a506b;
-      color: white;
-      border: none;
-      padding: 4px 8px;
-      border-radius: 4px;
-      cursor: pointer;
-      margin-right: 4px;
-      font-size: 0.8rem;
-    }
-
-    td button:hover {
-      background: var(--brass);
-      color: black;
-    }
-
-    /* Side Panel Components */
-    .task-card, .upgrade-card {
-      background: #0b132b;
-      border: 1px solid #3a506b;
-      border-radius: 6px;
-      padding: 10px;
-      margin-bottom: 10px;
-    }
-
-    .task-title {
-      font-weight: bold;
-      color: var(--accent);
-      font-size: 0.95rem;
-    }
-
-    .task-desc {
-      font-size: 0.8rem;
-      color: #cbd5e1;
-      margin: 4px 0 8px 0;
-    }
-
-    .action-btn {
-      width: 100%;
-      padding: 8px;
-      background: var(--brass);
-      color: black;
-      font-weight: bold;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      transition: background 0.2s;
-    }
-
-    .action-btn:hover {
-      background: #fefae0;
-    }
-
-    .log-box {
-      grid-column: span 2;
-      background: #070d1e;
-      border: 1px solid #3a506b;
-      border-radius: 6px;
-      padding: 10px;
-      height: 110px;
-      overflow-y: auto;
-      font-family: 'Courier New', Courier, monospace;
+    .folder-title {
       font-size: 0.85rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
 
-    .log-entry {
-      margin-bottom: 4px;
+    .folder-arrow {
+      font-size: 0.8rem;
+      color: var(--text-light);
+      transition: transform 0.2s ease;
     }
 
-    .log-entry.success { color: var(--success); }
-    .log-entry.danger { color: var(--danger); }
-    .log-entry.info { color: var(--accent); }
+    .folder-card.open .folder-arrow {
+      transform: rotate(180deg);
+      color: var(--gold);
+    }
+
+    .folder-content {
+      display: none;
+      padding: 8px 10px 10px;
+      border-top: 1px solid var(--border);
+      background: rgba(0, 0, 0, 0.3);
+    }
+
+    .folder-card.open .folder-content { display: block; }
+
+    /* Product Cards */
+    .glass-card {
+      background: var(--surface-1);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 10px 12px;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      backdrop-filter: blur(15px);
+    }
+
+    .card-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex: 1;
+      min-width: 0;
+      cursor: pointer;
+    }
+
+    .card-media-wrap {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.15);
+      background: #ffffff;
+      padding: 4px;
+    }
+
+    .card-media-img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .card-titles {
+      min-width: 0;
+      flex: 1;
+    }
+
+    .card-titles h4 {
+      font-size: 0.84rem;
+      font-weight: 700;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .count-pill {
+      font-size: 0.65rem;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 1px 6px;
+      border-radius: 5px;
+      color: var(--text-light);
+      flex-shrink: 0;
+    }
+
+    .card-titles p {
+      font-size: 0.72rem;
+      color: var(--emerald);
+      font-weight: 600;
+      margin-top: 2px;
+    }
+
+    /* Buttons */
+    .btn-action {
+      background: var(--gold-gradient);
+      color: #000;
+      border: none;
+      padding: 7px 12px;
+      border-radius: 8px;
+      font-weight: 800;
+      font-size: 0.72rem;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1px;
+      min-width: 76px;
+      box-shadow: 0 4px 12px rgba(245, 158, 11, 0.25);
+      flex-shrink: 0;
+    }
+
+    .btn-action span.cost {
+      font-size: 0.62rem;
+      font-weight: 600;
+      opacity: 0.9;
+    }
+
+    .btn-action:disabled {
+      background: rgba(255, 255, 255, 0.05) !important;
+      color: var(--text-muted) !important;
+      cursor: not-allowed !important;
+      box-shadow: none !important;
+      border: 1px solid var(--border);
+    }
+
+    .btn-pink {
+      background: linear-gradient(145deg, #ec4899, #be185d);
+      box-shadow: 0 4px 12px rgba(236, 72, 153, 0.3);
+      color: white;
+    }
+
+    .btn-sell {
+      background: var(--rose);
+      color: white;
+      margin-left: 4px;
+      padding: 6px 8px;
+      border-radius: 8px;
+      border: none;
+      font-size: 0.72rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .section-label {
+      font-size: 0.74rem;
+      font-weight: 800;
+      color: var(--gold);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin: 16px 0 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* Bottom Navigation */
+    .bottom-bar {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      height: 70px;
+      background: rgba(10, 14, 24, 0.96);
+      backdrop-filter: blur(30px);
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      padding: 0 4px;
+      z-index: 30;
+    }
+
+    .nav-btn {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-size: 0.68rem;
+      font-weight: 600;
+      cursor: pointer;
+      padding: 6px 0;
+    }
+
+    .nav-btn .icon { font-size: 1.3rem; }
+    .nav-btn.active { color: var(--gold); font-weight: 800; }
   </style>
 </head>
 <body>
 
-  <h1>⚡ Aetherport: Sky-Isle Merchant Guild ⚡</h1>
+  <div class="toast" id="toast-box">
+    <span>🏆</span>
+    <span id="toast-msg">Product Acquired!</span>
+  </div>
 
-  <div class="dashboard">
-    <div class="stat-item">
-      <div class="stat-label">Aether Guilders</div>
-      <div class="stat-value" id="cash-val">500 ₳</div>
-    </div>
-    <div class="stat-item">
-      <div class="stat-label">Airship Fleet Hull</div>
-      <div class="stat-value" id="hull-val">100%</div>
-    </div>
-    <div class="stat-item">
-      <div class="stat-label">Cargo Capacity</div>
-      <div class="stat-value" id="cargo-val">0 / 20</div>
-    </div>
-    <div class="stat-item">
-      <div class="stat-label">Current Port</div>
-      <div class="stat-value" id="port-val" style="color:var(--brass)">High Spire</div>
+  <div class="modal-overlay" id="inspectModal" onclick="closeModal(event)">
+    <div class="modal-card" onclick="event.stopPropagation()">
+      <img id="modalImg" class="modal-img" src="" alt="Vehicle Inspect">
+      <div class="modal-body">
+        <h3 id="modalTitle" class="modal-title">Product Name</h3>
+        <p id="modalDesc" class="modal-desc">High performance luxury specifications.</p>
+        <div class="modal-specs">
+          <div class="spec-box">
+            <div class="spec-label">Top Speed / Range</div>
+            <div id="modalSpec1" class="spec-value">320 km/h</div>
+          </div>
+          <div class="spec-box">
+            <div class="spec-label">Power Output</div>
+            <div id="modalSpec2" class="spec-value">650 BHP</div>
+          </div>
+        </div>
+        <button class="btn-close" onclick="closeModal()">Close Preview</button>
+      </div>
     </div>
   </div>
 
-  <div class="main-grid">
-    <div class="panel">
-      <div class="panel-title">
-        <span>Sky-Chart Navigation</span>
-        <span style="font-size:0.8rem; font-weight:normal; color:#8da9c4;">Fuel Cost: 10 ₳/jump</span>
+  <div class="app-frame">
+    <div class="header">
+      <div class="level-badge" id="player-tier">🇮🇳 Sovereign Hegemon of India</div>
+      <div class="networth-title">Total Liquid Capital</div>
+      <div class="balance-display" id="balance">₹0</div>
+      <div class="status-row">
+        <div class="income-pill">
+          <span>▲</span>
+          <span id="passive-rate">+₹0 / sec</span>
+        </div>
+        <div class="buff-pill" id="buff-indicator">
+          <span>🔥</span>
+          <span id="buff-text">2x (20s)</span>
+        </div>
       </div>
-      
-      <div class="islands-container" id="island-buttons"></div>
-
-      <div class="panel-title">Local Commodities Exchange</div>
-      <table>
-        <thead>
-          <tr>
-            <th>Commodity</th>
-            <th>Market Price</th>
-            <th>In Cargo</th>
-            <th>Trade Actions</th>
-          </tr>
-        </thead>
-        <tbody id="market-body"></tbody>
-      </table>
     </div>
 
-    <div class="panel">
-      <div class="panel-title">Guild Tasks & Contracts</div>
-      <div id="quest-container"></div>
+    <div class="content-area">
 
-      <div class="panel-title" style="margin-top: 15px;">Fleet Upgrades</div>
-      <div id="upgrade-container"></div>
+      <div id="tab-empire" class="tab-content active">
+        <div class="tap-zone">
+          <button class="tap-orb" id="tapButton">
+            <div class="tap-orb-icon">👑</div>
+            <div class="tap-orb-text">+<span id="click-val">₹1,000</span></div>
+          </button>
+        </div>
+
+        <div class="section-label">📁 Corporate Portfolios (Tap to Expand)</div>
+
+        <div class="folder-card open" id="folder-bike">
+          <div class="folder-header" onclick="toggleFolder('folder-bike')">
+            <span class="folder-title">🏍️ Indian Two-Wheeler Plants (10 Companies)</span>
+            <span class="folder-arrow">▼</span>
+          </div>
+          <div class="folder-content" id="bike-container"></div>
+        </div>
+
+        <div class="folder-card" id="folder-car">
+          <div class="folder-header" onclick="toggleFolder('folder-car')">
+            <span class="folder-title">🚗 Automotive Gigafactories (10 Companies)</span>
+            <span class="folder-arrow">▼</span>
+          </div>
+          <div class="folder-content" id="car-container"></div>
+        </div>
+
+        <div class="folder-card" id="folder-bus">
+          <div class="folder-header" onclick="toggleFolder('folder-bus')">
+            <span class="folder-title">🚌 Intercity Transit Fleets (10 Companies)</span>
+            <span class="folder-arrow">▼</span>
+          </div>
+          <div class="folder-content" id="bus-container"></div>
+        </div>
+
+        <div class="folder-card" id="folder-food">
+          <div class="folder-header" onclick="toggleFolder('folder-food')">
+            <span class="folder-title">🍛 FMCG & Luxury Hotels (10 Companies)</span>
+            <span class="folder-arrow">▼</span>
+          </div>
+          <div class="folder-content" id="food-container"></div>
+        </div>
+
+        <div class="folder-card" id="folder-mall">
+          <div class="folder-header" onclick="toggleFolder('folder-mall')">
+            <span class="folder-title">🏬 Super Regional Malls (10 Companies)</span>
+            <span class="folder-arrow">▼</span>
+          </div>
+          <div class="folder-content" id="mall-container"></div>
+        </div>
+
+        <div class="folder-card" id="folder-airline">
+          <div class="folder-header" onclick="toggleFolder('folder-airline')">
+            <span class="folder-title">✈️ Sky Fleets & Aviation (10 Companies)</span>
+            <span class="folder-arrow">▼</span>
+          </div>
+          <div class="folder-content" id="airline-container"></div>
+        </div>
+      </div>
+
+      <div id="tab-vehicles" class="tab-content">
+        <div class="section-label">🏍️ Buy Indian Bikes & Superbikes (10 Branded Models)</div>
+        <div id="hangar-bikes"></div>
+
+        <div class="section-label">🚗 Buy Luxury SUVs & Supercars (10 Branded Models)</div>
+        <div id="hangar-cars"></div>
+
+        <div class="section-label">✈️ Buy Business Jets & Sky Flagships (10 Aircraft)</div>
+        <div id="hangar-planes"></div>
+
+        <div class="section-label">🚁 Buy VIP Charter Helicopters (10 Choppers)</div>
+        <div id="hangar-copters"></div>
+      </div>
+
+      <div id="tab-commitments" class="tab-content">
+        <div class="section-label">👸 Girlfriend & Dating Commitments</div>
+        <div id="gf-container"></div>
+
+        <div class="section-label">💍 Wife & Matrimonial Royalties</div>
+        <div id="wife-container"></div>
+
+        <div class="section-label">🏡 Parents, Family & Heritage Milestones</div>
+        <div id="family-container"></div>
+      </div>
+
+      <div id="tab-stocks" class="tab-content">
+        <div class="section-label">🇮🇳 Dalal Street (10 Top Indian Bluechips)</div>
+        <div id="india-stocks-container"></div>
+
+        <div class="section-label">🇺🇸 Wall Street (8 US Big Tech Giants)</div>
+        <div id="us-stocks-container"></div>
+
+        <div class="section-label">🌍 World Titans (6 Global Powerhouses)</div>
+        <div id="world-stocks-container"></div>
+
+        <div class="section-label">⚡ Corporate Licenses & Perks</div>
+        <div id="upgrades-container"></div>
+      </div>
+
     </div>
 
-    <div class="log-box" id="activity-log"></div>
+    <div class="bottom-bar">
+      <button class="nav-btn active" onclick="switchTab('empire', this)">
+        <span class="icon">🏢</span>
+        <span>Companies</span>
+      </button>
+      <button class="nav-btn" onclick="switchTab('vehicles', this)">
+        <span class="icon">🏎️</span>
+        <span>Fleet Gallery</span>
+      </button>
+      <button class="nav-btn" onclick="switchTab('commitments', this)">
+        <span class="icon">💖</span>
+        <span>Family</span>
+      </button>
+      <button class="nav-btn" onclick="switchTab('stocks', this)">
+        <span class="icon">📈</span>
+        <span>World Stocks</span>
+      </button>
+    </div>
   </div>
 
   <script>
-    // Game State
-    const state = {
-      cash: 500,
-      hull: 100,
-      cargoCapacity: 20,
-      currentLocation: 0,
-      cargo: { silk: 0, aether: 0, stormWater: 0 },
-      cargoLimits: { silk: 1, aether: 2, stormWater: 1 } // Unit sizes
-    };
+    // State
+    let balance = 500000;
+    let clickVal = 1000;
+    let multiplier = 1;
+    let buffTimer = 0;
 
-    const islands = [
-      { id: 0, name: "High Spire", desc: "Capital of commerce", prices: { silk: 25, aether: 90, stormWater: 40 } },
-      { id: 1, name: "Cloud Garden", desc: "Agricultural paradise", prices: { silk: 12, aether: 110, stormWater: 20 } },
-      { id: 2, name: "Smelter Haven", desc: "Industrial foundry", prices: { silk: 40, aether: 65, stormWater: 55 } }
-    ];
+    const getLogo = (name, bg, fg) => `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=${bg}&color=${fg}&bold=true&length=3&font-size=0.4`;
 
-    const commodities = [
-      { id: "silk", name: "Cloud-Silk", size: 1 },
-      { id: "aether", name: "Aether Crystal", size: 2 },
-      { id: "stormWater", name: "Charged Storm-Water", size: 1 }
-    ];
-
-    const tasks = [
-      {
-        id: "expedition",
-        name: "Eye of the Storm",
-        desc: "Brave the vortex to gather raw lightning.",
-        risk: 0.3,
-        reward: 400,
-        hullDmg: 25
-      },
-      {
-        id: "corsair",
-        name: "Pirate Safe Passage",
-        desc: "Bribe corsairs to secure regional shipping routes.",
-        cost: 150,
-        rewardCash: 350
-      }
-    ];
-
-    const upgrades = [
-      { id: "hold", name: "Expanded Cargo Hold", cost: 300, purchased: false, effect: () => { state.cargoCapacity += 15; } },
-      { id: "hull", name: "Reinforced Brass Armor", cost: 250, purchased: false, effect: () => { state.hull = Math.min(100, state.hull + 40); } }
-    ];
-
-    function log(msg, type = "info") {
-      const logBox = document.getElementById("activity-log");
-      const entry = document.createElement("div");
-      entry.className = `log-entry ${type}`;
-      entry.innerText = `[${new Date().toLocaleTimeString()}] ${msg}`;
-      logBox.prepend(entry);
-    }
-
-    function getCurrentUsedCargo() {
-      return (state.cargo.silk * state.cargoLimits.silk) +
-             (state.cargo.aether * state.cargoLimits.aether) +
-             (state.cargo.stormWater * state.cargoLimits.stormWater);
-    }
-
-    function updateUI() {
-      // Top stats
-      document.getElementById("cash-val").innerText = `${state.cash} ₳`;
-      document.getElementById("hull-val").innerText = `${state.hull}%`;
-      document.getElementById("cargo-val").innerText = `${getCurrentUsedCargo()} / ${state.cargoCapacity}`;
-      document.getElementById("port-val").innerText = islands[state.currentLocation].name;
-
-      // Render Islands Navigation
-      const islandBtns = document.getElementById("island-buttons");
-      islandBtns.innerHTML = "";
-      islands.forEach((island, idx) => {
-        const btn = document.createElement("button");
-        btn.className = `island-btn ${state.currentLocation === idx ? "active" : ""}`;
-        btn.innerHTML = `<strong>${island.name}</strong><br><small>${island.desc}</small>`;
-        btn.onclick = () => travelTo(idx);
-        islandBtns.appendChild(btn);
-      });
-
-      // Render Market
-      const marketBody = document.getElementById("market-body");
-      marketBody.innerHTML = "";
-      const currentIsland = islands[state.currentLocation];
-
-      commodities.forEach(item => {
-        const price = currentIsland.prices[item.id];
-        const count = state.cargo[item.id];
-        const row = document.createElement("tr");
-
-        row.innerHTML = `
-          <td><strong>${item.name}</strong> <small>(${item.size} Cap)</small></td>
-          <td>${price} ₳</td>
-          <td>${count}</td>
-          <td>
-            <button onclick="buyItem('${item.id}', ${price}, ${item.size})">Buy</button>
-            <button onclick="sellItem('${item.id}', ${price})">Sell</button>
-          </td>
-        `;
-        marketBody.appendChild(row);
-      });
-
-      // Render Upgrades
-      const upgContainer = document.getElementById("upgrade-container");
-      upgContainer.innerHTML = "";
-      upgrades.forEach(upg => {
-        if (!upg.purchased) {
-          const div = document.createElement("div");
-          div.className = "upgrade-card";
-          div.innerHTML = `
-            <div style="font-size:0.9rem; font-weight:bold;">${upg.name}</div>
-            <div style="font-size:0.8rem; color:#8da9c4; margin-bottom:5px;">Cost: ${upg.cost} ₳</div>
-            <button class="action-btn" onclick="buyUpgrade('${upg.id}')">Purchase</button>
-          `;
-          upgContainer.appendChild(div);
-        }
-      });
-
-      // Render Quests
-      const qContainer = document.getElementById("quest-container");
-      qContainer.innerHTML = "";
-      tasks.forEach(task => {
-        const div = document.createElement("div");
-        div.className = "task-card";
-        div.innerHTML = `
-          <div class="task-title">${task.name}</div>
-          <div class="task-desc">${task.desc}</div>
-          <button class="action-btn" onclick="runTask('${task.id}')">Launch Operation</button>
-        `;
-        qContainer.appendChild(div);
-      });
-    }
-
-    window.travelTo = function(targetIndex) {
-      if (state.currentLocation === targetIndex) return;
-      if (state.cash < 10) {
-        log("Not enough Aether Guilders for fuel!", "danger");
-        return;
-      }
-      state.cash -= 10;
-      state.currentLocation = targetIndex;
-      log(`Steering airship to ${islands[targetIndex].name}. Traversed the cloud lanes.`, "info");
-      
-      // Random price fluctuation on travel
-      islands.forEach(isl => {
-        Object.keys(isl.prices).forEach(key => {
-          const delta = Math.floor((Math.random() * 11) - 5);
-          isl.prices[key] = Math.max(10, isl.prices[key] + delta);
-        });
-      });
-
-      updateUI();
-    };
-
-    window.buyItem = function(id, price, size) {
-      if (state.cash < price) {
-        log("Insufficient funds to buy commodity.", "danger");
-        return;
-      }
-      if (getCurrentUsedCargo() + size > state.cargoCapacity) {
-        log("Cargo hold is full! Upgrade your capacity or sell cargo.", "danger");
-        return;
-      }
-      state.cash -= price;
-      state.cargo[id]++;
-      log(`Purchased 1x ${id} for ${price} ₳.`, "success");
-      updateUI();
-    };
-
-    window.sellItem = function(id, price) {
-      if (state.cargo[id] <= 0) {
-        log(`No cargo of this type to sell!`, "danger");
-        return;
-      }
-      state.cargo[id]--;
-      state.cash += price;
-      log(`Sold 1x ${id} for ${price} ₳.`, "success");
-      updateUI();
-    };
-
-    window.buyUpgrade = function(id) {
-      const upg = upgrades.find(u => u.id === id);
-      if (upg && state.cash >= upg.cost) {
-        state.cash -= upg.cost;
-        upg.purchased = true;
-        upg.effect();
-        log(`Equipped upgrade: ${upg.name}!`, "success");
-        updateUI();
-      } else {
-        log("Cannot afford this fleet upgrade.", "danger");
-      }
-    };
-
-    window.runTask = function(id) {
-      const task = tasks.find(t => t.id === id);
-      if (id === "expedition") {
-        if (state.hull <= 30) {
-          log("Hull integrity critical! Repair before attempting storm expeditions.", "danger");
-          return;
-        }
-        if (Math.random() < task.risk) {
-          state.hull = Math.max(0, state.hull - task.hullDmg);
-          log(`Storm winds struck your ship! Lost ${task.hullDmg}% hull integrity.`, "danger");
-        } else {
-          state.cash += task.reward;
-          log(`Expedition success! Extracted charged aether worth ${task.reward} ₳.`, "success");
-        }
-      } else if (id === "corsair") {
-        if (state.cash < task.cost) {
-          log("Not enough funds to negotiate passage.", "danger");
-          return;
-        }
-        state.cash = state.cash - task.cost + task.rewardCash;
-        log(`Bribed Corsair captains. Recovered trade routes nets +${task.rewardCash - task.cost} ₳ net profit.`, "success");
-      }
-      updateUI();
-    };
-
-    // Initialize Game
-    log("Airship docked at High Spire. Engine warm, ready for trade.", "info");
-    updateUI();
-  </script>
-</body>
-</html>
+    // 1. 10 Bike Companies with Real Logos
+    const bikeBiz = [
+      { id: 'bk1', logo: 'https://upload.wikimedia.org/wikipedia/commons/4/4e/Hero_MotoCorp_Logo.svg', name: 'Hero MotoCorp Assembly', cost: 12000, income: 350, count: 0 },
+      { id: 'bk2', logo: 'https://upload.wikimedia.org/wikipedia/commons/3/30/Bajaj_Auto_Logo.svg', name: 'Bajaj Auto Pulsar Line', cost: 35000, income: 950, count: 0 },
+      { id: 'bk
